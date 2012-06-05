@@ -1,0 +1,17 @@
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+
+# For special people (i.e. VIM users) do not remove!!!
+*~
+*.swp
+
+
+# generic part (can be overridden locally using !pattern)
+bin/
+doc/
+doc-files/
+
+# eclipse settings folder
+.metadata/
