@@ -10,17 +10,19 @@
 package org.jdesktop.swingx.mapviewer;
 
 /**
- * A tile factory which configures itself using a TileFactoryInfo object and uses a Google Maps like mercator projection.
+ * A tile factory which configures itself using a TileFactoryInfo object and uses a Google Maps like mercator
+ * projection.
  * @author joshy
  */
-public class DefaultTileFactory extends AbstractTileFactory {
-    
-    /**
-     * Creates a new instance of DefaultTileFactory using the spcified TileFactoryInfo
-     * @param info a TileFactoryInfo to configure this TileFactory
-     */
-    public DefaultTileFactory(TileFactoryInfo info) {
-        super(info);
-    }
-        
+public class DefaultTileFactory extends AbstractTileFactory
+{
+	/**
+	 * Creates a new instance of DefaultTileFactory using the spcified TileFactoryInfo
+	 * @param info a TileFactoryInfo to configure this TileFactory
+	 */
+	public DefaultTileFactory(TileFactoryInfo info)
+	{
+		super(info);
+	}
+
 }

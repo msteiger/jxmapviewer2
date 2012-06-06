@@ -10,34 +10,49 @@
 package org.jdesktop.swingx.mapviewer;
 
 /**
- *
  * @author joshy
  */
-public class DefaultWaypoint extends Waypoint {
-    private GeoPosition position;
+public class DefaultWaypoint extends Waypoint
+{
+	private GeoPosition position;
 
-    /** Creates a new instance of Waypoint */
-    public DefaultWaypoint() {
-        this(new GeoPosition(0, 0));
-    }
-    
-    public DefaultWaypoint(double latitude, double longitude) {
-        this(new GeoPosition(latitude,longitude));
-    }
-    
-    public DefaultWaypoint(GeoPosition coord) {
-        this.position = coord;
-    }
-    
-    public GeoPosition getPosition() {
-        return position;
-    }
+	/** 
+	 * Creates a new instance of Waypoint 
+	 */
+	public DefaultWaypoint()
+	{
+		this(new GeoPosition(0, 0));
+	}
 
-    public void setPosition(GeoPosition coordinate) {
-        GeoPosition old = getPosition();
-        this.position = coordinate;
-        firePropertyChange("position", old, getPosition());
-    }
-    
-    
+	/**
+	 * @param latitude the latitude
+	 * @param longitude the longitude
+	 */
+	public DefaultWaypoint(double latitude, double longitude)
+	{
+		this(new GeoPosition(latitude, longitude));
+	}
+
+	/**
+	 * @param coord the geo coordinate
+	 */
+	public DefaultWaypoint(GeoPosition coord)
+	{
+		this.position = coord;
+	}
+
+	@Override
+	public GeoPosition getPosition()
+	{
+		return position;
+	}
+
+	@Override
+	public void setPosition(GeoPosition coordinate)
+	{
+		GeoPosition old = getPosition();
+		this.position = coordinate;
+		firePropertyChange("position", old, getPosition());
+	}
+
 }

@@ -76,25 +76,38 @@ public class GeoPosition {
         return longitude;
     }
     
-    /**
-     * Returns true the specified GeoPosition and this GeoPosition represent
-     * the exact same latitude and longitude coordinates.
-     * @param obj a GeoPosition to compare this GeoPosition to
-     * @return returns true if the specified GeoPosition is equal to this one
-     */
-    public boolean equals(Object obj) {
-        if (obj instanceof GeoPosition) {
-            GeoPosition coord = (GeoPosition)obj;
-            return coord.latitude == latitude && coord.longitude == longitude;
-        }
-        return false;
-    }
+    @Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(latitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
     
-    /**
-     * {@inheritDoc}
-     * @return 
-     */
-    public String toString() {
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof GeoPosition))
+			return false;
+		GeoPosition other = (GeoPosition) obj;
+		if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
+			return false;
+		if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
+			return false;
+		return true;
+	}
+    
+    @Override
+	public String toString() {
         return "[" + latitude + ", " + longitude + "]";
     }
 }

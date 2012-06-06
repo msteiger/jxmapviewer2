@@ -20,29 +20,34 @@ import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 
 /**
  * A null implementation of TileFactory. Draws empty areas.
- * 
  * @author joshy
  */
-public class EmptyTileFactory extends TileFactory {
-
-	/** The empty tile image. */
+public class EmptyTileFactory extends TileFactory
+{
+	/** 
+	 * The empty tile image. 
+	 */
 	private BufferedImage emptyTile;
 
-	/** Creates a new instance of EmptyTileFactory */
-	public EmptyTileFactory() {
-		this(new TileFactoryInfo("EmptyTileFactory 256x256", 1, 15, 17, 256,
-				true, true, "", "x", "y", "z"));
+	/** 
+	 * Creates a new instance of EmptyTileFactory 
+	 */
+	public EmptyTileFactory()
+	{
+		this(new TileFactoryInfo("EmptyTileFactory 256x256", 1, 15, 17, 256, true, true, "", "x", "y", "z"));
 	}
 
-	/** Creates a new instance of EmptyTileFactory using the specified info. */
-	public EmptyTileFactory(TileFactoryInfo info) {
+	/** 
+	 * Creates a new instance of EmptyTileFactory using the specified info. 
+	 * @param info the tile factory info
+	 */
+	public EmptyTileFactory(TileFactoryInfo info)
+	{
 		super(info);
 		int tileSize = info.getTileSize(info.getMinimumZoomLevel());
-		emptyTile = new BufferedImage(tileSize, tileSize,
-				BufferedImage.TYPE_INT_ARGB);
+		emptyTile = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = emptyTile.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, tileSize, tileSize);
 		g.setColor(Color.WHITE);
@@ -54,36 +59,39 @@ public class EmptyTileFactory extends TileFactory {
 	}
 
 	/**
-	 * Gets an instance of an empty tile for the given tile position and zoom on
-	 * the world map.
-	 * 
-	 * @param x
-	 *            The tile's x position on the world map.
-	 * @param y
-	 *            The tile's y position on the world map.
-	 * @param zoom
-	 *            The current zoom level.
+	 * Gets an instance of an empty tile for the given tile position and zoom on the world map.
+	 * @param x The tile's x position on the world map.
+	 * @param y The tile's y position on the world map.
+	 * @param zoom The current zoom level.
 	 */
-	public Tile getTile(int x, int y, int zoom) {
-		return new Tile(x, y, zoom) {
-
-			public boolean isLoaded() {
+	@Override
+	public Tile getTile(int x, int y, int zoom)
+	{
+		return new Tile(x, y, zoom)
+		{
+			@Override
+			public synchronized boolean isLoaded()
+			{
 				return true;
 			}
 
-			public BufferedImage getImage() {
+			@Override
+			public BufferedImage getImage()
+			{
 				return emptyTile;
 			}
 
 		};
 	}
 
-    /**
-     * Override this method to load the tile using, for example, an <code>ExecutorService</code>.
-     * @param tile The tile to load.
-     */
-    protected void startLoading(Tile tile){
-    	// noop
-    }
-    
+	/**
+	 * Override this method to load the tile using, for example, an <code>ExecutorService</code>.
+	 * @param tile The tile to load.
+	 */
+	@Override
+	protected void startLoading(Tile tile)
+	{
+		// noop
+	}
+
 }

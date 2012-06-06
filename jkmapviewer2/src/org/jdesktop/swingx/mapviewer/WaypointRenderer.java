@@ -18,13 +18,14 @@ import org.jdesktop.swingx.JXMapViewer;
  * be set on a WayPointPainter to draw waypoints on a JXMapViewer
  * @author joshua.marinacci@sun.com
  */
-public interface WaypointRenderer {
+public interface WaypointRenderer 
+{
     /**
      * paint the specified waypoint on the specified map and graphics context
-     * @param g 
-     * @param map 
-     * @param waypoint 
-     * @return 
+     * @param g the graphics2D object 
+     * @param map the map
+     * @param waypoint the waypoint
+     * @return TODO: unknown 
      */
     public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint waypoint);
     
