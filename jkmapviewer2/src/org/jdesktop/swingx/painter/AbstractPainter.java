@@ -55,6 +55,7 @@ import org.jdesktop.swingx.util.GraphicsUtilities;
  * </code></pre></p>
  *
  * @author rbair
+ * @param <T> an optional configuration parameter
  */
 @SuppressWarnings("nls")
 public abstract class AbstractPainter<T> extends AbstractBean implements Painter<T> {
@@ -236,7 +237,7 @@ public abstract class AbstractPainter<T> extends AbstractBean implements Painter
      *
      * <p>If set to false, then #clearCache is called to free system resources.</p>
      *
-     * @param cacheable
+     * @param cacheable the cache flag
      */
     public void setCacheable(boolean cacheable) {
         boolean old = isCacheable();
@@ -267,13 +268,13 @@ public abstract class AbstractPainter<T> extends AbstractBean implements Painter
         }
     }
 
-    /**
-     * Only made package private for testing. Don't call this method outside
-     * of this class! This is NOT a bound property
-     */
-    boolean isCacheCleared() {
-        return cacheCleared;
-    }
+//    /**
+//     * Only made package private for testing. Don't call this method outside
+//     * of this class! This is NOT a bound property
+//     */
+//    private boolean isCacheCleared() {
+//        return cacheCleared;
+//    }
 
     /**
      * <p>Called to allow <code>Painter</code> subclasses a chance to see if any state
@@ -281,9 +282,9 @@ public abstract class AbstractPainter<T> extends AbstractBean implements Painter
      * the <code>Painter</code> has a chance to mark itself as dirty, thus causing a
      * repaint, even if cached.</p>
      *
-     * @param object
+     * @param object the object to validate
      */
-    protected void validate(T object) { }
+    protected void validate(T object) { /* do nothing */ }
 
     /**
      * Ye olde dirty bit. If true, then the painter is considered dirty and in need of
@@ -359,16 +360,13 @@ public abstract class AbstractPainter<T> extends AbstractBean implements Painter
     /**
      * Subclasses must implement this method and perform custom painting operations
      * here.
-     * @param width 
-     * @param height 
+     * @param width the width
+     * @param height the height
      * @param g The Graphics2D object in which to paint
-     * @param object
+     * @param object an optional configuration parameter
      */
     protected abstract void doPaint(Graphics2D g, T object, int width, int height);
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public final void paint(Graphics2D g, T obj, int width, int height) {
         if (g == null) {
@@ -395,37 +393,39 @@ public abstract class AbstractPainter<T> extends AbstractBean implements Painter
                 if (invalidCache) {
                     cache = GraphicsUtilities.createCompatibleTranslucentImage(width, height);
                 }
-                Graphics2D gfx = cache.createGraphics();
-                
-                try {
-                    gfx.setClip(0, 0, width, height);
-
-                    if (!invalidCache) {
-                        // If we are doing a repaint, but we didn't have to
-                        // recreate the image, we need to clear it back
-                        // to a fully transparent background.
-                        Composite composite = gfx.getComposite();
-                        gfx.setComposite(AlphaComposite.Clear);
-                        gfx.fillRect(0, 0, width, height);
-                        gfx.setComposite(composite);
-                    }
-
-                    configureGraphics(gfx);
-                    doPaint(gfx, obj, width, height);
-                } finally {
-                    gfx.dispose();
-                }
-
-                if (!isInPaintContext()) {
-                    for (BufferedImageOp f : getFilters()) {
-                        cache = f.filter(cache, null);
-                    }
-                }
-
-                //only save the temporary image as the cacheable if I'm caching
-                if (shouldUseCache()) {
-                    cachedImage = new SoftReference<BufferedImage>(cache);
-                    cacheCleared = false;
+                if (cache != null) {
+	                Graphics2D gfx = cache.createGraphics();
+	                
+	                try {
+	                    gfx.setClip(0, 0, width, height);
+	
+	                    if (!invalidCache) {
+	                        // If we are doing a repaint, but we didn't have to
+	                        // recreate the image, we need to clear it back
+	                        // to a fully transparent background.
+	                        Composite composite = gfx.getComposite();
+	                        gfx.setComposite(AlphaComposite.Clear);
+	                        gfx.fillRect(0, 0, width, height);
+	                        gfx.setComposite(composite);
+	                    }
+	
+	                    configureGraphics(gfx);
+	                    doPaint(gfx, obj, width, height);
+	                } finally {
+	                    gfx.dispose();
+	                }
+	
+	                if (!isInPaintContext()) {
+	                    for (BufferedImageOp f : getFilters()) {
+	                        cache = f.filter(cache, null);
+	                    }
+	                }
+	
+	                //only save the temporary image as the cacheable if I'm caching
+	                if (shouldUseCache()) {
+	                    cachedImage = new SoftReference<BufferedImage>(cache);
+	                    cacheCleared = false;
+	                }
                 }
             }
 

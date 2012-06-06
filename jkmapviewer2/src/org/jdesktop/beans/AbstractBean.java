@@ -161,6 +161,8 @@ public abstract class AbstractBean {
     /** 
      * Creates a new instance of AbstractBean, using the supplied PropertyChangeSupport and
      * VetoableChangeSupport delegates. Neither of these may be null.
+     * @param pcs the property change support
+     * @param vcs the vetoable change support
      */
     protected AbstractBean(PropertyChangeSupport pcs, VetoableChangeSupport vcs) {
         if (pcs == null) {

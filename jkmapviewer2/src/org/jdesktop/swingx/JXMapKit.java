@@ -614,6 +614,7 @@ public class JXMapKit extends JPanel
 		return dataProviderCreditShown;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void rebuildMainMapOverlay()
 	{
 		CompoundPainter<JXMapViewer> cp = new CompoundPainter<JXMapViewer>();

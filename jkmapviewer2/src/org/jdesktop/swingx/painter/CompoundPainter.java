@@ -26,6 +26,11 @@ import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 //import org.jdesktop.beans.JavaBean;
 
@@ -61,6 +66,7 @@ import java.lang.ref.WeakReference;
  * </code></pre></p>
  *
  * @author rbair
+ * @param <T> an optional configuration parameter
  */
 //@JavaBean
 public class CompoundPainter<T> extends AbstractPainter<T> {
@@ -95,7 +101,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
     
     private Handler handler;
     
-    private Painter[] painters = new Painter[0];
+    private List<Painter<T>> painters = new ArrayList<Painter<T>>();
     private AffineTransform transform;
     private boolean clipPreserved = false;
 
@@ -103,7 +109,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
 
     /** Creates a new instance of CompoundPainter */
     public CompoundPainter() {
-        this((Painter[]) null);
+        this((Painter<T>[]) null);
     }
     
     /**
@@ -113,7 +119,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
      *
      * @param painters array of painters, which will be painted in order
      */
-    public CompoundPainter(Painter... painters) {
+    public CompoundPainter(Painter<T>... painters) {
         handler = new Handler(this);
         
         setPainters(painters);
@@ -127,21 +133,19 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
      *
      * @param painters array of painters, which will be painted in order
      */
-    public void setPainters(Painter... painters) {
-        Painter[] old = getPainters();
+    public void setPainters(List<? extends Painter<T>> painters) {
+        Collection<Painter<T>> old = getPainters();
         
-        for (Painter p : old) {
+        for (Painter<T> p : old) {
             if (p instanceof AbstractPainter) {
                 ((AbstractPainter<?>) p).removePropertyChangeListener(handler);
             }
         }
         
-        this.painters = new Painter[painters == null ? 0 : painters.length];
-        if (painters != null) {
-            System.arraycopy(painters, 0, this.painters, 0, this.painters.length);
-        }
+        this.painters.clear();
+        this.painters.addAll(painters);
         
-        for (Painter p : this.painters) {
+        for (Painter<T> p : this.painters) {
             if (p instanceof AbstractPainter) {
                 ((AbstractPainter<?>) p).addPropertyChangeListener(handler);
             }
@@ -152,14 +156,30 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
     }
     
     /**
+     * Sets the array of Painters to use. These painters will be executed in
+     * order. A null value will be treated as an empty array. To prevent unexpected 
+     * behavior all values in provided array are copied to internally held array. 
+     * Any changes to the original array will not be reflected.
+     *
+     * @param painters array of painters, which will be painted in order
+     */
+    public void setPainters(Painter<T>... painters) {
+    	List<? extends Painter<T>> l;
+    			
+    	if (painters == null)
+    		l = Collections.emptyList(); else
+    		l = Arrays.asList(painters);
+    	
+    	setPainters(l);
+    }
+    
+    /**
      * Gets the array of painters used by this CompoundPainter
      * @return a defensive copy of the painters used by this CompoundPainter.
      *         This will never be null.
      */
-    public final Painter[] getPainters() {
-        Painter[] results = new Painter[painters.length];
-        System.arraycopy(painters, 0, results, 0, results.length);
-        return results;
+    public final Collection<Painter<T>> getPainters() {
+        return Collections.unmodifiableCollection(painters);
     }
     
     
@@ -218,9 +238,9 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
     @Override
     protected void validate(T object) {
         boolean dirty = false;
-        for (Painter p : painters) {
+        for (Painter<T> p : painters) {
             if (p instanceof AbstractPainter) {
-                AbstractPainter ap = (AbstractPainter) p;
+                AbstractPainter<T> ap = (AbstractPainter<T>) p;
                 ap.validate(object);
                 if (ap.isDirty()) {
                     dirty = true;
@@ -249,6 +269,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
      * keep their cached image during regular repaints.  In this case,
      * client code should call {@link #clearCache()} manually when the cacheable
      * <code>Painter</code>s should be updated.
+     * @return the dirty check flag
      *
      *
      * @see #isDirty()
@@ -260,6 +281,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
      * Set the flag used by {@link #isDirty()} to check if the 
      * child <code>Painter</code>s should be checked for their 
      * <code>dirty</code> flag as part of processing.
+     * @param b the dirty check flag
      *
      * @see #isCheckingDirtyChildPainters()
      * @see #isDirty()
@@ -280,7 +302,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
      * Otherwise, we return <code>false</code>.</p>
      *
      * {@inheritDoc}
-     * {@see #isCheckingDirtyChildPainters()}
+     * @see #isCheckingDirtyChildPainters()
      */
     @Override
     protected boolean isDirty() {
@@ -289,7 +311,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
             return true;
         } 
         else if (isCheckingDirtyChildPainters()) {
-            for (Painter p : painters) {
+            for (Painter<T> p : painters) {
                 if (p instanceof AbstractPainter) {
                     AbstractPainter<?> ap = (AbstractPainter<?>) p;
                     if (ap.isDirty()) {
@@ -331,7 +353,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
     @Override
     public void clearCache() {
         if (!clearLocalCacheOnly) {
-            for (Painter p : painters) {
+            for (Painter<T> p : painters) {
                 if (p instanceof AbstractPainter) {
                     AbstractPainter<?> ap = (AbstractPainter<?>) p;
                     ap.clearCache();
@@ -353,7 +375,7 @@ public class CompoundPainter<T> extends AbstractPainter<T> {
      */
     @Override
     protected void doPaint(Graphics2D g, T component, int width, int height) {
-        for (Painter p : getPainters()) {
+        for (Painter<T> p : getPainters()) {
             Graphics2D temp = (Graphics2D) g.create();
             
             try {

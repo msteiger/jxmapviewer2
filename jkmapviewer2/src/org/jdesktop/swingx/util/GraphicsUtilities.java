@@ -533,6 +533,7 @@ public class GraphicsUtilities {
                     g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                                     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                 }
+                if (g2 != null)	// always the case
                 g2.drawImage(thumb, 0, 0, width, height,
                         0, 0, previousWidth, previousHeight, null);
     
@@ -637,6 +638,7 @@ public class GraphicsUtilities {
                     g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                                     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                 }
+                if (g2 != null)	// always the case
                 g2.drawImage(thumb, 0, 0, width, height,
                              0, 0, previousWidth, previousHeight, null);
     
@@ -791,6 +793,10 @@ public class GraphicsUtilities {
     /**
      * Draws an image on top of a component by doing a 3x3 grid stretch of the image
      * using the specified insets.
+     * @param g the graphics object
+     * @param comp the component
+     * @param img the image
+     * @param ins the insets
      */
     public static void tileStretchPaint(Graphics g, 
                 JComponent comp,

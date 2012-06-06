@@ -53,6 +53,7 @@ import java.awt.Graphics2D;
  * <p>This class is <strong>not</strong> threadsafe.</p>
  *
  * @author rbair
+ * @param <T> an optional configuration parameter
  * @see AbstractPainter
  * @see CompoundPainter
  */
