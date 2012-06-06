@@ -32,6 +32,7 @@ import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.Set;
 import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 
@@ -40,7 +41,6 @@ import org.jdesktop.swingx.mapviewer.Tile;
 import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.empty.EmptyTileFactory;
-import org.jdesktop.swingx.painter.AbstractPainter;
 import org.jdesktop.swingx.painter.Painter;
 
 /**
@@ -65,7 +65,7 @@ import org.jdesktop.swingx.painter.Painter;
  * @author Joshua.Marinacci@sun.com
  * @see org.jdesktop.swingx.mapviewer.bmng.SLMapServerInfo
  */
-public class JXMapViewer extends JXPanel implements DesignMode
+public class JXMapViewer extends JPanel implements DesignMode
 {
 	private static final long serialVersionUID = -3530746298586937321L;
 
@@ -164,15 +164,27 @@ public class JXMapViewer extends JXPanel implements DesignMode
 
 		// setAddressLocation(new GeoPosition(37.392137,-121.950431)); // Sun campus
 
-		setBackgroundPainter(new AbstractPainter<JXPanel>()
-		{
-			@Override
-			protected void doPaint(Graphics2D g, JXPanel component, int width, int height)
-			{
-				doPaintComponent(g);
-			}
-		});
+//		setBackgroundPainter(new AbstractPainter<JXPanel>()
+//		{
+//			@Override
+//			protected void doPaint(Graphics2D g, JXPanel component, int width, int height)
+//			{
+//				doPaintComponent(g);
+//			}
+//		});
 	}
+	
+	
+
+	@Override
+	protected void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		
+		doPaintComponent(g);
+	}
+
+
 
 	// the method that does the actual painting
 	private void doPaintComponent(Graphics g)

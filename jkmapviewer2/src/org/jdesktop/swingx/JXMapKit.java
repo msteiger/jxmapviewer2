@@ -21,6 +21,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -54,7 +55,7 @@ import org.jdesktop.swingx.painter.Painter;
  * </p>
  * @author joshy
  */
-public class JXMapKit extends JXPanel
+public class JXMapKit extends JPanel
 {
 	private static final long serialVersionUID = -8366577998349912380L;
 	private boolean miniMapVisible = true;
