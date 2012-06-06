@@ -10,7 +10,6 @@
 package org.jdesktop.swingx;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,11 +17,6 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -31,9 +25,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.Set;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 
 import org.jdesktop.swingx.mapviewer.GeoPosition;
@@ -138,12 +132,12 @@ public class JXMapViewer extends JPanel implements DesignMode
 	{
 		factory = new EmptyTileFactory();
 		// setTileFactory(new GoogleTileFactory());
-		MouseInputListener mia = new PanMouseInputListener();
+		MouseInputListener mia = new PanMouseInputListener(this);
 		setRecenterOnClickEnabled(false);
 		this.addMouseListener(mia);
 		this.addMouseMotionListener(mia);
-		this.addMouseWheelListener(new ZoomMouseWheelListener());
-		this.addKeyListener(new PanKeyListener());
+		this.addMouseWheelListener(new ZoomMouseWheelListener(this));
+		this.addKeyListener(new PanKeyListener(this));
 
 		// make a dummy loading image
 		try
@@ -163,19 +157,8 @@ public class JXMapViewer extends JPanel implements DesignMode
 		}
 
 		// setAddressLocation(new GeoPosition(37.392137,-121.950431)); // Sun campus
-
-//		setBackgroundPainter(new AbstractPainter<JXPanel>()
-//		{
-//			@Override
-//			protected void doPaint(Graphics2D g, JXPanel component, int width, int height)
-//			{
-//				doPaintComponent(g);
-//			}
-//		});
 	}
 	
-	
-
 	@Override
 	protected void paintComponent(Graphics g)
 	{
@@ -183,8 +166,6 @@ public class JXMapViewer extends JPanel implements DesignMode
 		
 		doPaintComponent(g);
 	}
-
-
 
 	// the method that does the actual painting
 	private void doPaintComponent(Graphics g)
@@ -737,169 +718,22 @@ public class JXMapViewer extends JPanel implements DesignMode
 				if (t.getZoom() == getZoom())
 				{
 					repaint();
-					/*
-					 * this optimization doesn't save much and it doesn't work if you wrap around the world Rectangle
-					 * viewportBounds = getViewportBounds(); TilePoint tilePoint = t.getLocation(); Point point = new
-					 * Point(tilePoint.getX() * getTileFactory().getTileSize(), tilePoint.getY() *
-					 * getTileFactory().getTileSize()); Rectangle tileRect = new Rectangle(point, new
-					 * Dimension(getTileFactory().getTileSize(), getTileFactory().getTileSize())); if
-					 * (viewportBounds.intersects(tileRect)) { //convert tileRect from world space to viewport space
-					 * repaint(new Rectangle( tileRect.x - viewportBounds.x, tileRect.y - viewportBounds.y,
-					 * tileRect.width, tileRect.height )); }
-					 */
+					/* this optimization doesn't save much and it doesn't work if you
+					* wrap around the world
+					Rectangle viewportBounds = getViewportBounds();
+					TilePoint tilePoint = t.getLocation();
+					Point point = new Point(tilePoint.getX() * getTileFactory().getTileSize(), tilePoint.getY() * getTileFactory().getTileSize());
+					Rectangle tileRect = new Rectangle(point, new Dimension(getTileFactory().getTileSize(), getTileFactory().getTileSize()));
+					if (viewportBounds.intersects(tileRect)) {
+					//convert tileRect from world space to viewport space
+					repaint(new Rectangle(
+						tileRect.x - viewportBounds.x,
+						tileRect.y - viewportBounds.y,
+						tileRect.width,
+						tileRect.height
+						));
+					}*/
 				}
-			}
-		}
-	}
-
-	// used to pan using the arrow keys
-	private class PanKeyListener extends KeyAdapter
-	{
-		private static final int OFFSET = 10;
-
-		@Override
-		public void keyPressed(KeyEvent e)
-		{
-			int delta_x = 0;
-			int delta_y = 0;
-
-			switch (e.getKeyCode())
-			{
-			case KeyEvent.VK_LEFT:
-				delta_x = -OFFSET;
-				break;
-			case KeyEvent.VK_RIGHT:
-				delta_x = OFFSET;
-				break;
-			case KeyEvent.VK_UP:
-				delta_y = -OFFSET;
-				break;
-			case KeyEvent.VK_DOWN:
-				delta_y = OFFSET;
-				break;
-			}
-
-			if (delta_x != 0 || delta_y != 0)
-			{
-				Rectangle bounds = getViewportBounds();
-				double x = bounds.getCenterX() + delta_x;
-				double y = bounds.getCenterY() + delta_y;
-				setCenter(new Point2D.Double(x, y));
-				repaint();
-			}
-		}
-	}
-
-	// used to pan using press and drag mouse gestures
-	private class PanMouseInputListener implements MouseInputListener
-	{
-		Point prev;
-
-		@Override
-		public void mousePressed(MouseEvent evt)
-		{
-			// if the middle mouse button is clicked, recenter the view
-			if (isRecenterOnClickEnabled()
-					&& (SwingUtilities.isMiddleMouseButton(evt) || (SwingUtilities.isLeftMouseButton(evt) && evt
-							.getClickCount() == 2)))
-			{
-				recenterMap(evt);
-			}
-			else
-			{
-				// otherwise, just remember this point (for panning)
-				prev = evt.getPoint();
-			}
-		}
-
-		private void recenterMap(MouseEvent evt)
-		{
-			Rectangle bounds = getViewportBounds();
-			double x = bounds.getX() + evt.getX();
-			double y = bounds.getY() + evt.getY();
-			setCenter(new Point2D.Double(x, y));
-			repaint();
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent evt)
-		{
-			if (isPanEnabled())
-			{
-				Point current = evt.getPoint();
-				double x = getCenter().getX() - (current.x - prev.x);
-				double y = getCenter().getY() - (current.y - prev.y);
-
-				if (!isNegativeYAllowed)
-				{
-					if (y < 0)
-					{
-						y = 0;
-					}
-				}
-
-				int maxHeight = (int) (getTileFactory().getMapSize(getZoom()).getHeight() * getTileFactory()
-						.getTileSize(getZoom()));
-				if (y > maxHeight)
-				{
-					y = maxHeight;
-				}
-
-				prev = current;
-				setCenter(new Point2D.Double(x, y));
-				repaint();
-				setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-			}
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent evt)
-		{
-			prev = null;
-			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent e)
-		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					requestFocusInWindow();
-				}
-			});
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e)
-		{
-			// ignore
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e)
-		{
-			// ignore
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e)
-		{
-			// ignore
-		}
-	}
-
-	// zooms using the mouse wheel
-	private class ZoomMouseWheelListener implements MouseWheelListener
-	{
-		@Override
-		public void mouseWheelMoved(MouseWheelEvent e)
-		{
-			if (isZoomEnabled())
-			{
-				setZoom(getZoom() + e.getWheelRotation());
 			}
 		}
 	}
@@ -966,5 +800,15 @@ public class JXMapViewer extends JPanel implements DesignMode
 		// convert from world bitmap to geo
 		GeoPosition pos = getTileFactory().pixelToGeo(pt2, getZoom());
 		return pos;
+	}
+
+
+
+	/**
+	 * @return isNegativeYAllowed
+	 */
+	public boolean isNegativeYAllowed()
+	{
+		return isNegativeYAllowed;
 	}
 }
