@@ -23,14 +23,26 @@ public class Sample
 	{
 		JXMapViewer mapViewer = new JXMapViewer();
 
+		// Create a TileFactoryInfo for OpenStreetMap
 		TileFactoryInfo info = new OSMTileFactoryInfo();
 		DefaultTileFactory tileFactory = new DefaultTileFactory(info);
 		tileFactory.setThreadPoolSize(8);
 		mapViewer.setTileFactory(tileFactory);
 
-		mapViewer.setZoom(14);
-		mapViewer.setAddressLocation(new GeoPosition(51.5, 0));
+		GeoPosition frankfurt = new GeoPosition(50.11, 8.68);
 
+		// Set the focus
+		mapViewer.setZoom(7);
+		mapViewer.setAddressLocation(frankfurt);
+	
+		// Add a selection painter
+		SelectionAdapter sa = new SelectionAdapter(mapViewer); 
+		SelectionPainter sp = new SelectionPainter(sa); 
+		mapViewer.addMouseListener(sa); 
+		mapViewer.addMouseMotionListener(sa); 
+		mapViewer.setOverlayPainter(sp);
+		
+		// Display the viewer in a JFrame
 		JFrame frame = new JFrame("JXMapviewer2 Example");
 		frame.getContentPane().add(mapViewer);
 		frame.setSize(800, 600);
