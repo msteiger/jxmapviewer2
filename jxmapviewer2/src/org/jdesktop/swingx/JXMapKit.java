@@ -641,21 +641,7 @@ public class JXMapKit extends JPanel
 		}
 		if (prov == DefaultProviders.OpenStreetMaps)
 		{
-			final int max = 17;
-			TileFactoryInfo info = new TileFactoryInfo(1, max - 2, max, 256, true, true, // tile size is 256 and x/y
-																							// orientation is normal
-					"http://tile.openstreetmap.org",// 5/15/10.png",
-					"x", "y", "z")
-			{
-				@Override
-				public String getTileUrl(int x, int y, int zoom)
-				{
-					zoom = max - zoom;
-					String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
-					return url;
-				}
-
-			};
+			TileFactoryInfo info = new OSMTileFactoryInfo();
 			TileFactory tf = new DefaultTileFactory(info);
 			setTileFactory(tf);
 			setZoom(11);
@@ -714,21 +700,7 @@ public class JXMapKit extends JPanel
 				JXMapKit kit = new JXMapKit();
 				kit.setDefaultProvider(DefaultProviders.OpenStreetMaps);
 
-				final int max = 17;
-				TileFactoryInfo info = new TileFactoryInfo(1, max - 2, max, 256, true, true, // tile size is 256 and x/y
-																								// orientation is normal
-						"http://tile.openstreetmap.org",// 5/15/10.png",
-						"x", "y", "z")
-				{
-					@Override
-					public String getTileUrl(int x, int y, int zoom)
-					{
-						zoom = max - zoom;
-						String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
-						return url;
-					}
-
-				};
+				TileFactoryInfo info = new OSMTileFactoryInfo();
 				TileFactory tf = new DefaultTileFactory(info);
 				kit.setTileFactory(tf);
 				kit.setZoom(14);
