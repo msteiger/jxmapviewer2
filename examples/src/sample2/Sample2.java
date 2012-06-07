@@ -1,5 +1,6 @@
 package sample2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
+import org.jdesktop.swingx.painter.Painter;
 
 /**
  * A simple sample application that shows
@@ -47,9 +49,11 @@ public class Sample2
 		mapViewer.setZoom(7);
 		mapViewer.setAddressLocation(frankfurt);
 		
+		// Create a track from the geo-positions
 		List<GeoPosition> track = Arrays.asList(frankfurt, wiesbaden, mainz, darmstadt, offenbach);
 		RoutePainter routePainter = new RoutePainter(track);
-		
+
+		// Create waypoints from the geo-positions
 		Set<Waypoint> waypoints = new HashSet<Waypoint>(Arrays.asList(
 				new DefaultWaypoint(frankfurt),
 				new DefaultWaypoint(wiesbaden),
@@ -57,11 +61,16 @@ public class Sample2
 				new DefaultWaypoint(darmstadt),
 				new DefaultWaypoint(offenbach)));
 
+		// Create a waypoint painter that takes all the waypoints
 		WaypointPainter waypointPainter = new WaypointPainter();
 		waypointPainter.setWaypoints(waypoints);
 		
-		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>();
-		painter.setPainters(Arrays.asList(routePainter, waypointPainter));
+		// Create a compound painter that uses both the route-painter and the waypoint-painter
+		List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+		painters.add(routePainter);
+		painters.add(waypointPainter);
+		
+		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
 		mapViewer.setOverlayPainter(painter);
 	
 		// Display the viewer in a JFrame
