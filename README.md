@@ -1,5 +1,7 @@
 #### Overview
 
+![sample2](jxmapviewer2/raw/master/images/sample2.png "Sample2")
+
 This project is based on the JXMapViewer component of SwingX-WS.
 
 The project was hosted at SwingLabs.org, but has been discontinued. We extracted the JXMapViewer part from the latest SwingX-WS version available and continue developing it.
