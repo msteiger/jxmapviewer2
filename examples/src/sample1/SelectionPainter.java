@@ -1,5 +1,5 @@
 
-package sample;
+package sample1;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

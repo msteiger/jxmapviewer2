@@ -1,5 +1,4 @@
-
-package sample;
+package sample1;
 
 import javax.swing.JFrame;
 
@@ -14,7 +13,7 @@ import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
  * a OSM map of Europe
  * @author Martin Steiger
  */
-public class Sample
+public class Sample1
 {
 	/**
 	 * @param args the program args (ignored)
