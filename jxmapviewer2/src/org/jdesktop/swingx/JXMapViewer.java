@@ -100,7 +100,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 	 * The overlay to delegate to for painting the "foreground" of the map component. This would include painting
 	 * waypoints, day/night, etc. Also receives mouse events.
 	 */
-	private Painter<JXMapViewer> overlay;
+	private Painter<? super JXMapViewer> overlay;
 
 	private boolean designTime;
 
@@ -289,9 +289,9 @@ public class JXMapViewer extends JPanel implements DesignMode
 	 * lines, or static overlays like text messages.
 	 * @param overlay the map overlay to use
 	 */
-	public void setOverlayPainter(Painter<JXMapViewer> overlay)
+	public void setOverlayPainter(Painter<? super JXMapViewer> overlay)
 	{
-		Painter<JXMapViewer> old = getOverlayPainter();
+		Painter<? super JXMapViewer> old = getOverlayPainter();
 		this.overlay = overlay;
 		firePropertyChange("mapOverlay", old, getOverlayPainter());
 		repaint();
@@ -301,7 +301,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 	 * Gets the current map overlay
 	 * @return the current map overlay
 	 */
-	public Painter<JXMapViewer> getOverlayPainter()
+	public Painter<? super JXMapViewer> getOverlayPainter()
 	{
 		return overlay;
 	}
