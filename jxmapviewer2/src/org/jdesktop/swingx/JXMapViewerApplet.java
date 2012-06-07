@@ -57,7 +57,7 @@ public class JXMapViewerApplet extends JApplet
 	{
 		kit = new JXMapKit();
 		GeoPosition sanjose = new GeoPosition(37, 20, 0, -121, -53, 0);
-		GeoPosition statlib = new GeoPosition(40, 41, 20, -74, -2, -42.4);
+		GeoPosition statlib = new GeoPosition(40, 41, 20, -74, -2, -42);
 		Set<Waypoint> set = new HashSet<Waypoint>();
 		set.add(new Waypoint(statlib));
 		set.add(new Waypoint(sanjose));

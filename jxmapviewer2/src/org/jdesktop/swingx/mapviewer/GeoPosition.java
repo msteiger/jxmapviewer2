@@ -54,8 +54,8 @@ public class GeoPosition {
      * @param lonMinutes the minutes part of the current longitude
      * @param lonSeconds the seconds part of the current longitude
      */
-    public GeoPosition(double latDegrees, double latMinutes, double latSeconds,
-            double lonDegrees, double lonMinutes, double lonSeconds) {
+    public GeoPosition(int latDegrees, int latMinutes, int latSeconds,
+    		int lonDegrees, int lonMinutes, int lonSeconds) {
         this(latDegrees + (latMinutes + latSeconds/60.0)/60.0,
              lonDegrees + (lonMinutes + lonSeconds/60.0)/60.0);
     }
