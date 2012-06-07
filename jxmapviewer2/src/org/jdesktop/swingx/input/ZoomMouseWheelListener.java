@@ -1,8 +1,10 @@
 
-package org.jdesktop.swingx;
+package org.jdesktop.swingx.input;
 
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+
+import org.jdesktop.swingx.JXMapViewer;
 
 /**
  * zooms using the mouse wheel
@@ -12,7 +14,6 @@ public class ZoomMouseWheelListener implements MouseWheelListener
 {
 	private JXMapViewer viewer;
 	
-	
 	/**
 	 * @param viewer the jxmapviewer
 	 */
@@ -20,7 +21,6 @@ public class ZoomMouseWheelListener implements MouseWheelListener
 	{
 		this.viewer = viewer;
 	}
-
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e)

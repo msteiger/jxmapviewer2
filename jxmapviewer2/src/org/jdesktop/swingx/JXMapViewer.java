@@ -28,7 +28,6 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.event.MouseInputListener;
 
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Tile;
@@ -108,11 +107,6 @@ public class JXMapViewer extends JPanel implements DesignMode
 	private boolean zoomEnabled = true;
 
 	/**
-	 * Indicates whether the component should recenter the map when the "middle" mouse button is pressed
-	 */
-	private boolean recenterOnClickEnabled = true;
-
-	/**
 	 * The overlay to delegate to for painting the "foreground" of the map component. This would include painting
 	 * waypoints, day/night, etc. Also receives mouse events.
 	 */
@@ -132,12 +126,6 @@ public class JXMapViewer extends JPanel implements DesignMode
 	{
 		factory = new EmptyTileFactory();
 		// setTileFactory(new GoogleTileFactory());
-		MouseInputListener mia = new PanMouseInputListener(this);
-		setRecenterOnClickEnabled(false);
-		this.addMouseListener(mia);
-		this.addMouseMotionListener(mia);
-		this.addMouseWheelListener(new ZoomMouseWheelListener(this));
-		this.addKeyListener(new PanKeyListener(this));
 
 		// make a dummy loading image
 		try
@@ -347,26 +335,6 @@ public class JXMapViewer extends JPanel implements DesignMode
 		double viewportX = (centr.getX() - viewportWidth / 2);
 		double viewportY = (centr.getY() - viewportHeight / 2);
 		return new Rectangle((int) viewportX, (int) viewportY, viewportWidth, viewportHeight);
-	}
-
-	/**
-	 * Sets whether the map should recenter itself on mouse clicks (middle mouse clicks?)
-	 * @param b if should recenter
-	 */
-	public void setRecenterOnClickEnabled(boolean b)
-	{
-		boolean old = isRecenterOnClickEnabled();
-		recenterOnClickEnabled = b;
-		firePropertyChange("recenterOnClickEnabled", old, isRecenterOnClickEnabled());
-	}
-
-	/**
-	 * Indicates if the map should recenter itself on mouse clicks.
-	 * @return boolean indicating if the map should recenter itself
-	 */
-	public boolean isRecenterOnClickEnabled()
-	{
-		return recenterOnClickEnabled;
 	}
 
 	/**

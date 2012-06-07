@@ -1,10 +1,12 @@
 
-package org.jdesktop.swingx;
+package org.jdesktop.swingx.input;
 
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+
+import org.jdesktop.swingx.JXMapViewer;
 
 /**
  * used to pan using the arrow keys
