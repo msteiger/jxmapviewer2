@@ -1,8 +1,9 @@
 package sample2;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JFrame;
 
@@ -48,12 +49,12 @@ public class Sample2
 		List<GeoPosition> track = Arrays.asList(frankfurt, wiesbaden, mainz, darmstadt, offenbach);
 		RoutePainter routePainter = new RoutePainter(track);
 		
-		Collection<Waypoint> waypoints = Arrays.asList(
+		Set<Waypoint> waypoints = new HashSet<Waypoint>(Arrays.asList(
 				new Waypoint(frankfurt),
 				new Waypoint(wiesbaden),
 				new Waypoint(mainz),
 				new Waypoint(darmstadt),
-				new Waypoint(offenbach));
+				new Waypoint(offenbach)));
 
 		WaypointPainter waypointPainter = new WaypointPainter();
 		waypointPainter.setWaypoints(waypoints);
