@@ -26,6 +26,7 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
+import org.jdesktop.swingx.mapviewer.DefaultWaypoint;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
@@ -677,11 +678,11 @@ public class JXMapKit extends JPanel
 			Set<Waypoint> set = new HashSet<Waypoint>();
 			if (getAddressLocation() != null)
 			{
-				set.add(new Waypoint(getAddressLocation()));
+				set.add(new DefaultWaypoint(getAddressLocation()));
 			}
 			else
 			{
-				set.add(new Waypoint(0, 0));
+				set.add(new DefaultWaypoint(0, 0));
 			}
 			return set;
 		}

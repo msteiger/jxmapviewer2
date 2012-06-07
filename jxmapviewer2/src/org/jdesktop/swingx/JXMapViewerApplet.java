@@ -12,6 +12,8 @@ package org.jdesktop.swingx;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JApplet;
+
+import org.jdesktop.swingx.mapviewer.DefaultWaypoint;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
@@ -59,8 +61,8 @@ public class JXMapViewerApplet extends JApplet
 		GeoPosition sanjose = new GeoPosition(37, 20, 0, -121, -53, 0);
 		GeoPosition statlib = new GeoPosition(40, 41, 20, -74, -2, -42);
 		Set<Waypoint> set = new HashSet<Waypoint>();
-		set.add(new Waypoint(statlib));
-		set.add(new Waypoint(sanjose));
+		set.add(new DefaultWaypoint(statlib));
+		set.add(new DefaultWaypoint(sanjose));
 		WaypointPainter wp = new WaypointPainter();
 		wp.setWaypoints(set);
 		kit.getMainMap().setOverlayPainter(wp);

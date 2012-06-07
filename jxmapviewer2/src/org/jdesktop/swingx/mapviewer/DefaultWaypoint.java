@@ -9,10 +9,12 @@
 
 package org.jdesktop.swingx.mapviewer;
 
+import org.jdesktop.beans.AbstractBean;
+
 /**
  * @author joshy
  */
-public class DefaultWaypoint extends Waypoint
+public class DefaultWaypoint extends AbstractBean implements Waypoint 
 {
 	private GeoPosition position;
 
@@ -47,7 +49,10 @@ public class DefaultWaypoint extends Waypoint
 		return position;
 	}
 
-	@Override
+	/**
+	 * Set a new GeoPosition for this Waypoint
+	 * @param coordinate a new position
+	 */
 	public void setPosition(GeoPosition coordinate)
 	{
 		GeoPosition old = getPosition();

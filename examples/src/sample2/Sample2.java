@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.OSMTileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
+import org.jdesktop.swingx.mapviewer.DefaultWaypoint;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
@@ -18,7 +19,7 @@ import org.jdesktop.swingx.painter.CompoundPainter;
 
 /**
  * A simple sample application that shows
- * a OSM map of Europe
+ * a OSM map of Europe containing a route with waypoints
  * @author Martin Steiger
  */
 public class Sample2
@@ -50,11 +51,11 @@ public class Sample2
 		RoutePainter routePainter = new RoutePainter(track);
 		
 		Set<Waypoint> waypoints = new HashSet<Waypoint>(Arrays.asList(
-				new Waypoint(frankfurt),
-				new Waypoint(wiesbaden),
-				new Waypoint(mainz),
-				new Waypoint(darmstadt),
-				new Waypoint(offenbach)));
+				new DefaultWaypoint(frankfurt),
+				new DefaultWaypoint(wiesbaden),
+				new DefaultWaypoint(mainz),
+				new DefaultWaypoint(darmstadt),
+				new DefaultWaypoint(offenbach)));
 
 		WaypointPainter waypointPainter = new WaypointPainter();
 		waypointPainter.setWaypoints(waypoints);
