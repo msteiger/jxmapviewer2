@@ -97,16 +97,6 @@ public class JXMapViewer extends JPanel implements DesignMode
 	private GeoPosition addressLocation;
 
 	/**
-	 * Specifies whether panning is enabled. Panning is being able to click and drag the map around to cause it to move
-	 */
-	private boolean panEnabled = true;
-
-	/**
-	 * Specifies whether zooming is enabled (the mouse wheel, for example, zooms)
-	 */
-	private boolean zoomEnabled = true;
-
-	/**
 	 * The overlay to delegate to for painting the "foreground" of the map component. This would include painting
 	 * waypoints, day/night, etc. Also receives mouse events.
 	 */
@@ -432,46 +422,6 @@ public class JXMapViewer extends JPanel implements DesignMode
 		this.drawTileBorders = drawTileBorders;
 		firePropertyChange("drawTileBorders", old, isDrawTileBorders());
 		repaint();
-	}
-
-	/**
-	 * A property indicating if the map should be pannable by the user using the mouse.
-	 * @return property value
-	 */
-	public boolean isPanEnabled()
-	{
-		return panEnabled;
-	}
-
-	/**
-	 * A property indicating if the map should be pannable by the user using the mouse.
-	 * @param panEnabled new property value
-	 */
-	public void setPanEnabled(boolean panEnabled)
-	{
-		boolean old = isPanEnabled();
-		this.panEnabled = panEnabled;
-		firePropertyChange("panEnabled", old, isPanEnabled());
-	}
-
-	/**
-	 * A property indicating if the map should be zoomable by the user using the mouse wheel.
-	 * @return the current property value
-	 */
-	public boolean isZoomEnabled()
-	{
-		return zoomEnabled;
-	}
-
-	/**
-	 * A property indicating if the map should be zoomable by the user using the mouse wheel.
-	 * @param zoomEnabled the new value of the property
-	 */
-	public void setZoomEnabled(boolean zoomEnabled)
-	{
-		boolean old = isZoomEnabled();
-		this.zoomEnabled = zoomEnabled;
-		firePropertyChange("zoomEnabled", old, isZoomEnabled());
 	}
 
 	/**

@@ -39,8 +39,6 @@ public class SelectionAdapter extends MouseAdapter
 		endPos.setLocation(e.getX(), e.getY());
 		
 		dragging = true;
-			
-		viewer.setPanEnabled(false);
 	}
 
 	@Override
@@ -63,7 +61,6 @@ public class SelectionAdapter extends MouseAdapter
 		if (e.getButton() != MouseEvent.BUTTON1)
 			return;
 		
-		viewer.setPanEnabled(true);
 		viewer.repaint();
 		
 		dragging = false;

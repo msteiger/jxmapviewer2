@@ -25,9 +25,6 @@ public class ZoomMouseWheelListener implements MouseWheelListener
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
-		if (viewer.isZoomEnabled())
-		{
-			viewer.setZoom(viewer.getZoom() + e.getWheelRotation());
-		}
+		viewer.setZoom(viewer.getZoom() + e.getWheelRotation());
 	}
 }

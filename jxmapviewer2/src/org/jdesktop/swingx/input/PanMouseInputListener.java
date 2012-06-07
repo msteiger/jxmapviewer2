@@ -37,6 +37,9 @@ public class PanMouseInputListener extends MouseInputAdapter
 	@Override
 	public void mouseDragged(MouseEvent evt)
 	{
+		if (!SwingUtilities.isRightMouseButton(evt))
+			return;
+
 		Point current = evt.getPoint();
 		double x = viewer.getCenter().getX() - (current.x - prev.x);
 		double y = viewer.getCenter().getY() - (current.y - prev.y);
@@ -65,6 +68,9 @@ public class PanMouseInputListener extends MouseInputAdapter
 	@Override
 	public void mouseReleased(MouseEvent evt)
 	{
+		if (!SwingUtilities.isRightMouseButton(evt))
+			return;
+
 		prev = null;
 		viewer.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
