@@ -59,7 +59,10 @@ public class SelectionAdapter extends MouseAdapter
 	{
 		if (!dragging)
 			return;
-
+		
+		if (e.getButton() != MouseEvent.BUTTON1)
+			return;
+		
 		viewer.setPanEnabled(true);
 		viewer.repaint();
 		
