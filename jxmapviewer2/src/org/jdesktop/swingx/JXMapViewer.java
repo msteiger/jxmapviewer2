@@ -15,7 +15,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -499,7 +498,10 @@ public class JXMapViewer extends JPanel implements DesignMode
 	public void setCenter(Point2D center)
 	{
 		Point2D old = this.getCenter();
-
+		
+		double centerX = center.getX();
+		double centerY = center.getY();
+		
 		if (isRestrictOutsidePanning())
 		{
 			Insets insets = getInsets();
@@ -510,15 +512,13 @@ public class JXMapViewer extends JPanel implements DesignMode
 			Rectangle newVP = calculateViewportBounds(center);
 			if (newVP.getY() < 0)
 			{
-				double centerY = viewportHeight / 2;
-				center = new Point2D.Double(center.getX(), centerY);
+				centerY = viewportHeight / 2;
 			}
 
 			// don't let the user pan over the left edge
 			if (!isHorizontalWrapped() && newVP.getX() < 0)
 			{
-				double centerX = viewportWidth / 2;
-				center = new Point2D.Double(centerX, center.getY());
+				centerX = viewportWidth / 2;
 			}
 
 			// don't let the user pan over the bottom edge
@@ -526,40 +526,32 @@ public class JXMapViewer extends JPanel implements DesignMode
 			int mapHeight = (int) mapSize.getHeight() * getTileFactory().getTileSize(getZoom());
 			if (newVP.getY() + newVP.getHeight() > mapHeight)
 			{
-				double centerY = mapHeight - viewportHeight / 2;
-				center = new Point2D.Double(center.getX(), centerY);
+				centerY = mapHeight - viewportHeight / 2;
 			}
 
 			// don't let the user pan over the right edge
 			int mapWidth = (int) mapSize.getWidth() * getTileFactory().getTileSize(getZoom());
 			if (!isHorizontalWrapped() && (newVP.getX() + newVP.getWidth() > mapWidth))
 			{
-				double centerX = mapWidth - viewportWidth / 2;
-				center = new Point2D.Double(centerX, center.getY());
+				centerX = mapWidth - viewportWidth / 2;
 			}
 
 			// if map is to small then just center it vert
 			if (mapHeight < newVP.getHeight())
 			{
-				double centerY = mapHeight / 2;// viewportHeight/2;// - mapHeight/2;
-				center = new Point2D.Double(center.getX(), centerY);
+				centerY = mapHeight / 2;// viewportHeight/2;// - mapHeight/2;
 			}
 
 			// if map is too small then just center it horiz
 			if (!isHorizontalWrapped() && mapWidth < newVP.getWidth())
 			{
-				double centerX = mapWidth / 2;
-				center = new Point2D.Double(centerX, center.getY());
+				centerX = mapWidth / 2;
 			}
 		}
 
-		// joshy: this is an evil hack to force a property change event
-		// i don't know why it doesn't work normally
-		old = new Point(5, 6);
-
 		GeoPosition oldGP = this.getCenterPosition();
-		this.center = center;
-		firePropertyChange("center", old, this.center);// .getCenter());
+		this.center = new Point2D.Double(centerX, centerY);
+		firePropertyChange("center", old, this.center);
 		firePropertyChange("centerPosition", oldGP, this.getCenterPosition());
 		repaint();
 	}
