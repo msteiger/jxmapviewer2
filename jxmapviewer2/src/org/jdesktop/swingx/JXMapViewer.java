@@ -105,7 +105,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 
 	private Image loadingImage;
 
-	private boolean restrictOutsidePanning = false;
+	private boolean restrictOutsidePanning = true;
 	private boolean horizontalWrapped = true;
 
 	/**
@@ -501,7 +501,11 @@ public class JXMapViewer extends JPanel implements DesignMode
 		
 		double centerX = center.getX();
 		double centerY = center.getY();
-		
+
+		Dimension mapSize = getTileFactory().getMapSize(getZoom());
+		int mapHeight = (int) mapSize.getHeight() * getTileFactory().getTileSize(getZoom());
+		int mapWidth = (int) mapSize.getWidth() * getTileFactory().getTileSize(getZoom());
+
 		if (isRestrictOutsidePanning())
 		{
 			Insets insets = getInsets();
@@ -522,15 +526,12 @@ public class JXMapViewer extends JPanel implements DesignMode
 			}
 
 			// don't let the user pan over the bottom edge
-			Dimension mapSize = getTileFactory().getMapSize(getZoom());
-			int mapHeight = (int) mapSize.getHeight() * getTileFactory().getTileSize(getZoom());
 			if (newVP.getY() + newVP.getHeight() > mapHeight)
 			{
 				centerY = mapHeight - viewportHeight / 2;
 			}
 
 			// don't let the user pan over the right edge
-			int mapWidth = (int) mapSize.getWidth() * getTileFactory().getTileSize(getZoom());
 			if (!isHorizontalWrapped() && (newVP.getX() + newVP.getWidth() > mapWidth))
 			{
 				centerX = mapWidth - viewportWidth / 2;
@@ -549,6 +550,19 @@ public class JXMapViewer extends JPanel implements DesignMode
 			}
 		}
 
+		// If center is outside (0, 0,mapWidth, mapHeight)
+		// compute modulo to get it back in.
+		{
+			centerX = centerX % mapWidth; 
+			centerY = centerY % mapHeight; 
+			
+			if (centerX < 0)
+				centerX += mapWidth;
+			
+			if (centerY < 0)
+				centerY += mapHeight;
+		}
+		
 		GeoPosition oldGP = this.getCenterPosition();
 		this.center = new Point2D.Double(centerX, centerY);
 		firePropertyChange("center", old, this.center);
