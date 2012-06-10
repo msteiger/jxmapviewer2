@@ -11,8 +11,8 @@ package org.jdesktop.swingx.mapviewer;
 
 import java.awt.EventQueue;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
 import java.lang.ref.SoftReference;
+
 import javax.swing.SwingUtilities;
 
 import org.jdesktop.beans.AbstractBean;
@@ -171,30 +171,6 @@ public class Tile extends AbstractBean
 	{
 		return zoom;
 	}
-
-	// ////////////////JavaOne Hack///////////////////
-	private PropertyChangeListener uniqueListener = null;
-
-	/**
-	 * Adds a single property change listener. If a listener has been previously added then it will be replaced by the
-	 * new one. TODO: remove
-	 * @param propertyName the property name
-	 * @param listener the listener
-	 */
-	public void addUniquePropertyChangeListener(String propertyName, PropertyChangeListener listener)
-	{
-		if (uniqueListener != null && uniqueListener != listener)
-		{
-			removePropertyChangeListener(propertyName, uniqueListener);
-		}
-		if (uniqueListener != listener)
-		{
-			uniqueListener = listener;
-			addPropertyChangeListener(propertyName, uniqueListener);
-		}
-	}
-
-	// ///////////////End JavaOne Hack/////////////////
 
 	/**
 	 * @param propertyName the property name

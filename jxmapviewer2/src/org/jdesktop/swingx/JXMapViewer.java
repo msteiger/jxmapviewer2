@@ -223,7 +223,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 						new Rectangle(itpx * size - viewportBounds.x, itpy * size - viewportBounds.y, size, size)))
 				{
 					Tile tile = getTileFactory().getTile(itpx, itpy, zoom);
-					tile.addUniquePropertyChangeListener("loaded", tileLoadListener); // this is a filthy hack
+					tile.addPropertyChangeListener("loaded", tileLoadListener);
 					int ox = ((itpx * getTileFactory().getTileSize(zoom)) - viewportBounds.x);
 					int oy = ((itpy * getTileFactory().getTileSize(zoom)) - viewportBounds.y);
 
