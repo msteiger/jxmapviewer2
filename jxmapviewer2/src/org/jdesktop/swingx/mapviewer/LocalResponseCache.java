@@ -18,46 +18,39 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author joshy
  */
 public class LocalResponseCache extends ResponseCache
 {
-	private static final boolean IS_CACHE_DISABLED = true;
-	static
-	{
-		if (IS_CACHE_DISABLED)
-		{
-			System.out.println("[AERITH] Cache disabled");
-		}
-	}
-
-	private static final File CACHE_DIR = new File(System.getProperty("user.home") + File.separator + ".aerith");
-
-	static
-	{
-		if (!CACHE_DIR.exists())
-		{
-			CACHE_DIR.mkdir();
-		}
-	}
+	private static final Log log = LogFactory.getLog(LocalResponseCache.class);
+	
+	private final File CACHE_DIR;
 
 	/**
 	 * Private constructor to prevent instantiation.
+	 * @param cacheDir the cache directory
 	 */
-	private LocalResponseCache()
+	private LocalResponseCache(File cacheDir)
 	{
+		this.CACHE_DIR = cacheDir;
+
+		if (!cacheDir.exists())
+		{
+			cacheDir.mkdirs();
+		}
 	}
 
 	/**
 	 * Sets this cache as default response cache
+	 * @param cacheDir the cache directory
 	 */
-	public static void installResponseCache()
+	public static void installResponseCache(File cacheDir)
 	{
-		if (!IS_CACHE_DISABLED)
-		{
-			ResponseCache.setDefault(new LocalResponseCache());
-		}
+		ResponseCache.setDefault(new LocalResponseCache(cacheDir));
 	}
 
 	/**
@@ -65,11 +58,20 @@ public class LocalResponseCache extends ResponseCache
 	 * @param remoteUri the remote URI
 	 * @return the corresponding local file
 	 */
-	public static File getLocalFile(URI remoteUri)
+	public File getLocalFile(URI remoteUri)
 	{
-		int code = remoteUri.hashCode();
-		String fileName = Integer.toString(code >= 0 ? code : -code);
-		return new File(CACHE_DIR, fileName);
+		String name = remoteUri.getHost() + remoteUri.getPath();
+		
+		name = name.replace('?', '$');
+		name = name.replace('*', '$');
+		name = name.replace(':', '$');
+		name = name.replace('<', '$');
+		name = name.replace('>', '$');
+		name = name.replace('"', '$');
+		
+		File f = new File(CACHE_DIR, name);
+		
+		return f;
 	}
 
 	/**
@@ -86,12 +88,12 @@ public class LocalResponseCache extends ResponseCache
 		}
 		catch (MalformedURLException ex)
 		{
-			ex.printStackTrace();
+			log.error("An exception occurred", ex);
 			return false;
 		}
 		catch (IOException ex)
 		{
-			ex.printStackTrace();
+			log.error("An exception occurred", ex);
 			return false;
 		}
 		if (!(conn instanceof HttpURLConnection))
@@ -112,7 +114,7 @@ public class LocalResponseCache extends ResponseCache
 		}
 		catch (IOException ex)
 		{
-			// ex.printStackTrace();
+			// log.error("An exception occurred", ex);();
 			return false;
 		}
 		finally
@@ -158,6 +160,7 @@ public class LocalResponseCache extends ResponseCache
 		}
 
 		File localFile = getLocalFile(uri);
+		new File(localFile.getParent()).mkdirs();
 		return new LocalCacheRequest(localFile);
 	}
 
@@ -175,7 +178,7 @@ public class LocalResponseCache extends ResponseCache
 			catch (FileNotFoundException ex)
 			{
 				// should not happen, since we already checked for existence
-				ex.printStackTrace();
+				log.error("An exception occurred", ex);
 			}
 			this.headers = rqstHeaders;
 		}
@@ -207,8 +210,8 @@ public class LocalResponseCache extends ResponseCache
 			}
 			catch (FileNotFoundException ex)
 			{
-				// should not happen
-				ex.printStackTrace();
+				// should not happen if cache dir is valid
+				log.error("An exception occurred", ex);
 			}
 		}
 
