@@ -9,9 +9,8 @@
 
 package org.jdesktop.swingx.mapviewer;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -21,8 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jdesktop.swingx.JXMapViewer;
 
 /**
- * This is a standard waypoint renderer. It draws all 
- * waypoints as blue circles with crosshairs over the waypoint center
+ * This is a standard waypoint renderer.
  * @author joshy
  */
 public class DefaultWaypointRenderer implements WaypointRenderer
@@ -47,21 +45,16 @@ public class DefaultWaypointRenderer implements WaypointRenderer
 	}
 
 	@Override
-	public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint waypoint)
+	public void paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint w)
 	{
-		if (img != null)
-		{
-			g.drawImage(img, -img.getWidth() / 2, -img.getHeight(), null);
-		}
-		else
-		{
-			g.setStroke(new BasicStroke(3f));
-			g.setColor(Color.BLUE);
-			g.drawOval(-10, -10, 20, 20);
-			g.setStroke(new BasicStroke(1f));
-			g.drawLine(-10, 0, 10, 0);
-			g.drawLine(0, -10, 0, 10);
-		}
-		return false;
+		if (img == null)
+			return;
+
+		Point2D point = map.getTileFactory().geoToPixel(w.getPosition(), map.getZoom());
+		
+		int x = (int)point.getX() -img.getWidth() / 2;
+		int y = (int)point.getY() -img.getHeight();
+		
+		g.drawImage(img, x, y, null);
 	}
 }

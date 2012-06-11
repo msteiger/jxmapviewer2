@@ -25,8 +25,7 @@ public interface WaypointRenderer
      * @param g the graphics2D object 
      * @param map the map
      * @param waypoint the waypoint
-     * @return TODO: unknown 
      */
-    public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint waypoint);
+    public void paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint waypoint);
     
 }
