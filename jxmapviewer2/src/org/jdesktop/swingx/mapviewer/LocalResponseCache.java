@@ -28,15 +28,19 @@ public class LocalResponseCache extends ResponseCache
 {
 	private static final Log log = LogFactory.getLog(LocalResponseCache.class);
 	
-	private final File CACHE_DIR;
+	private final File cacheDir;
+
+	private boolean checkForUpdates;
 
 	/**
 	 * Private constructor to prevent instantiation.
 	 * @param cacheDir the cache directory
+	 * @param checkForUpdates true if the URL is queried for newer versions of a file first
 	 */
-	private LocalResponseCache(File cacheDir)
+	private LocalResponseCache(File cacheDir, boolean checkForUpdates)
 	{
-		this.CACHE_DIR = cacheDir;
+		this.cacheDir = cacheDir;
+		this.checkForUpdates = checkForUpdates;
 
 		if (!cacheDir.exists())
 		{
@@ -47,10 +51,11 @@ public class LocalResponseCache extends ResponseCache
 	/**
 	 * Sets this cache as default response cache
 	 * @param cacheDir the cache directory
+	 * @param checkForUpdates true if the URL is queried for newer versions of a file first
 	 */
-	public static void installResponseCache(File cacheDir)
+	public static void installResponseCache(File cacheDir, boolean checkForUpdates)
 	{
-		ResponseCache.setDefault(new LocalResponseCache(cacheDir));
+		ResponseCache.setDefault(new LocalResponseCache(cacheDir, checkForUpdates));
 	}
 
 	/**
@@ -69,7 +74,7 @@ public class LocalResponseCache extends ResponseCache
 		name = name.replace('>', '$');
 		name = name.replace('"', '$');
 		
-		File f = new File(CACHE_DIR, name);
+		File f = new File(cacheDir, name);
 		
 		return f;
 	}
@@ -135,10 +140,13 @@ public class LocalResponseCache extends ResponseCache
 			return null;
 		}
 
-		if (isUpdateAvailable(uri, localFile))
+		if (checkForUpdates)
 		{
-			// there is an update available, so don't return cached version
-			return null;
+			if (isUpdateAvailable(uri, localFile))
+			{
+				// there is an update available, so don't return cached version
+				return null;
+			}
 		}
 
 		if (!localFile.exists())
