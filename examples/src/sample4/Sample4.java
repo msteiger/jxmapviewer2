@@ -1,5 +1,6 @@
 package sample4;
 
+import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,23 +12,18 @@ import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
 import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.OSMTileFactoryInfo;
 import org.jdesktop.swingx.VirtualEarthTileFactoryInfo;
 import org.jdesktop.swingx.input.CenterMapListener;
 import org.jdesktop.swingx.input.PanKeyListener;
 import org.jdesktop.swingx.input.PanMouseInputListener;
 import org.jdesktop.swingx.input.ZoomMouseWheelListener;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
-import org.jdesktop.swingx.mapviewer.DefaultWaypoint;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.LocalResponseCache;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
-import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
 import org.jdesktop.swingx.painter.Painter;
-
-import sample2.RoutePainter;
 
 /**
  * A simple sample application that shows
@@ -60,7 +56,7 @@ public class Sample4
 		GeoPosition offenbach = new GeoPosition(50,  6, 0, 8, 46, 0);
 
 		// Set the focus
-		mapViewer.setZoom(7);
+		mapViewer.setZoom(10);
 		mapViewer.setAddressLocation(frankfurt);
 	
 		// Add interactions
@@ -71,24 +67,21 @@ public class Sample4
 		mapViewer.addMouseWheelListener(new ZoomMouseWheelListener(mapViewer));
 		mapViewer.addKeyListener(new PanKeyListener(mapViewer));
 
-		List<GeoPosition> track = Arrays.asList(frankfurt, wiesbaden, mainz, darmstadt, offenbach);
-		RoutePainter routePainter = new RoutePainter(track);
-
 		// Create waypoints from the geo-positions
-		Set<Waypoint> waypoints = new HashSet<Waypoint>(Arrays.asList(
-				new DefaultWaypoint(frankfurt),
-				new DefaultWaypoint(wiesbaden),
-				new DefaultWaypoint(mainz),
-				new DefaultWaypoint(darmstadt),
-				new DefaultWaypoint(offenbach)));
+		Set<MyWaypoint> waypoints = new HashSet<MyWaypoint>(Arrays.asList(
+				new MyWaypoint("F", Color.ORANGE, frankfurt),
+				new MyWaypoint("W", Color.CYAN, wiesbaden),
+				new MyWaypoint("M", Color.GRAY, mainz),
+				new MyWaypoint("D", Color.MAGENTA, darmstadt),
+				new MyWaypoint("O", Color.GREEN, offenbach)));
 
 		// Create a waypoint painter that takes all the waypoints
-		WaypointPainter waypointPainter = new WaypointPainter();
+		WaypointPainter<MyWaypoint> waypointPainter = new WaypointPainter<MyWaypoint>();
 		waypointPainter.setWaypoints(waypoints);
+		waypointPainter.setRenderer(new FancyWaypointRenderer());
 		
 		// Create a compound painter that uses both the route-painter and the waypoint-painter
 		List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
-		painters.add(routePainter);
 		painters.add(waypointPainter);
 		
 		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);

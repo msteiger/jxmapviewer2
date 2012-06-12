@@ -62,7 +62,7 @@ public class Sample2
 				new DefaultWaypoint(offenbach)));
 
 		// Create a waypoint painter that takes all the waypoints
-		WaypointPainter waypointPainter = new WaypointPainter();
+		WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<Waypoint>();
 		waypointPainter.setWaypoints(waypoints);
 		
 		// Create a compound painter that uses both the route-painter and the waypoint-painter

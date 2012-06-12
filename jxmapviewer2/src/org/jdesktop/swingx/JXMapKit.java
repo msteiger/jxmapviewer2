@@ -670,7 +670,7 @@ public class JXMapKit extends JPanel
 		}
 	};
 
-	private WaypointPainter addressLocationPainter = new WaypointPainter()
+	private WaypointPainter<Waypoint> addressLocationPainter = new WaypointPainter<Waypoint>()
 	{
 		@Override
 		public Set<Waypoint> getWaypoints()

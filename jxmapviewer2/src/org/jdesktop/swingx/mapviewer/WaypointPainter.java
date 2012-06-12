@@ -11,6 +11,7 @@ package org.jdesktop.swingx.mapviewer;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,12 +21,13 @@ import org.jdesktop.swingx.painter.AbstractPainter;
 /**
  * Paints waypoints on the JXMapViewer. This is an 
  * instance of Painter that only can draw on to JXMapViewers.
+ * @param <W> the waypoint type
  * @author rbair
  */
-public class WaypointPainter extends AbstractPainter<JXMapViewer>
+public class WaypointPainter<W extends Waypoint> extends AbstractPainter<JXMapViewer>
 {
-	private WaypointRenderer renderer = new DefaultWaypointRenderer();
-	private Set<Waypoint> waypoints;
+	private WaypointRenderer<? super W> renderer = new DefaultWaypointRenderer();
+	private Set<W> waypoints = new HashSet<W>();
 
 	/**
 	 * Creates a new instance of WaypointPainter
@@ -34,14 +36,13 @@ public class WaypointPainter extends AbstractPainter<JXMapViewer>
 	{
 		setAntialiasing(true);
 		setCacheable(false);
-		waypoints = new HashSet<Waypoint>();
 	}
 
 	/**
 	 * Sets the waypoint renderer to use when painting waypoints
 	 * @param r the new WaypointRenderer to use
 	 */
-	public void setRenderer(WaypointRenderer r)
+	public void setRenderer(WaypointRenderer<W> r)
 	{
 		this.renderer = r;
 	}
@@ -50,18 +51,19 @@ public class WaypointPainter extends AbstractPainter<JXMapViewer>
 	 * Gets the current set of waypoints to paint
 	 * @return a typed Set of Waypoints
 	 */
-	public Set<Waypoint> getWaypoints()
+	public Set<W> getWaypoints()
 	{
-		return waypoints;
+		return Collections.unmodifiableSet(waypoints);
 	}
 
 	/**
 	 * Sets the current set of waypoints to paint
 	 * @param waypoints the new Set of Waypoints to use
 	 */
-	public void setWaypoints(Set<Waypoint> waypoints)
+	public void setWaypoints(Set<? extends W> waypoints)
 	{
-		this.waypoints = waypoints;
+		this.waypoints.clear();
+		this.waypoints.addAll(waypoints);
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class WaypointPainter extends AbstractPainter<JXMapViewer>
 
 		g.translate(-viewportBounds.getX(), -viewportBounds.getY());
 
-		for (Waypoint w : getWaypoints())
+		for (W w : getWaypoints())
 		{
 			renderer.paintWaypoint(g, map, w);
 		}

@@ -23,7 +23,7 @@ import org.jdesktop.swingx.JXMapViewer;
  * This is a standard waypoint renderer.
  * @author joshy
  */
-public class DefaultWaypointRenderer implements WaypointRenderer
+public class DefaultWaypointRenderer implements WaypointRenderer<Waypoint>
 {
 	private static final Log log = LogFactory.getLog(DefaultWaypointRenderer.class);
 	
