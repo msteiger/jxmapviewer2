@@ -28,7 +28,7 @@ import org.jdesktop.swingx.painter.AbstractPainter;
 public class WaypointPainter extends AbstractPainter<JXMapViewer>
 {
 	private WaypointRenderer renderer = new DefaultWaypointRenderer();
-	private Set<Waypoint> waypoints;
+	private Set<? extends Waypoint> waypoints;
 
 	/**
 	 * Creates a new instance of WaypointPainter
@@ -53,7 +53,7 @@ public class WaypointPainter extends AbstractPainter<JXMapViewer>
 	 * Gets the current set of waypoints to paint
 	 * @return a typed Set of Waypoints
 	 */
-	public Set<Waypoint> getWaypoints()
+	public Set<? extends Waypoint> getWaypoints()
 	{
 		return waypoints;
 	}
@@ -62,7 +62,7 @@ public class WaypointPainter extends AbstractPainter<JXMapViewer>
 	 * Sets the current set of waypoints to paint
 	 * @param waypoints the new Set of Waypoints to use
 	 */
-	public void setWaypoints(Set<Waypoint> waypoints)
+	public void setWaypoints(Set<? extends Waypoint> waypoints)
 	{
 		this.waypoints = waypoints;
 	}
