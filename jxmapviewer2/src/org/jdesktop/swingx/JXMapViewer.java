@@ -241,11 +241,23 @@ public class JXMapViewer extends JPanel implements DesignMode
 					}
 					else
 					{
-						int imageX = (getTileFactory().getTileSize(zoom) - getLoadingImage().getWidth(null)) / 2;
-						int imageY = (getTileFactory().getTileSize(zoom) - getLoadingImage().getHeight(null)) / 2;
-						g.setColor(Color.GRAY);
-						g.fillRect(ox, oy, size, size);
-						g.drawImage(getLoadingImage(), ox + imageX, oy + imageY, null);
+						// Use tile at higher zoom level with 200% magnification
+						Tile superTile = getTileFactory().getTile(itpx / 2, itpy / 2, zoom + 1);
+
+						if (superTile.isLoaded())
+						{
+							int offX = (itpx % 2) * size / 2;
+							int offY = (itpy % 2) * size / 2;
+							g.drawImage(superTile.getImage(), ox, oy, ox + size, oy + size, offX, offY, offX + size / 2, offY + size / 2, null);
+						}
+						else
+						{
+							int imageX = (getTileFactory().getTileSize(zoom) - getLoadingImage().getWidth(null)) / 2;
+							int imageY = (getTileFactory().getTileSize(zoom) - getLoadingImage().getHeight(null)) / 2;
+							g.setColor(Color.GRAY);
+							g.fillRect(ox, oy, size, size);
+							g.drawImage(getLoadingImage(), ox + imageX, oy + imageY, null);
+						}
 					}
 					if (isDrawTileBorders())
 					{
