@@ -17,7 +17,7 @@ import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
  */
 public class OSMTileFactoryInfo extends TileFactoryInfo
 {
-	private static final int max = 17;
+	private static final int max = 19;
 
 	/**
 	 * Default constructor
