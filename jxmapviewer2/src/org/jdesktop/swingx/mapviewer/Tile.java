@@ -151,7 +151,12 @@ public class Tile extends AbstractBean
 		if (img == null)
 		{
 			setLoaded(false);
-			dtf.startLoading(this);
+			
+			// tile factory can be null if the tile has invalid coords or zoom
+			if (dtf != null)
+			{
+				dtf.startLoading(this);
+			}
 		}
 
 		return img;
