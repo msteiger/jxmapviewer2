@@ -149,12 +149,6 @@ public class LocalResponseCache extends ResponseCache
 			}
 		}
 
-		if (!localFile.exists())
-		{
-			// the file isn't already in our cache, return null
-			return null;
-		}
-
 		return new LocalCacheResponse(localFile, rqstHeaders);
 	}
 
