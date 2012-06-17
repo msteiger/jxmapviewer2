@@ -1,4 +1,4 @@
-package sample2;
+package sample2_waypoints;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,7 +74,7 @@ public class Sample2
 		mapViewer.setOverlayPainter(painter);
 	
 		// Display the viewer in a JFrame
-		JFrame frame = new JFrame("JXMapviewer2 Example");
+		JFrame frame = new JFrame("JXMapviewer2 Example 2");
 		frame.getContentPane().add(mapViewer);
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

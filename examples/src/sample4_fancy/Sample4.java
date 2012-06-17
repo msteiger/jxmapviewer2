@@ -1,4 +1,4 @@
-package sample4;
+package sample4_fancy;
 
 import java.awt.Color;
 import java.io.File;
@@ -79,7 +79,7 @@ public class Sample4
 		mapViewer.setOverlayPainter(waypointPainter);
 
 		// Display the viewer in a JFrame
-		JFrame frame = new JFrame("JXMapviewer2 Example");
+		JFrame frame = new JFrame("JXMapviewer2 Example 4");
 		frame.getContentPane().add(mapViewer);
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

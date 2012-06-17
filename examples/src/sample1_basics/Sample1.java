@@ -1,4 +1,4 @@
-package sample1;
+package sample1_basics;
 
 import javax.swing.JFrame;
 
@@ -37,7 +37,7 @@ public class Sample1
 		mapViewer.setAddressLocation(frankfurt);
 		
 		// Display the viewer in a JFrame
-		JFrame frame = new JFrame("JXMapviewer2 Example");
+		JFrame frame = new JFrame("JXMapviewer2 Example 1");
 		frame.getContentPane().add(mapViewer);
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

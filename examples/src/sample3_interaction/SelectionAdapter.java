@@ -1,5 +1,5 @@
 
-package sample3;
+package sample3_interaction;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;

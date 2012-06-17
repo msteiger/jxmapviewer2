@@ -1,5 +1,5 @@
 
-package sample4;
+package sample4_fancy;
 
 import java.awt.Color;
 

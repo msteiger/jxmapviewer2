@@ -1,5 +1,5 @@
 
-package sample2;
+package sample2_waypoints;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

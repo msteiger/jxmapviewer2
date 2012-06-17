@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package sample4;
+package sample4_fancy;
 
 import java.awt.Color;
 import java.awt.FontMetrics;

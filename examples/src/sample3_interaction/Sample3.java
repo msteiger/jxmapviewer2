@@ -1,4 +1,4 @@
-package sample3;
+package sample3_interaction;
 
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
@@ -58,7 +58,7 @@ public class Sample3
 		mapViewer.setOverlayPainter(sp);
 		
 		// Display the viewer in a JFrame
-		JFrame frame = new JFrame("JXMapviewer2 Example");
+		JFrame frame = new JFrame("JXMapviewer2 Example 3");
 		frame.getContentPane().add(mapViewer);
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
