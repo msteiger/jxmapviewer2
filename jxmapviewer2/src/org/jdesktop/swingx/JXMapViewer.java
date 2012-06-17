@@ -32,6 +32,7 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Tile;
 import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
+import org.jdesktop.swingx.mapviewer.TileListener;
 import org.jdesktop.swingx.mapviewer.empty.EmptyTileFactory;
 import org.jdesktop.swingx.painter.Painter;
 
@@ -222,7 +223,6 @@ public class JXMapViewer extends JPanel implements DesignMode
 						new Rectangle(itpx * size - viewportBounds.x, itpy * size - viewportBounds.y, size, size)))
 				{
 					Tile tile = getTileFactory().getTile(itpx, itpy, zoom);
-					tile.addUniquePropertyChangeListener("loaded", tileLoadListener);	// this is a filthy hack
 					int ox = ((itpx * getTileFactory().getTileSize(zoom)) - viewportBounds.x);
 					int oy = ((itpy * getTileFactory().getTileSize(zoom)) - viewportBounds.y);
 
@@ -472,8 +472,13 @@ public class JXMapViewer extends JPanel implements DesignMode
 	 */
 	public void setTileFactory(TileFactory factory)
 	{
+		this.factory.removeTileListener(tileLoadListener);
+		
 		this.factory = factory;
 		this.setZoom(factory.getInfo().getDefaultZoomLevel());
+		
+		factory.addTileListener(tileLoadListener);
+
 	}
 
 	/**
@@ -641,17 +646,12 @@ public class JXMapViewer extends JPanel implements DesignMode
 	}
 
 	// a property change listener which forces repaints when tiles finish loading
-	private TileLoadListener tileLoadListener = new TileLoadListener();
-
-	private final class TileLoadListener implements PropertyChangeListener
+	private TileListener tileLoadListener = new TileListener()
 	{
 		@Override
-		public void propertyChange(PropertyChangeEvent evt)
+		public void tileLoaded(Tile tile)
 		{
-			if ("loaded".equals(evt.getPropertyName()) && Boolean.TRUE.equals(evt.getNewValue()))
-			{
-				Tile t = (Tile) evt.getSource();
-				if (t.getZoom() == getZoom())
+				if (tile.getZoom() == getZoom())
 				{
 					repaint();
 					/* this optimization doesn't save much and it doesn't work if you
@@ -671,8 +671,8 @@ public class JXMapViewer extends JPanel implements DesignMode
 					}*/
 				}
 			}
-		}
-	}
+			
+	};
 
 	/**
 	 * @return true if panning is restricted or not

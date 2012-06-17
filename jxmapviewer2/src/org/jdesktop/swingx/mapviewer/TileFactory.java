@@ -11,6 +11,8 @@ package org.jdesktop.swingx.mapviewer;
 
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jdesktop.swingx.mapviewer.util.GeoUtil;
 
@@ -20,8 +22,8 @@ import org.jdesktop.swingx.mapviewer.util.GeoUtil;
  */
 public abstract class TileFactory
 {
-
 	private TileFactoryInfo info;
+	private List<TileListener> tileListeners = new ArrayList<TileListener>();
 
 	/**
 	 * Creates a new instance of TileFactory
@@ -96,6 +98,36 @@ public abstract class TileFactory
 	public TileFactoryInfo getInfo()
 	{
 		return info;
+	}
+	
+	/**
+	 * Adds a tile listener
+	 * @param listener the listener
+	 */
+	public void addTileListener(TileListener listener)
+	{
+		tileListeners.add(listener);
+	}
+	
+	/**
+	 * Removes a tile listener
+	 * @param listener the listener
+	 */
+	public void removeTileListener(TileListener listener)
+	{
+		tileListeners.remove(listener);
+	}
+	
+	/**
+	 * Notifies all tile listeners
+	 * @param tile the tile
+	 */
+	protected void fireTileLoadedEvent(Tile tile)
+	{
+		for (TileListener listener : tileListeners)
+		{
+			listener.tileLoaded(tile);
+		}
 	}
 
 	/**

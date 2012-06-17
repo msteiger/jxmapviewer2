@@ -334,6 +334,7 @@ public abstract class AbstractTileFactory extends TileFactory
 							{
 								tile.image = new SoftReference<BufferedImage>(i);
 								tile.setLoaded(true);
+								fireTileLoadedEvent(tile);
 							}
 						});
 					}
