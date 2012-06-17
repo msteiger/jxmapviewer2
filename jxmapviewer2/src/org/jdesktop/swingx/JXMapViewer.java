@@ -20,8 +20,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.DesignMode;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.Set;
 
