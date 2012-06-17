@@ -158,7 +158,7 @@ public class CompoundPainter<T> extends AbstractPainter<T>
 	 */
 	public void setPainters(List<? extends Painter<T>> painters)
 	{
-		Collection<Painter<T>> old = getPainters();
+		Collection<Painter<T>> old = new ArrayList<Painter<T>>(getPainters());
 
 		for (Painter<T> p : old)
 		{
@@ -201,6 +201,25 @@ public class CompoundPainter<T> extends AbstractPainter<T>
 			l = Arrays.asList(painters);
 
 		setPainters(l);
+	}
+	
+	/**
+	 * Adds a painter to the queue of painters
+	 * @param painter the painter that is added
+	 */
+	public void addPainter(Painter<T> painter)
+	{
+		Collection<Painter<T>> old = new ArrayList<Painter<T>>(getPainters());
+		
+		this.painters.add(painter);	
+		
+		if (painter instanceof AbstractPainter)
+		{
+			((AbstractPainter<?>) painter).addPropertyChangeListener(handler);
+		}
+
+		setDirty(true);
+		firePropertyChange("painters", old, getPainters());
 	}
 
 	/**
