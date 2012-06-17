@@ -25,21 +25,16 @@ public class Sample1
 		// Create a TileFactoryInfo for OpenStreetMap
 		TileFactoryInfo info = new OSMTileFactoryInfo();
 		DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-		tileFactory.setThreadPoolSize(8);
 		mapViewer.setTileFactory(tileFactory);
-
-		GeoPosition frankfurt = new GeoPosition(50.11, 8.68);
+		
+		// Use 8 threads in parallel to load the tiles
+		tileFactory.setThreadPoolSize(8);
 
 		// Set the focus
+		GeoPosition frankfurt = new GeoPosition(50.11, 8.68);
+
 		mapViewer.setZoom(7);
 		mapViewer.setAddressLocation(frankfurt);
-	
-		// Add a selection painter
-		SelectionAdapter sa = new SelectionAdapter(mapViewer); 
-		SelectionPainter sp = new SelectionPainter(sa); 
-		mapViewer.addMouseListener(sa); 
-		mapViewer.addMouseMotionListener(sa); 
-		mapViewer.setOverlayPainter(sp);
 		
 		// Display the viewer in a JFrame
 		JFrame frame = new JFrame("JXMapviewer2 Example");

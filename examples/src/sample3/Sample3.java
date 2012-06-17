@@ -49,7 +49,14 @@ public class Sample3
 		mapViewer.addMouseWheelListener(new ZoomMouseWheelListener(mapViewer));
 		
 		mapViewer.addKeyListener(new PanKeyListener(mapViewer));
-
+		
+		// Add a selection painter
+		SelectionAdapter sa = new SelectionAdapter(mapViewer); 
+		SelectionPainter sp = new SelectionPainter(sa); 
+		mapViewer.addMouseListener(sa); 
+		mapViewer.addMouseMotionListener(sa); 
+		mapViewer.setOverlayPainter(sp);
+		
 		// Display the viewer in a JFrame
 		JFrame frame = new JFrame("JXMapviewer2 Example");
 		frame.getContentPane().add(mapViewer);
