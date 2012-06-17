@@ -345,17 +345,13 @@ public abstract class AbstractTileFactory extends TileFactory
 				}
 				catch (Throwable e)
 				{
-					log.warn("Failed to load a tile at url: " + tile.getURL() + ", retrying", e);
-					// /temp
-					Object oldError = tile.getError();
-					tile.setError(e);
-					tile.firePropertyChangeOnEDT("loadingError", oldError, e);
 					if (trys == 0)
 					{
-						tile.firePropertyChangeOnEDT("unrecoverableError", null, e);
+						log.error("Failed to load a tile at url: " + tile.getURL() + ", stopping", e);
 					}
 					else
 					{
+						log.warn("Failed to load a tile at url: " + tile.getURL() + ", retrying", e);
 						trys--;
 					}
 				}

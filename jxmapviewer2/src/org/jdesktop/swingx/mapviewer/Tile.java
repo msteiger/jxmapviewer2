@@ -9,11 +9,8 @@
 
 package org.jdesktop.swingx.mapviewer;
 
-import java.awt.EventQueue;
 import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
-
-import javax.swing.SwingUtilities;
 
 import org.jdesktop.beans.AbstractBean;
 
@@ -43,11 +40,6 @@ public class Tile extends AbstractBean
 	// of most recently used tiles.
 	// private static final Map<URI, BufferedImage> recentlyAccessed = new HashMap<URI, BufferedImage>();
 	// private static final TileCache cache = new TileCache();
-
-	/**
-	 * If an error occurs while loading a tile, store the exception here.
-	 */
-	private Throwable error;
 
 	/**
 	 * The url of the image to load for this tile
@@ -125,23 +117,6 @@ public class Tile extends AbstractBean
 	}
 
 	/**
-	 * @return the last error in a possible chain of errors that occured during the loading of the tile
-	 */
-	public Throwable getUnrecoverableError()
-	{
-		return error;
-	}
-
-	/**
-	 * @return the Throwable tied to any error that may have ocurred while loading the tile. This error may change
-	 * several times if multiple errors occur
-	 */
-	public Throwable getLoadingError()
-	{
-		return error;
-	}
-
-	/**
 	 * @return the Image associated with this Tile. This is a read only property This may return null at any time,
 	 * however if this returns null, a load operation will automatically be started for it.
 	 */
@@ -175,42 +150,6 @@ public class Tile extends AbstractBean
 	public int getZoom()
 	{
 		return zoom;
-	}
-
-	/**
-	 * @param propertyName the property name
-	 * @param oldValue the old value
-	 * @param newValue the new value
-	 */
-	void firePropertyChangeOnEDT(final String propertyName, final Object oldValue, final Object newValue)
-	{
-		if (!EventQueue.isDispatchThread())
-		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					firePropertyChange(propertyName, oldValue, newValue);
-				}
-			});
-		}
-	}
-
-	/**
-	 * @return the error
-	 */
-	public Throwable getError()
-	{
-		return error;
-	}
-
-	/**
-	 * @param error the error to set
-	 */
-	public void setError(Throwable error)
-	{
-		this.error = error;
 	}
 
 	/**
