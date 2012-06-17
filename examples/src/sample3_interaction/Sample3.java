@@ -1,5 +1,7 @@
 package sample3_interaction;
 
+import java.io.File;
+
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
@@ -8,9 +10,10 @@ import org.jdesktop.swingx.OSMTileFactoryInfo;
 import org.jdesktop.swingx.input.CenterMapListener;
 import org.jdesktop.swingx.input.PanKeyListener;
 import org.jdesktop.swingx.input.PanMouseInputListener;
-import org.jdesktop.swingx.input.ZoomMouseWheelListener;
+import org.jdesktop.swingx.input.ZoomMouseWheelListenerCursor;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jdesktop.swingx.mapviewer.LocalResponseCache;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 
 /**
@@ -26,6 +29,10 @@ public class Sample3
 	public static void main(String[] args)
 	{
 		JXMapViewer mapViewer = new JXMapViewer();
+
+		// Setup local file cache
+		File cacheDir = new File(System.getProperty("user.home") + File.separator + ".jxmapviewer2");
+		LocalResponseCache.installResponseCache(cacheDir, false);
 
 		// Create a TileFactoryInfo for OpenStreetMap
 		TileFactoryInfo info = new OSMTileFactoryInfo();
@@ -46,7 +53,7 @@ public class Sample3
 
 		mapViewer.addMouseListener(new CenterMapListener(mapViewer));
 		
-		mapViewer.addMouseWheelListener(new ZoomMouseWheelListener(mapViewer));
+		mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mapViewer));
 		
 		mapViewer.addKeyListener(new PanKeyListener(mapViewer));
 		

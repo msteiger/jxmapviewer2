@@ -14,7 +14,7 @@ import org.jdesktop.swingx.VirtualEarthTileFactoryInfo;
 import org.jdesktop.swingx.input.CenterMapListener;
 import org.jdesktop.swingx.input.PanKeyListener;
 import org.jdesktop.swingx.input.PanMouseInputListener;
-import org.jdesktop.swingx.input.ZoomMouseWheelListener;
+import org.jdesktop.swingx.input.ZoomMouseWheelListenerCenter;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.LocalResponseCache;
@@ -60,7 +60,7 @@ public class Sample4
 		mapViewer.addMouseListener(mia);
 		mapViewer.addMouseMotionListener(mia);
 		mapViewer.addMouseListener(new CenterMapListener(mapViewer));
-		mapViewer.addMouseWheelListener(new ZoomMouseWheelListener(mapViewer));
+		mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(mapViewer));
 		mapViewer.addKeyListener(new PanKeyListener(mapViewer));
 
 		// Create waypoints from the geo-positions

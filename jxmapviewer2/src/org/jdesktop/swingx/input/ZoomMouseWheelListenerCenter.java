@@ -7,17 +7,17 @@ import java.awt.event.MouseWheelListener;
 import org.jdesktop.swingx.JXMapViewer;
 
 /**
- * zooms using the mouse wheel
+ * zooms using the mouse wheel on the view center
  * @author joshy
  */
-public class ZoomMouseWheelListener implements MouseWheelListener
+public class ZoomMouseWheelListenerCenter implements MouseWheelListener
 {
 	private JXMapViewer viewer;
 	
 	/**
 	 * @param viewer the jxmapviewer
 	 */
-	public ZoomMouseWheelListener(JXMapViewer viewer)
+	public ZoomMouseWheelListenerCenter(JXMapViewer viewer)
 	{
 		this.viewer = viewer;
 	}
