@@ -2,10 +2,8 @@ package sample4;
 
 import java.awt.Color;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -22,8 +20,6 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.LocalResponseCache;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
-import org.jdesktop.swingx.painter.CompoundPainter;
-import org.jdesktop.swingx.painter.Painter;
 
 /**
  * A simple sample application that shows
@@ -80,12 +76,7 @@ public class Sample4
 		waypointPainter.setWaypoints(waypoints);
 		waypointPainter.setRenderer(new FancyWaypointRenderer());
 		
-		// Create a compound painter that uses both the route-painter and the waypoint-painter
-		List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
-		painters.add(waypointPainter);
-		
-		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
-		mapViewer.setOverlayPainter(painter);
+		mapViewer.setOverlayPainter(waypointPainter);
 
 		// Display the viewer in a JFrame
 		JFrame frame = new JFrame("JXMapviewer2 Example");
