@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 //import org.jdesktop.beans.JavaBean;
 
@@ -109,7 +110,7 @@ public class CompoundPainter<T> extends AbstractPainter<T>
 
 	private Handler handler;
 
-	private List<Painter<T>> painters = new ArrayList<Painter<T>>();
+	private List<Painter<T>> painters = new CopyOnWriteArrayList<Painter<T>>();
 	private AffineTransform transform;
 	private boolean clipPreserved = false;
 
