@@ -222,6 +222,26 @@ public class CompoundPainter<T> extends AbstractPainter<T>
 		setDirty(true);
 		firePropertyChange("painters", old, getPainters());
 	}
+	
+	/**
+	 * Removes a painter from the queue of painters
+	 * @param painter the painter that is added
+	 */
+	public void removePainter(Painter<T> painter)
+	{
+		Collection<Painter<T>> old = new ArrayList<Painter<T>>(getPainters());
+		
+		this.painters.remove(painter);
+		
+		if (painter instanceof AbstractPainter)
+		{
+			((AbstractPainter<?>) painter).removePropertyChangeListener(handler);
+		}
+
+		setDirty(true);
+		firePropertyChange("painters", old, getPainters());
+	}
+	
 
 	/**
 	 * Gets the array of painters used by this CompoundPainter
