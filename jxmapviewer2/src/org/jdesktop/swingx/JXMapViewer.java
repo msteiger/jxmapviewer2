@@ -20,6 +20,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.DesignMode;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.Set;
 
@@ -32,6 +34,7 @@ import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.TileListener;
 import org.jdesktop.swingx.mapviewer.empty.EmptyTileFactory;
+import org.jdesktop.swingx.painter.AbstractPainter;
 import org.jdesktop.swingx.painter.Painter;
 
 /**
@@ -302,6 +305,31 @@ public class JXMapViewer extends JPanel implements DesignMode
 	{
 		Painter<? super JXMapViewer> old = getOverlayPainter();
 		this.overlay = overlay;
+
+		PropertyChangeListener listener = new PropertyChangeListener()
+		{
+			@Override
+			public void propertyChange(PropertyChangeEvent evt)
+			{
+				if (evt.getNewValue().equals(Boolean.TRUE))
+				{
+					repaint();
+				}
+			}
+		};
+
+		if (old instanceof AbstractPainter)
+		{
+			AbstractPainter<?> ap = (AbstractPainter<?>) overlay;
+			ap.removePropertyChangeListener("dirty", listener);
+		}
+
+		if (overlay instanceof AbstractPainter)
+		{
+			AbstractPainter<?> ap = (AbstractPainter<?>) overlay;
+			ap.addPropertyChangeListener("dirty", listener);
+		}
+		
 		firePropertyChange("mapOverlay", old, getOverlayPainter());
 		repaint();
 	}
