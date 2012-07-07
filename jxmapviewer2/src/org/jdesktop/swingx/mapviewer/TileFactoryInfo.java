@@ -313,4 +313,13 @@ public class TileFactoryInfo
 		return name;
 	}
 
+	/**
+	 * @return the base URL
+	 */
+	public String getBaseURL()
+	{
+		return baseURL;
+	}
+
+	
 }

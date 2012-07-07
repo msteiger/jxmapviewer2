@@ -28,16 +28,17 @@ public class Sample3
 	 */
 	public static void main(String[] args)
 	{
-		JXMapViewer mapViewer = new JXMapViewer();
-
-		// Setup local file cache
-		File cacheDir = new File(System.getProperty("user.home") + File.separator + ".jxmapviewer2");
-		LocalResponseCache.installResponseCache(cacheDir, false);
-
 		// Create a TileFactoryInfo for OpenStreetMap
 		TileFactoryInfo info = new OSMTileFactoryInfo();
 		DefaultTileFactory tileFactory = new DefaultTileFactory(info);
 		tileFactory.setThreadPoolSize(8);
+
+		// Setup local file cache
+		File cacheDir = new File(System.getProperty("user.home") + File.separator + ".jxmapviewer2");
+		LocalResponseCache.installResponseCache(info.getBaseURL(), cacheDir, false);
+
+		// Setup JXMapViewer
+		JXMapViewer mapViewer = new JXMapViewer();
 		mapViewer.setTileFactory(tileFactory);
 
 		GeoPosition frankfurt = new GeoPosition(50.11, 8.68);

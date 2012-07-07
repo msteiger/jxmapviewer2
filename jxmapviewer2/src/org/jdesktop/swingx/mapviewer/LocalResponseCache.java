@@ -32,13 +32,17 @@ public class LocalResponseCache extends ResponseCache
 
 	private boolean checkForUpdates;
 
+	private String baseURL;
+
 	/**
 	 * Private constructor to prevent instantiation.
+	 * @param baseURL the URI that should be cached or <code>null</code> (for all URLs)
 	 * @param cacheDir the cache directory
 	 * @param checkForUpdates true if the URL is queried for newer versions of a file first
 	 */
-	private LocalResponseCache(File cacheDir, boolean checkForUpdates)
+	private LocalResponseCache(String baseURL, File cacheDir, boolean checkForUpdates)
 	{
+		this.baseURL = baseURL;
 		this.cacheDir = cacheDir;
 		this.checkForUpdates = checkForUpdates;
 
@@ -50,12 +54,13 @@ public class LocalResponseCache extends ResponseCache
 
 	/**
 	 * Sets this cache as default response cache
+	 * @param baseURL the URL, the caching should be restricted to or <code>null</code> for none
 	 * @param cacheDir the cache directory
 	 * @param checkForUpdates true if the URL is queried for newer versions of a file first
 	 */
-	public static void installResponseCache(File cacheDir, boolean checkForUpdates)
+	public static void installResponseCache(String baseURL, File cacheDir, boolean checkForUpdates)
 	{
-		ResponseCache.setDefault(new LocalResponseCache(cacheDir, checkForUpdates));
+		ResponseCache.setDefault(new LocalResponseCache(baseURL, cacheDir, checkForUpdates));
 	}
 
 	/**
@@ -65,7 +70,55 @@ public class LocalResponseCache extends ResponseCache
 	 */
 	public File getLocalFile(URI remoteUri)
 	{
-		String name = remoteUri.getHost() + remoteUri.getPath();
+		if (baseURL != null)
+		{
+			String remote = remoteUri.toString();
+			
+			if (!remote.startsWith(baseURL))
+			{
+				return null;
+			}
+		}
+		
+		
+		StringBuilder sb = new StringBuilder();
+		
+	    String host = remoteUri.getHost();
+	    String query = remoteUri.getQuery();
+	    String path = remoteUri.getPath();
+	    String fragment = remoteUri.getFragment();
+	    
+		if (host != null)
+		{
+			sb.append(host);
+		}
+		if (path != null)
+		{
+			sb.append(path);
+		}
+		if (query != null)
+		{
+			sb.append('?');
+			sb.append(query);
+		}
+		if (fragment != null)
+		{
+			sb.append('#');
+			sb.append(fragment);
+		}
+
+		String name;
+		
+		final int maxLen = 250;
+		
+		if (sb.length() < maxLen)
+		{
+			name = sb.toString();
+		}
+		else
+		{
+			name = sb.substring(0, maxLen);
+		}
 		
 		name = name.replace('?', '$');
 		name = name.replace('*', '$');
