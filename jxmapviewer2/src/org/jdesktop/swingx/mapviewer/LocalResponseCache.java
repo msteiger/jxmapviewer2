@@ -187,6 +187,13 @@ public class LocalResponseCache extends ResponseCache
 	public CacheResponse get(URI uri, String rqstMethod, Map<String, List<String>> rqstHeaders) throws IOException
 	{
 		File localFile = getLocalFile(uri);
+		
+		if (localFile == null)
+		{
+			// we don't want to cache this URL 
+			return null;
+		}
+		
 		if (!localFile.exists())
 		{
 			// the file isn't already in our cache, return null
@@ -215,6 +222,13 @@ public class LocalResponseCache extends ResponseCache
 		}
 
 		File localFile = getLocalFile(uri);
+		
+		if (localFile == null)
+		{
+			// we don't want to cache this URL 
+			return null;
+		}
+		
 		new File(localFile.getParent()).mkdirs();
 		return new LocalCacheRequest(localFile);
 	}
