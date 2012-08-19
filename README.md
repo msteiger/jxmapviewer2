@@ -18,18 +18,17 @@ This source code used in this project is based on:
  * Extract the JXMapViewer part from the full package
  * Upgrade to Java 6
  * Fixed javadoc
- * Replaced `system.out` with  `apache.commons.logging` 
+ * Replaced `system.out.println()` with `apache.commons.logging` 
  * Removed broken TileProviders
  * Remove dependencies to SwingX (and its indirect dependencies)
-
+ * Fixed tile caching so that only tiles are cached, not everything
+ * Extract user interaction from the viewer
+ * Make CompoundPainter use Lists instead of Arrays
+ * Find out what the "Java One" hack is and replace it with proper implementation
+ 
 #### What we plan to do ..
 
- * Add tile caching
- * Fix bugs that were posted on http://java.net/jira/browse/SWINGX_WS
- * Extract user interaction from the viewer
- * Find out what the "Java One" hack is and if it can be removed
- * Make CompoundPainter use List instead of Array
- * Refactor painters
+ * Fix bugs that were posted on http://java.net/jira/browse/SWINGX_WS ( mostly complete )
 
 #### License
 This project has been licensed under the GNU Lesser General Public License (LGPL)
