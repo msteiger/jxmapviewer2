@@ -119,17 +119,20 @@ public class TileCache
 	{
 		synchronized (imgmap)
 		{
-			while (imagesize > 1000 * 1000 * 50)
-			{
-				URI olduri = imgmapAccessQueue.removeFirst();
-				BufferedImage oldimg = imgmap.remove(olduri);
-				imagesize -= oldimg.getWidth() * oldimg.getHeight() * 4;
-				log("removed 1 img from image cache");
-			}
-
-			imgmap.put(uri, img);
-			imagesize += img.getWidth() * img.getHeight() * 4;
-			imgmapAccessQueue.addLast(uri);
+			try {
+                            while (imagesize > 1000 * 1000 * 50)
+                            {
+                                    URI olduri = imgmapAccessQueue.removeFirst();
+                                    BufferedImage oldimg = imgmap.remove(olduri);
+                                    imagesize -= oldimg.getWidth() * oldimg.getHeight() * 4;
+                                    log("removed 1 img from image cache");
+                            }
+                            imgmap.put(uri, img);
+                            imagesize += img.getWidth() * img.getHeight() * 4;
+                            imgmapAccessQueue.addLast(uri);
+                        } catch (Exception ex) {
+                            log("Failed to load tile at URL. Tile is null");
+                        }
 		}
 		log("added to cache: " + " uncompressed = " + imgmap.keySet().size() + " / " + imagesize / 1000 + "k"
 				+ " compressed = " + bytemap.keySet().size() + " / " + bytesize / 1000 + "k");
