@@ -37,7 +37,7 @@ public class PanMouseInputListener extends MouseInputAdapter
 	@Override
 	public void mouseDragged(MouseEvent evt)
 	{
-		if (!SwingUtilities.isRightMouseButton(evt))
+		if (!SwingUtilities.isLeftMouseButton(evt))
 			return;
 
 		Point current = evt.getPoint();
@@ -68,7 +68,7 @@ public class PanMouseInputListener extends MouseInputAdapter
 	@Override
 	public void mouseReleased(MouseEvent evt)
 	{
-		if (!SwingUtilities.isRightMouseButton(evt))
+		if (!SwingUtilities.isLeftMouseButton(evt))
 			return;
 
 		prev = null;
