@@ -48,6 +48,7 @@ public class CenterMapListener extends MouseAdapter
 		double x = bounds.getX() + evt.getX();
 		double y = bounds.getY() + evt.getY();
 		viewer.setCenter(new Point2D.Double(x, y));
+                viewer.setZoom(viewer.getZoom() - 1);
 		viewer.repaint();
 	}
 }
