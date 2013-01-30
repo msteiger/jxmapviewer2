@@ -25,6 +25,7 @@ This source code used in this project is based on:
  * Extract user interaction from the viewer
  * Make CompoundPainter use Lists instead of Arrays
  * Find out what the "Java One" hack is and replace it with proper implementation
+ * Improved zooming in - images of coarser resolution are used until new images are loaded
  
 #### What we plan to do ..
 
