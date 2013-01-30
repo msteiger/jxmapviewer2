@@ -12,23 +12,14 @@ package org.jdesktop.swingx.mapviewer.util;
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoBounds;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
-import org.w3c.dom.Document;
 
 /**
  * These are math utilities for converting between pixels, tiles, and geographic coordinates. Implements a Google Maps
@@ -142,54 +133,6 @@ public final class GeoUtil
 		double flat = e2;
 		GeoPosition wc = new GeoPosition(flat, flon);
 		return wc;
-	}
-
-	/**
-	 * TODO: not working -> remove
-	 * Convert a street address into a position. Uses the Yahoo GeoCoder. You must supply your own yahoo id.
-	 * @param fields {Street, City, State}
-	 * @throws java.io.IOException if the request fails.
-	 * @return the position of this street address
-	 */
-	public static GeoPosition getPositionForAddress(String[] fields) throws IOException
-	{
-		return getPositionForAddress(fields[0], fields[1], fields[2]);
-	}
-
-	/**
-	 * Convert a street address into a position. Uses the Yahoo GeoCoder. You must supply your own yahoo id.
-	 * TODO: not working -> remove
-	 * @param street Street
-	 * @param city City
-	 * @param state State (must be a US state)
-	 * @throws java.io.IOException if the request fails.
-	 * @return the position of this street address
-	 */
-	public static GeoPosition getPositionForAddress(String street, String city, String state) throws IOException
-	{
-		try
-		{
-			URL load = new URL("http://api.local.yahoo.com/MapsService/V1/geocode?" + "appid=joshy688" + "&street="
-					+ street.replace(' ', '+') + "&city=" + city.replace(' ', '+') + "&state="
-					+ state.replace(' ', '+'));
-			// System.out.println("using address: " + load);
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = builder.parse(load.openConnection().getInputStream());
-			XPath xpath = XPathFactory.newInstance().newXPath();
-			// NodeList str = (NodeList)xpath.evaluate("//Result",doc,XPathConstants.NODESET);
-			Double lat = (Double) xpath.evaluate("//Result/Latitude/text()", doc, XPathConstants.NUMBER);
-			Double lon = (Double) xpath.evaluate("//Result/Longitude/text()", doc, XPathConstants.NUMBER);
-			// System.out.println("got address at: " + lat + " " + lon);
-			return new GeoPosition(lat, lon);
-		}
-		catch (IOException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			throw new IOException("Failed to retrieve location information from the internet: " + e.toString());
-		}
 	}
 
 	/**
