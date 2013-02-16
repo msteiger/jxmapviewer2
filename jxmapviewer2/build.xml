@@ -17,14 +17,27 @@
     <javac srcdir="${src.dir}" destdir="${build.dir}" classpath="${lib.dir}/commons-logging-1.1.1.jar"/>
   </target>
 
-  <target name="dist" depends="compile" description="generate the distribution" >
+  <target name="dist" depends="compile,src-dist" description="generate the distribution" >
     <mkdir dir="${dist.dir}/lib"/>
     <copy todir="${dist.dir}/lib">
       <fileset dir="${lib.dir}">
         <include name="*.jar"/>
       </fileset>
     </copy>
-    <jar jarfile="${dist.dir}/lib/jxmapviewer2.jar" basedir="${build.dir}"/>
+    <jar jarfile="${dist.dir}/lib/jxmapviewer2.jar">
+      <fileset dir="${build.dir}"/>
+      <fileset file="../license.txt"/>
+      <fileset file="../README.md"/>
+    </jar>
+  </target>
+
+  <target name="src-dist" description="generate the source distribution jar file" >
+    <mkdir dir="${dist.dir}/lib"/>
+    <jar jarfile="${dist.dir}/lib/jxmapviewer2-source.jar">
+      <fileset dir="${src.dir}"/>
+      <fileset file="../license.txt"/>
+      <fileset file="../README.md"/>
+    </jar>
   </target>
 
   <target name="clean" description="clean up" >
