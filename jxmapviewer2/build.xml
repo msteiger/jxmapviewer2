@@ -1,0 +1,36 @@
+<project name="JXMapViewer2" default="dist" basedir=".">
+
+    <description>
+        Builds a jar library for JXMapViewer2
+    </description>
+
+  <property name="src.dir" location="src"/>
+  <property name="build.dir" location="build"/>
+  <property name="dist.dir"  location="dist"/>
+  <property name="lib.dir"  location="lib"/>
+
+  <target name="init">
+    <mkdir dir="${build.dir}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source ">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" classpath="${lib.dir}/commons-logging-1.1.1.jar"/>
+  </target>
+
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <mkdir dir="${dist.dir}/lib"/>
+    <copy todir="${dist.dir}/lib">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <jar jarfile="${dist.dir}/lib/jxmapviewer2.jar" basedir="${build.dir}"/>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+
+</project>
+
