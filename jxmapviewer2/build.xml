@@ -13,11 +13,21 @@
     <mkdir dir="${build.dir}"/>
   </target>
 
+  <target name="genarate-doc">
+    <mkdir dir="${dist.dir}/doc"/>
+    <javadoc sourcepath="src"
+             destdir="${dist.dir}/doc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="JXMapviewer2 Documentation" />
+  </target>
+
   <target name="compile" depends="init" description="compile the source ">
     <javac srcdir="${src.dir}" destdir="${build.dir}" classpath="${lib.dir}/commons-logging-1.1.1.jar"/>
   </target>
 
-  <target name="dist" depends="compile,src-dist" description="generate the distribution" >
+  <target name="dist" depends="compile,src-dist,genarate-doc" description="generate the distribution" >
     <mkdir dir="${dist.dir}/lib"/>
     <copy todir="${dist.dir}/lib">
       <fileset dir="${lib.dir}">
