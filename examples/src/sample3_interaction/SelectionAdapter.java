@@ -32,7 +32,7 @@ public class SelectionAdapter extends MouseAdapter
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		if (e.getButton() != MouseEvent.BUTTON1)
+		if (e.getButton() != MouseEvent.BUTTON3)
 			return;
 		
 		startPos.setLocation(e.getX(), e.getY());
@@ -58,7 +58,7 @@ public class SelectionAdapter extends MouseAdapter
 		if (!dragging)
 			return;
 		
-		if (e.getButton() != MouseEvent.BUTTON1)
+		if (e.getButton() != MouseEvent.BUTTON3)
 			return;
 		
 		viewer.repaint();

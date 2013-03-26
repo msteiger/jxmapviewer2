@@ -1,8 +1,10 @@
 package sample3_interaction;
 
+import java.awt.BorderLayout;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.event.MouseInputListener;
 
 import org.jdesktop.swingx.JXMapViewer;
@@ -67,7 +69,9 @@ public class Sample3
 		
 		// Display the viewer in a JFrame
 		JFrame frame = new JFrame("JXMapviewer2 Example 3");
-		frame.getContentPane().add(mapViewer);
+		frame.setLayout(new BorderLayout());
+		frame.add(new JLabel("Use left mouse button to pan, mouse wheel to zoom and right mouse to select"), BorderLayout.NORTH);
+		frame.add(mapViewer);
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
