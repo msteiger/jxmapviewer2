@@ -493,12 +493,16 @@ public class JXMapViewer extends JPanel implements DesignMode
 	}
 
 	/**
-	 * Set the current tile factory
+	 * Set the current tile factory (must not be <code>null</code>)
 	 * @param factory the new property value
 	 */
 	public void setTileFactory(TileFactory factory)
 	{
+		if (factory == null)
+			throw new NullPointerException("factory must not be null");
+		
 		this.factory.removeTileListener(tileLoadListener);
+		this.factory.dispose();
 		
 		this.factory = factory;
 		this.setZoom(factory.getInfo().getDefaultZoomLevel());

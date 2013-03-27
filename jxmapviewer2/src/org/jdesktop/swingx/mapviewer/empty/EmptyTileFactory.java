@@ -13,7 +13,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import org.jdesktop.swingx.mapviewer.Tile;
 import org.jdesktop.swingx.mapviewer.TileFactory;
@@ -86,7 +85,7 @@ public class EmptyTileFactory extends TileFactory
 	}
 
 	@Override
-	public void close() throws IOException
+	public void dispose()
 	{
 		// noop
 	}

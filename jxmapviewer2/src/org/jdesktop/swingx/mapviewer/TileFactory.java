@@ -11,7 +11,6 @@ package org.jdesktop.swingx.mapviewer;
 
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ import org.jdesktop.swingx.mapviewer.util.GeoUtil;
  * A class that can produce tiles and convert coordinates to pixels
  * @author joshy
  */
-public abstract class TileFactory implements Closeable
+public abstract class TileFactory
 {
 	private TileFactoryInfo info;
 	private List<TileListener> tileListeners = new ArrayList<TileListener>();
@@ -118,6 +117,11 @@ public abstract class TileFactory implements Closeable
 	{
 		tileListeners.remove(listener);
 	}
+	
+	/**
+	 * Disposes this TileFactory
+	 */
+	public abstract void dispose();
 	
 	/**
 	 * Notifies all tile listeners

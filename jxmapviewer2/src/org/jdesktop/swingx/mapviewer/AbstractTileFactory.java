@@ -202,7 +202,7 @@ public abstract class AbstractTileFactory extends TileFactory
 	}
 	
 	@Override
-	public void close()
+	public void dispose()
 	{
 		service.shutdown();
 	}
