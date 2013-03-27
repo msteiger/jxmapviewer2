@@ -46,7 +46,7 @@ public class Sample2
 		GeoPosition offenbach = new GeoPosition(50,  6, 0, 8, 46, 0);
 
 		// Set the focus
-		mapViewer.setZoom(7);
+		mapViewer.setZoom(10);
 		mapViewer.setAddressLocation(frankfurt);
 		
 		// Create a track from the geo-positions
