@@ -200,6 +200,12 @@ public abstract class AbstractTileFactory extends TileFactory
 		}
 		return service;
 	}
+	
+	@Override
+	public void close()
+	{
+		service.shutdown();
+	}
 
 	/**
 	 * Set the number of threads to use for loading the tiles. This controls the number of threads used by the
