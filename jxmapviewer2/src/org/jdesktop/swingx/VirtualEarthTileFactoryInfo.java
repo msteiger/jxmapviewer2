@@ -60,7 +60,7 @@ public class VirtualEarthTileFactoryInfo extends TileFactoryInfo
 	 */
 	public VirtualEarthTileFactoryInfo(MVEMode mode)
 	{
-		super(MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL, TOP_ZOOM_LEVEL, TILE_SIZE, false, false, "", "", "", "");
+		super("Virtual Earth", MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL, TOP_ZOOM_LEVEL, TILE_SIZE, false, false, "", "", "", "");
 		
 		this.mode = mode;
 	}

@@ -509,6 +509,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 		
 		factory.addTileListener(tileLoadListener);
 
+		repaint();
 	}
 
 	/**
