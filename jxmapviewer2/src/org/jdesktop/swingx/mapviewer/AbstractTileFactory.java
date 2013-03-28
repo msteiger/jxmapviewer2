@@ -204,7 +204,11 @@ public abstract class AbstractTileFactory extends TileFactory
 	@Override
 	public void dispose()
 	{
-		service.shutdown();
+		if (service != null)
+		{
+			service.shutdown();
+			service = null;
+		}
 	}
 
 	/**
