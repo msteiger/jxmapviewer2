@@ -9,6 +9,11 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <parent>
+  	<groupId>org.sonatype.oss</groupId>
+  	<artifactId>oss-parent</artifactId>
+  	<version>7</version>
+  </parent>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -19,6 +24,7 @@
         </excludes>
       </resource>
     </resources>
+    
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -28,8 +34,37 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-    </plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+	    </executions>
+      </plugin>      
+    </plugins>    
   </build>
+  
   <url>https://github.com/msteiger/jxmapviewer2</url>
   <dependencies>
   	<dependency>
@@ -51,4 +86,5 @@
 		<url>http://www.gnu.org/licenses/lgpl-3.0-standalone.html</url>
 	</license>
   </licenses>  
+
 </project>
