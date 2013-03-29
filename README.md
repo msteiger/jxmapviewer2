@@ -1,6 +1,7 @@
 #### Overview
 
-![sample](images/sample2.png "MapViewer Sample")
+![sample2](images/sample2.png "MapViewer Sample2")
+![sample2](images/sample5.png "MapViewer Sample5")
 
 This project is based on the JXMapViewer component of SwingX-WS.
 
