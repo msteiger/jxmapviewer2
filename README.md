@@ -26,6 +26,7 @@ This source code used in this project is based on:
  * Make CompoundPainter use Lists instead of Arrays
  * Find out what the "Java One" hack is and replace it with proper implementation
  * Improved zooming in - images of coarser resolution are used until new images are loaded
+ * Fixed thread leak when setting new TileFactory
  
 #### What we plan to do ..
 
