@@ -1,10 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JXMapViewer2
-Bundle-SymbolicName: jxmapviewer2
-Bundle-Version: 1.0.0.qualifier
-Bundle-Classpath: .,
- lib/commons-logging-1.1.1.jar
+Bundle-SymbolicName: org.jdesktop.swingx.jxmapviewer2
+Bundle-Version: 1.1
+Bundle-Classpath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.jdesktop.swingx,
  org.jdesktop.swingx.input,
@@ -16,3 +15,4 @@ Export-Package: org.jdesktop.swingx,
  org.jdesktop.swingx.mapviewer.wms,
  org.jdesktop.swingx.painter,
  org.jdesktop.swingx.util
+Import-Package: org.apache.commons.logging
