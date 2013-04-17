@@ -12,7 +12,15 @@ The [JXMapViewer Tutorial by Joshua Marinacci](http://today.java.net/pub/a/today
 This source code used in this project is based on: 
 
  * SwingX-ws-2009_06_14.jar http://java.net/projects/swingx 
- * SwingX 1.6.3 (released Feb 2012) http://java.net/projects/swingx-ws  
+ * SwingX 1.6.3 (released Feb 2012) http://java.net/projects/swingx-ws
+
+The content of this project are also available at *Maven Central* and can be referenced in your pom.xml:
+
+    <dependency>
+      <groupId>org.jdesktop.swingx</groupId>
+      <artifactId>jxmapviewer2</artifactId>
+      <version>1.1</version>
+    </dependency>
 
 #### What we have done so far ..
 
@@ -37,3 +45,4 @@ This source code used in this project is based on:
 
 #### License
 This project has been licensed under the GNU Lesser General Public License (LGPL)
+
