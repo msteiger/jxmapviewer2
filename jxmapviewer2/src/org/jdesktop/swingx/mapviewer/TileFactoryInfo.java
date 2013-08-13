@@ -93,9 +93,9 @@ public class TileFactoryInfo
 	 * subclasses should ensure all of the properties stay the same after the class is constructed. Returning different
 	 * values of getTileSize() for example is considered an error and may result in unexpected behavior.
 	 * @param name A name to identify this information.
-	 * @param minimumZoomLevel The minimum zoom level
-	 * @param maximumZoomLevel the maximum zoom level
-	 * @param totalMapZoom the top zoom level, essentially the height of the pyramid
+	 * @param minimumZoomLevel The minimum zoom level, the user is allowed to zoom, means the smallest map
+	 * @param maximumZoomLevel the maximum zoom level, the user is allowed to zoom, means the biggest map
+	 * @param totalMapZoom how many zoom levels the map provides
 	 * @param tileSize the size of the tiles in pixels (must be square)
 	 * @param xr2l if the x goes r to l (is this backwards?)
 	 * @param yt2b if the y goes top to bottom
@@ -203,8 +203,8 @@ public class TileFactoryInfo
 	 * <pre><code>http://www.myserver.com/maps?version=0.1&amp;x=1&amp;y=2&amp;z=3</code></pre> Note that the URL can be
 	 * a <CODE>file:</CODE> url.
 	 * @param zoom the zoom level
-	 * @param x the x value
-	 * @param y the y value
+	 * @param x the x value, measured from left to right
+	 * @param y the y value, measured from top to bottom
 	 * @return a valid url to load the tile
 	 */
 
@@ -273,7 +273,7 @@ public class TileFactoryInfo
 	}
 
 	/**
-	 * @return indicates if the Y coordinates of tiles go from right to left or left to right.
+	 * @return true if the Y coordinates of tiles go from top to bottom
 	 */
 	public boolean isYt2b()
 	{
@@ -281,7 +281,7 @@ public class TileFactoryInfo
 	}
 
 	/**
-	 * @param yt2b indicates if the Y coordinates of tiles go from right to left or left to right.
+	 * @param yt2b should be true if the Y coordinates of tiles go from top to bottom
 	 */
 	public void setYt2b(boolean yt2b)
 	{
