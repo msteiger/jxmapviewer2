@@ -323,7 +323,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 
 		if (old instanceof AbstractPainter)
 		{
-			AbstractPainter<?> ap = (AbstractPainter<?>) overlay;
+			AbstractPainter<?> ap = (AbstractPainter<?>) old;
 			ap.removePropertyChangeListener("dirty", listener);
 		}
 
