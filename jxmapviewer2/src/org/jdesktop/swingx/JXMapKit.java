@@ -25,6 +25,11 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputListener;
+
+import org.jdesktop.swingx.input.CenterMapListener;
+import org.jdesktop.swingx.input.PanMouseInputListener;
+import org.jdesktop.swingx.input.ZoomMouseWheelListenerCursor;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.DefaultWaypoint;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
@@ -139,6 +144,18 @@ public class JXMapKit extends JPanel
 				miniMap.repaint();
 			}
 		});
+		
+		
+		// Add interactions
+		MouseInputListener mia = new PanMouseInputListener(mainMap);
+		mainMap.addMouseListener(mia);
+		mainMap.addMouseMotionListener(mia);
+
+		mainMap.addMouseListener(new CenterMapListener(mainMap));
+
+		mainMap.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mainMap));
+
+		//mainMap.addKeyListener(new PanKeyListener(mainMap));
 
 		mainMap.addPropertyChangeListener("zoom", new PropertyChangeListener()
 		{
@@ -593,6 +610,18 @@ public class JXMapKit extends JPanel
 	public boolean isAddressLocationShown()
 	{
 		return addressLocationShown;
+	}
+	
+	/** 
+	 * copied from {@link JXMapViewer#calculateZoomFrom(Set)}
+	 * Calculates a zoom level so that all points in the specified set will be visible on screen. This is useful if you
+	 * have a bunch of points in an area like a city and you want to zoom out so that the entire city and it's points
+	 * are visible without panning.
+	 * @param positions A set of GeoPositions to calculate the new zoom from
+	 * @author Samuel Vogel 
+	 */
+	public void calculateZoomFrom(Set<GeoPosition> positions) {
+		mainMap.calculateZoomFrom(positions);
 	}
 
 	/**

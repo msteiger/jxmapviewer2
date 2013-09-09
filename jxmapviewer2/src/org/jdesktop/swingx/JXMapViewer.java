@@ -205,7 +205,10 @@ public class JXMapViewer extends JPanel implements DesignMode
 		// TilePoint topLeftTile = getTileFactory().getTileCoordinate(
 		// new Point2D.Double(viewportBounds.x, viewportBounds.y));
 		TileFactoryInfo info = getTileFactory().getInfo();
+		
+		// number of tiles in x direction 
 		int tpx = (int) Math.floor(viewportBounds.getX() / info.getTileSize(0));
+		// number of tiles in y direction 
 		int tpy = (int) Math.floor(viewportBounds.getY() / info.getTileSize(0));
 		// TilePoint topLeftTile = new TilePoint(tpx, tpy);
 
@@ -320,7 +323,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 
 		if (old instanceof AbstractPainter)
 		{
-			AbstractPainter<?> ap = (AbstractPainter<?>) overlay;
+			AbstractPainter<?> ap = (AbstractPainter<?>) old;
 			ap.removePropertyChangeListener("dirty", listener);
 		}
 
@@ -654,7 +657,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 				break;
 			}
 			zoom = zoom + 1;
-			if (zoom > 15)
+			if (zoom > 15) //TODO: use maxZoom of the tfInfo
 			{
 				break;
 			}
