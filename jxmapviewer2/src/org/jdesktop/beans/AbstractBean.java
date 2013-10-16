@@ -134,7 +134,6 @@ import java.beans.VetoableChangeSupport;
  * </p>
  * 
  * @see AbstractSerializableBean
- * @status REVIEWED
  * @author rbair
  */
 @SuppressWarnings("nls")
