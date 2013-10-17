@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jdesktop.swingx</groupId>
   <artifactId>jxmapviewer2</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.2</version>
   <name>jxmapviewer2</name>
   <packaging>jar</packaging>
   <description>This project is based on the JXMapViewer component of SwingX-WS.</description>
