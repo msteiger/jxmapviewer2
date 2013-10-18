@@ -1,0 +1,114 @@
+Sonatype OSS Maven Repository Usage Guide 
+--------------------------------------------
+
+# Short info
+
+https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
+
+First you need to prepare a release:
+
+$ mvn release:clean
+$ mvn release:prepare
+	
+Note: Preparing the release will create the new tag in SVN, automatically checking in on your behalf.
+
+Then stage the release:
+
+$ mvn release:perform
+
+Maven will checkout the tag you just prepared, then build and deploy it into Nexus staging repository.
+
+Login to the Nexus UI.
+
+https://oss.sonatype.org/
+
+Go to Staging Repositories page.
+Select a staging repository.
+Click the Close button.
+
+You will be asked to provide a description for this staging close operation. 
+If the staging repository is closed successfully, you will get a notification email and confirmation via the ui.
+
+# Long info
+
+First, gpg keys are required to sign the artifacts
+
+$ gpg --gen-key
+
+Check if successful and get the key ID with
+
+$ gpg --list-keys
+
+Primary key must not have a (S)igning subkey. Delete it if necessary.
+
+Send the keys to the keyserver
+
+$ gpg --keyserver hkp://pool.sks-keyservers.net --send-keys <12345678>
+
+Authorization at sonatype is required in 
+
+~/.m2/settings.xml
+
+<settings>
+  <servers>
+    <server>
+      <id>sonatype-nexus-staging</id>
+      <username>your-jira-id</username>
+      <password>your-jira-pwd</password>
+    </server>
+  </servers>
+</settings>
+
+Otherwise, you will get:
+
+Error: Return code is: 401, ReasonPhrase:Unauthorized.
+
+Then prepare the release
+$ mvn release:prepare 
+
+It will ask for
+* version (default 1.3 should be ok)
+* git tag name (jxmapviewer2-1.3 should be ok)
+* next version (default 1.4 should be ok)
+
+this will create 2 commits:
+
+pom.xml (version 1.3)
+
+pom.xml (version 1.4-SNAPSHOT)
+
+..and will push the commits to github
+
+
+Pushing the release version is done by 
+$ mvn release:perform 
+
+It checks out the tag that was created by prepare
+if it does not find the SCM url, try:
+
+mvn release:perform -DconnectionUrl=scm:git:git@github.com:msteiger/jxmapviewer2.git
+
+If it still doesn't work (e.g. pom.xml not found)
+
+Sign and deploy Artifacts manually:
+
+$ mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=jxmapviewer2-1.2.pom -Dfile=jxmapviewer2-1.2.jar
+
+$ mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=jxmapviewer2-1.2.pom -Dfile=jxmapviewer2-1.2-sources.jar -Dclassifier=sources
+
+$ mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=jxmapviewer2-1.2.pom -Dfile=jxmapviewer2-1.2-javadoc.jar -Dclassifier=javadoc
+
+
+Finally log in to
+
+http://oss.sonatype.org
+
+Select "Staging Repositories" -> Wait -> Last entry -> jxmapviewer -> Close
+
+Select it again (Status: Closed) -> Release
+
+
+
+
+
+
