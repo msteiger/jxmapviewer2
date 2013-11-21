@@ -665,6 +665,65 @@ public class JXMapViewer extends JPanel implements DesignMode
 			rect = generateBoundingRect(positions, zoom);
 		}
 	}
+	
+	/**
+	 * Zoom and center the map to a best fit around the input GeoPositions.
+	 * Best fit is defined as the most zoomed-in possible view where both
+	 * the width and height of a bounding box around the positions take up
+	 * no more than maxFraction of the viewport width or height respectively.
+	 * @param positions A set of GeoPositions to calculate the new zoom from
+	 * @param maxFraction the maximum fraction of the viewport that should be covered
+	 */
+	public void zoomToBestFit(Set<GeoPosition> positions, double maxFraction) 
+	{
+		if (positions.isEmpty())
+			return;
+		
+		if (maxFraction <= 0 || maxFraction > 1)
+			throw new IllegalArgumentException("maxFraction must be between 0 and 1");
+		
+        TileFactory tileFactory = getTileFactory();
+        TileFactoryInfo info = tileFactory.getInfo();
+        
+        if(info == null)
+        	return;
+
+        // set to central position initially
+        Rectangle2D bounds=generateBoundingRect(positions, getZoom());   
+        Point2D bc = new Point2D.Double(bounds.getCenterX(),bounds.getCenterY());
+		GeoPosition centre = tileFactory.pixelToGeo(bc, getZoom());
+        setCenterPosition(centre);
+        
+        if (positions.size() == 1)
+        	return;
+
+        // set map to maximum zoomed out
+        setZoom(info.getMaximumZoomLevel());
+
+        // repeatedly zoom in until we find the first zoom level where either the width or height
+        // of the points takes up more than the max fraction of the viewport
+        int bestZoom = getZoom();
+        
+        Rectangle2D viewport = getViewportBounds();
+        		
+        while (getZoom() >= info.getMinimumZoomLevel())
+        {
+            // is this zoom still OK?
+            bounds = generateBoundingRect(positions, getZoom());
+            if (bounds.getWidth() < viewport.getWidth() * maxFraction && 
+            	bounds.getHeight() < viewport.getHeight()* maxFraction)
+            {
+                bestZoom = getZoom();
+            }
+            else
+            {
+                break;
+            }
+            setZoom(getZoom()-1);
+        }
+
+        setZoom(bestZoom);
+	}	
 
 	private Rectangle2D generateBoundingRect(final Set<GeoPosition> positions, int zoom)
 	{

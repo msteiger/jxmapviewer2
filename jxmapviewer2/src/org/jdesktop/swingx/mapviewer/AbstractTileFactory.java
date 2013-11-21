@@ -10,6 +10,7 @@ import java.lang.ref.SoftReference;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -371,7 +372,10 @@ public abstract class AbstractTileFactory extends TileFactory
 
 		private byte[] cacheInputStream(URL url) throws IOException
 		{
-			InputStream ins = url.openStream();
+			URLConnection connection = url.openConnection();
+			connection.setRequestProperty("User-Agent", "JxMapViewer/1.0");
+			InputStream ins = connection.getInputStream();
+			
 			ByteArrayOutputStream bout = new ByteArrayOutputStream();
 			byte[] buf = new byte[256];
 			while (true)

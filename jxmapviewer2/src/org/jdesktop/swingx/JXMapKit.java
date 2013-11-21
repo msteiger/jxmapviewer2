@@ -612,18 +612,6 @@ public class JXMapKit extends JPanel
 		return addressLocationShown;
 	}
 	
-	/** 
-	 * copied from {@link JXMapViewer#calculateZoomFrom(Set)}
-	 * Calculates a zoom level so that all points in the specified set will be visible on screen. This is useful if you
-	 * have a bunch of points in an area like a city and you want to zoom out so that the entire city and it's points
-	 * are visible without panning.
-	 * @param positions A set of GeoPositions to calculate the new zoom from
-	 * @author Samuel Vogel 
-	 */
-	public void calculateZoomFrom(Set<GeoPosition> positions) {
-		mainMap.calculateZoomFrom(positions);
-	}
-
 	/**
 	 * @param b the visibility flag
 	 */

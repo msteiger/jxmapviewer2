@@ -33,6 +33,13 @@ public class Sample2
 	{
 		JXMapViewer mapViewer = new JXMapViewer();
 
+		// Display the viewer in a JFrame
+		JFrame frame = new JFrame("JXMapviewer2 Example 2");
+		frame.getContentPane().add(mapViewer);
+		frame.setSize(800, 600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+
 		// Create a TileFactoryInfo for OpenStreetMap
 		TileFactoryInfo info = new OSMTileFactoryInfo();
 		DefaultTileFactory tileFactory = new DefaultTileFactory(info);
@@ -45,13 +52,12 @@ public class Sample2
 		GeoPosition darmstadt = new GeoPosition(49, 52, 0, 8, 39, 0);
 		GeoPosition offenbach = new GeoPosition(50,  6, 0, 8, 46, 0);
 
-		// Set the focus
-		mapViewer.setZoom(10);
-		mapViewer.setAddressLocation(frankfurt);
-		
 		// Create a track from the geo-positions
 		List<GeoPosition> track = Arrays.asList(frankfurt, wiesbaden, mainz, darmstadt, offenbach);
 		RoutePainter routePainter = new RoutePainter(track);
+
+		// Set the focus
+		mapViewer.zoomToBestFit(new HashSet<GeoPosition>(track), 0.7);
 
 		// Create waypoints from the geo-positions
 		Set<Waypoint> waypoints = new HashSet<Waypoint>(Arrays.asList(
@@ -72,12 +78,5 @@ public class Sample2
 		
 		CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
 		mapViewer.setOverlayPainter(painter);
-	
-		// Display the viewer in a JFrame
-		JFrame frame = new JFrame("JXMapviewer2 Example 2");
-		frame.getContentPane().add(mapViewer);
-		frame.setSize(800, 600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
 	}
 }
