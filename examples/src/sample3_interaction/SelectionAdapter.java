@@ -6,7 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
-import org.jdesktop.swingx.JXMapViewer;
+import org.jxmapviewer.JXMapViewer;
 
 /**
  * Creates a selection rectangle based on mouse input

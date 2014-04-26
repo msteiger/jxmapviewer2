@@ -18,15 +18,15 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputListener;
 
-import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.OSMTileFactoryInfo;
-import org.jdesktop.swingx.VirtualEarthTileFactoryInfo;
-import org.jdesktop.swingx.input.PanMouseInputListener;
-import org.jdesktop.swingx.input.ZoomMouseWheelListenerCursor;
-import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.jdesktop.swingx.mapviewer.TileFactory;
-import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.VirtualEarthTileFactoryInfo;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactory;
+import org.jxmapviewer.viewer.TileFactoryInfo;
 
 /**
  * This example demonstrate the use of different {@link TileFactory} elements.

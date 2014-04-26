@@ -22,8 +22,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.mapviewer.WaypointRenderer;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.viewer.WaypointRenderer;
 
 
 /**
