@@ -1,4 +1,3 @@
-
 package org.jdesktop.swingx.input;
 
 import java.awt.Cursor;
@@ -19,6 +18,7 @@ public class PanMouseInputListener extends MouseInputAdapter
 {
 	private Point prev;
 	private JXMapViewer viewer;
+	private Cursor priorCursor;
 	
 	/**
 	 * @param viewer the jxmapviewer
@@ -32,6 +32,8 @@ public class PanMouseInputListener extends MouseInputAdapter
 	public void mousePressed(MouseEvent evt)
 	{
 		prev = evt.getPoint();
+		priorCursor = viewer.getCursor();
+		viewer.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 	}
 
 	@Override
@@ -67,7 +69,6 @@ public class PanMouseInputListener extends MouseInputAdapter
 		prev = current;
 		viewer.setCenter(new Point2D.Double(x, y));
 		viewer.repaint();
-		viewer.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 	}
 
 	@Override
@@ -77,7 +78,7 @@ public class PanMouseInputListener extends MouseInputAdapter
 			return;
 
 		prev = null;
-		viewer.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		viewer.setCursor(priorCursor);
 	}
 
 	@Override
