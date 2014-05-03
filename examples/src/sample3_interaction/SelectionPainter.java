@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import org.jdesktop.swingx.painter.Painter;
+import org.jxmapviewer.painter.Painter;
 
 /**
  * Paints a selection rectangle

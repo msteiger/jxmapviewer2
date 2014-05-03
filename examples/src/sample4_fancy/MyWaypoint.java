@@ -3,8 +3,8 @@ package sample4_fancy;
 
 import java.awt.Color;
 
-import org.jdesktop.swingx.mapviewer.DefaultWaypoint;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.viewer.DefaultWaypoint;
+import org.jxmapviewer.viewer.GeoPosition;
 
 /**
  * A waypoint that also has a color and a label
