@@ -10,7 +10,7 @@ First you need to prepare a release:
 $ mvn release:clean
 $ mvn release:prepare
 	
-Note: Preparing the release will create the new tag in SVN, automatically checking in on your behalf.
+Note: Preparing the release will create the new tag and two commits in GIT, automatically checking in on your behalf.
 
 Then stage the release:
 
@@ -30,6 +30,10 @@ You will be asked to provide a description for this staging close operation.
 If the staging repository is closed successfully, you will get a notification email and confirmation via the ui.
 
 # Long info
+
+If iconv.dll is missing, you need to download it and put it either in System32 or git/bin.
+
+https://www.gnupg.org/download/iconv.html
 
 First, gpg keys are required to sign the artifacts
 
