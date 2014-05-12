@@ -19,7 +19,7 @@ The content of this project are also available at *Maven Central* and can be ref
     <dependency>
       <groupId>org.jdesktop.swingx</groupId>
       <artifactId>jxmapviewer2</artifactId>
-      <version>2.0</version>
+      <version>1.3.1</version>
     </dependency>
 
 #### What we have done so far ..
