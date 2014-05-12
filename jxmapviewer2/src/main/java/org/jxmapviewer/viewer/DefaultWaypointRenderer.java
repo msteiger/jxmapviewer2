@@ -36,7 +36,7 @@ public class DefaultWaypointRenderer implements WaypointRenderer<Waypoint>
 	{
 		try
 		{
-			img = ImageIO.read(getClass().getResource("resources/standard_waypoint.png"));
+			img = ImageIO.read(DefaultWaypointRenderer.class.getResource("resources/standard_waypoint.png"));
 		}
 		catch (Exception ex)
 		{
