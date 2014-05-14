@@ -89,11 +89,6 @@ artifacts {
     archives javadocJar
 }
 
-// sign all artifacts
-task signJars (type : Sign, dependsOn: [jar, javadocJar, sourceJar]) {
-    sign configurations.archives
-}
-
 signing {
     sign configurations.archives
 }
