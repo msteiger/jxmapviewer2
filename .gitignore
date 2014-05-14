@@ -15,6 +15,9 @@ doc-files/
 
 # eclipse settings folder
 .metadata/
+.classpath
+.project
+.settings/
 
 # Maven output
 target/
