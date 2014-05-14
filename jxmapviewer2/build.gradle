@@ -1,0 +1,99 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+group = 'org.jxmapviewer'
+version = '2.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+ 
+			beforeDeployment { MavenDeployment deployment ->
+				signing.signPom(deployment)
+			}
+			
+			repository(url: sonatypeRepoURI) {
+                authentication(
+					userName: sonatypeUsername,
+                    password: sonatypePassword);
+            }
+	  
+			pom.project {
+				name 'jxmapviewer2'
+				packaging 'jar'
+				description 'A MapViewer based on the JXMapViewer component of SwingX-WS.'
+				url 'https://github.com/msteiger/jxmapviewer2'
+
+				scm {
+					url 'git@github.com:msteiger/jxmapviewer2.git'
+					connection 'scm:git@github.com:msteiger/jxmapviewer2.git'
+					developerConnection 'scm:git@github.com:msteiger/jxmapviewer2.git'
+				}
+
+				issueManagement {
+					url 'https://github.com/msteiger/jxmapviewer2/issues'
+				}
+
+				licenses {
+					license {
+						name 'GNU Lesser General Public License'
+						url 'http://www.gnu.org/licenses/lgpl-3.0-standalone.html'
+						distribution 'repo'
+					}
+				}
+
+				developers {
+					developer {
+						id 'msteiger'
+						name 'Martin Steiger'
+					}
+				}
+			}
+       }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}
+
+
+task sourceJar(type: Jar) {
+    description = "Create a JAR with all sources"
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    description = "Create a JAR with the JavaDoc for the java sources"
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+// Define the artifacts we want to publish (the .pom will also be included since the Maven plugin is active)
+artifacts {
+	archives jar
+    archives sourceJar
+    archives javadocJar
+}
+
+// sign all artifacts
+task signJars (type : Sign, dependsOn: [jar, javadocJar, sourceJar]) {
+    sign configurations.archives
+}
+
+signing {
+    sign configurations.archives
+}

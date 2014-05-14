@@ -93,10 +93,10 @@ public class JXMapKit extends JPanel
 		zoomSlider.setOpaque(false);
 		try
 		{
-			Icon minusIcon = new ImageIcon(JXMapKit.class.getResource("viewer/resources/minus.png"));
+			Icon minusIcon = new ImageIcon(JXMapKit.class.getResource("/images/minus.png"));
 			this.zoomOutButton.setIcon(minusIcon);
 			this.zoomOutButton.setText("");
-			Icon plusIcon = new ImageIcon(JXMapKit.class.getResource("viewer/resources/plus.png"));
+			Icon plusIcon = new ImageIcon(JXMapKit.class.getResource("/images/plus.png"));
 			this.zoomInButton.setIcon(plusIcon);
 			this.zoomInButton.setText("");
 		}
@@ -327,7 +327,7 @@ public class JXMapKit extends JPanel
 		jPanel1.setLayout(new java.awt.GridBagLayout());
 
 		zoomInButton.setAction(getZoomOutAction());
-		zoomInButton.setIcon(new ImageIcon(JXMapKit.class.getResource("viewer/resources/plus.png")));
+		zoomInButton.setIcon(new ImageIcon(JXMapKit.class.getResource("/images/plus.png")));
 		zoomInButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
 		zoomInButton.setMaximumSize(new java.awt.Dimension(20, 20));
 		zoomInButton.setMinimumSize(new java.awt.Dimension(20, 20));
@@ -350,7 +350,7 @@ public class JXMapKit extends JPanel
 		jPanel1.add(zoomInButton, gridBagConstraints);
 
 		zoomOutButton.setAction(getZoomInAction());
-		zoomOutButton.setIcon(new ImageIcon(JXMapKit.class.getResource("viewer/resources/minus.png")));
+		zoomOutButton.setIcon(new ImageIcon(JXMapKit.class.getResource("/images/minus.png")));
 		zoomOutButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
 		zoomOutButton.setMaximumSize(new java.awt.Dimension(20, 20));
 		zoomOutButton.setMinimumSize(new java.awt.Dimension(20, 20));

@@ -121,7 +121,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 		// make a dummy loading image
 		try
 		{
-			URL url = JXMapViewer.class.getResource("viewer/resources/loading.png");
+			URL url = JXMapViewer.class.getResource("/images/loading.png");
 			this.setLoadingImage(ImageIO.read(url));
 		}
 		catch (Exception ex)
