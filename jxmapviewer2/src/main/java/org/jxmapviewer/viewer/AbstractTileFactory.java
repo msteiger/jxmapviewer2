@@ -157,7 +157,7 @@ public abstract class AbstractTileFactory extends TileFactory
 	/**
 	 * Thread pool for loading the tiles
 	 */
-	private static BlockingQueue<Tile> tileQueue = new PriorityBlockingQueue<Tile>(5, new Comparator<Tile>()
+	private BlockingQueue<Tile> tileQueue = new PriorityBlockingQueue<Tile>(5, new Comparator<Tile>()
 	{
 		@Override
 		public int compare(Tile o1, Tile o2)
