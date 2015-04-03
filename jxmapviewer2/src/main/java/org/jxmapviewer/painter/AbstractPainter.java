@@ -47,12 +47,14 @@ import org.jxmapviewer.util.GraphicsUtilities;
  * 
  * <p>For example, here is the doPaint method of a simple <code>Painter</code> that
  * paints an opaque rectangle:
+ * </p>
+ * 
  * <pre><code>
  *  public void doPaint(Graphics2D g, T obj, int width, int height) {
  *      g.setPaint(Color.BLUE);
  *      g.fillRect(0, 0, width, height);
  *  }
- * </code></pre></p>
+ * </code></pre>
  *
  * @author rbair
  * @param <T> an optional configuration parameter

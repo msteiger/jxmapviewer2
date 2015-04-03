@@ -300,7 +300,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 	}
 
 	/**
-	 * Sets the map overlay. This is a Painter<JXMapViewer> which will paint on top of the map. It can be used to draw waypoints,
+	 * Sets the map overlay. This is a {@code Painter<JXMapViewer>} which will paint on top of the map. It can be used to draw waypoints,
 	 * lines, or static overlays like text messages.
 	 * @param overlay the map overlay to use
 	 */

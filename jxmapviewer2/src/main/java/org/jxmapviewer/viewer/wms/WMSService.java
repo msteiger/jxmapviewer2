@@ -23,8 +23,8 @@ public class WMSService
 
 	/** 
 	 * Creates a new instance of WMSService
-	 * TODO: not working -> remove 
 	 */
+        // TODO: not working -> remove 
 	public WMSService()
 	{
 		// by default use a known nasa server
