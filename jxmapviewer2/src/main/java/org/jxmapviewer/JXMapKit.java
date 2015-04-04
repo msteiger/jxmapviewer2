@@ -50,9 +50,9 @@ import org.jxmapviewer.viewer.bmng.CylindricalProjectionTileFactory;
  * Each feature can be turned off using an appropriate
  * <CODE>is<I>X</I>visible</CODE> property. For example, to turn
  * off the minimap call
+ * </p>
  *
  * <PRE><CODE>jxMapKit.setMiniMapVisible(false);</CODE></PRE>
- * </p>
  *
  * <p>
  * The JXMapViewer is preconfigured to connect to maps.swinglabs.org which
