@@ -245,10 +245,14 @@ public class JXMapViewer extends JPanel implements DesignMode
 					}
 					else
 					{
-						// Use tile at higher zoom level with 200% magnification
-						Tile superTile = getTileFactory().getTile(itpx / 2, itpy / 2, zoom + 1);
+                                                Tile superTile = null;
+                                                
+						// Use tile at higher zoom level with 200% magnification and if we are not already at max resolution
+                                                if( zoom < info.getMaximumZoomLevel() ) {
+                                                    superTile = getTileFactory().getTile(itpx / 2, itpy / 2, zoom + 1);
+                                                }
 
-						if (superTile.isLoaded())
+						if ( superTile != null && superTile.isLoaded())
 						{
 							int offX = (itpx % 2) * size / 2;
 							int offY = (itpy % 2) * size / 2;
