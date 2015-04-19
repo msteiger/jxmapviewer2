@@ -87,7 +87,7 @@ import javax.swing.JComponent;
  * These methods try to avoid unmanaging the image in order to keep good
  * performance.</p>
  *
- * @author Romain Guy <romain.guy@mac.com>
+ * @author Romain Guy &lt;romain.guy@mac.com&gt;
  * @author rbair
  * @author Karl Schaefer
  */
@@ -420,7 +420,7 @@ public class GraphicsUtilities {
      * @return a new compatible <code>BufferedImage</code> containing a
      *   thumbnail of <code>image</code>
      * @throws IllegalArgumentException if <code>newWidth</code> is larger than
-     *   the width of <code>image</code> or if code>newHeight</code> is larger
+     *   the width of <code>image</code> or if <code>newHeight</code> is larger
      *   than the height of <code>image</code> or if one of the dimensions
      *   is &lt;= 0
      */
@@ -583,7 +583,7 @@ public class GraphicsUtilities {
      * @return a new compatible <code>BufferedImage</code> containing a
      *   thumbnail of <code>image</code>
      * @throws IllegalArgumentException if <code>newWidth</code> is larger than
-     *   the width of <code>image</code> or if code>newHeight</code> is larger
+     *   the width of <code>image</code> or if <code>newHeight</code> is larger
      *   than the height of <code>image or if one the dimensions is not &gt; 0</code>
      */
     public static BufferedImage createThumbnail(BufferedImage image,

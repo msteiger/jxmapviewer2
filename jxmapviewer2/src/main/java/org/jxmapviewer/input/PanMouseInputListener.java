@@ -80,17 +80,4 @@ public class PanMouseInputListener extends MouseInputAdapter
 		prev = null;
 		viewer.setCursor(priorCursor);
 	}
-
-	@Override
-	public void mouseEntered(MouseEvent e)
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				viewer.requestFocusInWindow();
-			}
-		});
-	}
 }

@@ -44,6 +44,7 @@ import java.beans.VetoableChangeSupport;
  * <p>
  * Here is a simple example bean that contains one property, foo, and the proper
  * pattern for implementing property change notification:
+ * </p>
  * 
  * <pre><code>
  * public class ABean extends AbstractBean {
@@ -60,8 +61,6 @@ import java.beans.VetoableChangeSupport;
  *     }
  * }
  * </code></pre>
- * 
- * </p>
  * 
  * <p>
  * You will notice that "getFoo()" is used in the setFoo method rather than
@@ -85,6 +84,7 @@ import java.beans.VetoableChangeSupport;
  * from "fred" to "red", but a listener deems that "red" is unexceptable. In
  * this case, the listener can fire a veto exception and the property must
  * remain "fred". For example:
+ * </p>
  * 
  * <pre><code>
  *  public class ABean extends AbstractBean {
@@ -120,7 +120,6 @@ import java.beans.VetoableChangeSupport;
  *  }
  * </code></pre>
  * 
- * </p>
  * <p>
  * {@code AbstractBean} is not {@link java.io.Serializable}. Special care must
  * be taken when creating {@code Serializable} subclasses, as the
@@ -217,6 +216,7 @@ public abstract class AbstractBean {
      * the parameter.
      * 
      * <pre>
+     * {@code
      * PropertyChangeListener[] listeners = bean.getPropertyChangeListeners();
      * for (int i = 0; i < listeners.length; i++) {
      *     if (listeners[i] instanceof PropertyChangeListenerProxy) {
@@ -227,6 +227,7 @@ public abstract class AbstractBean {
      *       // with the property named "foo"
      *     }
      *   }
+     * }
      * }
      *</pre>
      *
