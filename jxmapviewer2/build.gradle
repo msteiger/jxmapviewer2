@@ -5,10 +5,23 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 group = 'org.jxmapviewer'
-version = '2.0'
+version = '2.1-SNAPSHOT'
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
 
 repositories {
     mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    doFirst {
+        if (sourceCompatibility == '1.6' && System.env.JRE6_HOME != null) {
+            options.fork = true
+            options.bootClasspath = "$System.env.JRE6_HOME/lib/rt.jar"
+            options.bootClasspath += "$File.pathSeparator$System.env.JDK6_HOME/lib/jsse.jar"
+        }
+    }
 }
 
 dependencies {
@@ -18,50 +31,51 @@ dependencies {
 
 uploadArchives {
     repositories {
-        mavenDeployer {
- 
-			beforeDeployment { MavenDeployment deployment ->
-				signing.signPom(deployment)
-			}
-			
-			repository(url: sonatypeRepoURI) {
-                authentication(
-					userName: sonatypeUsername,
-                    password: sonatypePassword);
+        if (hasProperty('sonatypeRepoURI') && hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')) {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment ->
+                    signing.signPom(deployment)
+                }
+                
+                repository(url: sonatypeRepoURI) {
+                    authentication(
+                        userName: sonatypeUsername,
+                        password: sonatypePassword);
+                }
+          
+                pom.project {
+                    name 'jxmapviewer2'
+                    packaging 'jar'
+                    description 'A MapViewer based on the JXMapViewer component of SwingX-WS.'
+                    url 'https://github.com/msteiger/jxmapviewer2'
+
+                    scm {
+                        url 'git@github.com:msteiger/jxmapviewer2.git'
+                        connection 'scm:git@github.com:msteiger/jxmapviewer2.git'
+                        developerConnection 'scm:git@github.com:msteiger/jxmapviewer2.git'
+                    }
+
+                    issueManagement {
+                        url 'https://github.com/msteiger/jxmapviewer2/issues'
+                    }
+
+                    licenses {
+                        license {
+                            name 'GNU Lesser General Public License'
+                            url 'http://www.gnu.org/licenses/lgpl-3.0-standalone.html'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'msteiger'
+                            name 'Martin Steiger'
+                        }
+                    }
+                }
             }
-	  
-			pom.project {
-				name 'jxmapviewer2'
-				packaging 'jar'
-				description 'A MapViewer based on the JXMapViewer component of SwingX-WS.'
-				url 'https://github.com/msteiger/jxmapviewer2'
-
-				scm {
-					url 'git@github.com:msteiger/jxmapviewer2.git'
-					connection 'scm:git@github.com:msteiger/jxmapviewer2.git'
-					developerConnection 'scm:git@github.com:msteiger/jxmapviewer2.git'
-				}
-
-				issueManagement {
-					url 'https://github.com/msteiger/jxmapviewer2/issues'
-				}
-
-				licenses {
-					license {
-						name 'GNU Lesser General Public License'
-						url 'http://www.gnu.org/licenses/lgpl-3.0-standalone.html'
-						distribution 'repo'
-					}
-				}
-
-				developers {
-					developer {
-						id 'msteiger'
-						name 'Martin Steiger'
-					}
-				}
-			}
-       }
+        }
     }
 }
 
@@ -90,5 +104,7 @@ artifacts {
 }
 
 signing {
-    sign configurations.archives
+    if (hasProperty('signing.keyId') && hasProperty('signing.password') && hasProperty('signing.secretKeyRingFile')) {
+        sign configurations.archives
+    }
 }
