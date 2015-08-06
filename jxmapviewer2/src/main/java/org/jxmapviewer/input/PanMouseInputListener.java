@@ -31,6 +31,9 @@ public class PanMouseInputListener extends MouseInputAdapter
 	@Override
 	public void mousePressed(MouseEvent evt)
 	{
+		if (!SwingUtilities.isLeftMouseButton(evt))
+			return;
+
 		prev = evt.getPoint();
 		priorCursor = viewer.getCursor();
 		viewer.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
