@@ -79,6 +79,13 @@ uploadArchives {
     }
 }
 
+processResources {
+    filesMatching('project.properties') {
+        expand projectVersion: project.version,
+               projectName: project.name
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }

@@ -1,6 +1,11 @@
 
 package org.jxmapviewer.viewer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jxmapviewer.util.ProjectProperties;
+import org.jxmapviewer.viewer.util.GeoUtil;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,13 +24,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
-
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jxmapviewer.viewer.util.GeoUtil;
 
 /**
  * The <code>AbstractTileFactory</code> provides 
@@ -34,6 +34,11 @@ import org.jxmapviewer.viewer.util.GeoUtil;
 public abstract class AbstractTileFactory extends TileFactory
 {
 	private static final Log log = LogFactory.getLog(AbstractTileFactory.class);
+
+	// Note that the name and version are actually set by Gradle
+	// so there is no need to bump a version manually when new release
+	// is made.
+	private static final String DEFAULT_USER_AGENT = ProjectProperties.getName() + "/" + ProjectProperties.getVersion();
 	
 	/**
 	 * Creates a new instance of DefaultTileFactory using the spcified TileFactoryInfo
@@ -47,6 +52,7 @@ public abstract class AbstractTileFactory extends TileFactory
 	// private static final boolean doEagerLoading = true;
 
 	private int threadPoolSize = 4;
+	private String userAgent = DEFAULT_USER_AGENT;
 	private ExecutorService service;
 
 	// TODO the tile map should be static ALWAYS, regardless of the number
@@ -89,7 +95,7 @@ public abstract class AbstractTileFactory extends TileFactory
 		{
 			pri = Tile.Priority.Low;
 		}
-		Tile tile = null;
+		Tile tile;
 		// System.out.println("testing for validity: " + tilePoint + " zoom = " + zoom);
 		if (!tileMap.containsKey(url))
 		{
@@ -228,12 +234,28 @@ public abstract class AbstractTileFactory extends TileFactory
 		threadPoolSize = size;
 	}
 
+	/**
+	 * Set the User agent that will be used when making a tile request.
+	 *
+	 * Some tile server usage policies requires application to identify itself,
+	 * so please make sure that it is set properly.
+	 *
+	 * @param userAgent User agent to be used.
+	 */
+	public void setUserAgent(String userAgent) {
+		if (userAgent == null || userAgent.isEmpty()) {
+			throw new IllegalArgumentException("User agent can't be null or empty.");
+		}
+
+		this.userAgent = userAgent;
+	}
+
 	@Override
 	protected synchronized void startLoading(Tile tile)
 	{
 		if (tile.isLoading())
 		{
-			System.out.println("already loading. bailing");
+			// System.out.println("already loading. bailing");
 			return;
 		}
 		tile.setLoading(true);
@@ -318,7 +340,7 @@ public abstract class AbstractTileFactory extends TileFactory
 			{
 				try
 				{
-					BufferedImage img = null;
+					BufferedImage img;
 					URI uri = getURI(tile);
 					img = cache.get(uri);
 					if (img == null)
@@ -331,7 +353,7 @@ public abstract class AbstractTileFactory extends TileFactory
 					}
 					if (img == null)
 					{
-						System.out.println("error loading: " + uri);
+						// System.out.println("error loading: " + uri);
 						log.info("Failed to load: " + uri);
 						trys--;
 					}
@@ -373,7 +395,7 @@ public abstract class AbstractTileFactory extends TileFactory
 		private byte[] cacheInputStream(URL url) throws IOException
 		{
 			URLConnection connection = url.openConnection();
-			connection.setRequestProperty("User-Agent", "JxMapViewer/1.0");
+			connection.setRequestProperty("User-Agent", userAgent);
 			InputStream ins = connection.getInputStream();
 			
 			ByteArrayOutputStream bout = new ByteArrayOutputStream();
