@@ -17,32 +17,38 @@ repositories {
 tasks.withType(JavaCompile) {
     doFirst {
         if (sourceCompatibility == '1.6' && System.env.JRE6_HOME != null) {
+            println "Using Java6 runtime library"
             options.fork = true
             options.bootClasspath = "$System.env.JRE6_HOME/lib/rt.jar"
             options.bootClasspath += "$File.pathSeparator$System.env.JDK6_HOME/lib/jsse.jar"
+        } else {
+            println "Using default Java runtime library"
         }
     }
 }
 
 dependencies {
-	compile group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
+    compile group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
 }
 
 
 uploadArchives {
     repositories {
-        if (hasProperty('sonatypeRepoURI') && hasProperty('sonatypeUsername') && hasProperty('sonatypePassword')) {
+        if (project.hasProperty('sonatypeRepoURI') &&
+            project.hasProperty('sonatypeUsername') &&
+            project.hasProperty('sonatypePassword')) {
+
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment ->
                     signing.signPom(deployment)
                 }
-                
+
                 repository(url: sonatypeRepoURI) {
                     authentication(
                         userName: sonatypeUsername,
                         password: sonatypePassword);
                 }
-          
+
                 pom.project {
                     name 'jxmapviewer2'
                     packaging 'jar'
@@ -87,7 +93,7 @@ processResources {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.13'
 }
 
 
@@ -105,13 +111,15 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 // Define the artifacts we want to publish (the .pom will also be included since the Maven plugin is active)
 artifacts {
-	archives jar
+    archives jar
     archives sourceJar
     archives javadocJar
 }
 
 signing {
-    if (hasProperty('signing.keyId') && hasProperty('signing.password') && hasProperty('signing.secretKeyRingFile')) {
+    if (project.hasProperty('signing.keyId') &&
+        project.hasProperty('signing.password') &&
+        project.hasProperty('signing.secretKeyRingFile')) {
         sign configurations.archives
     }
 }
