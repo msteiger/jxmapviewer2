@@ -1,78 +1,76 @@
 package org.jxmapviewer.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Project properties.
  *
  * @author Primoz K.
  */
-public class ProjectProperties {
+public enum ProjectProperties {
 
-	private static final Log log = LogFactory.getLog(ProjectProperties.class);
+    /**
+     * The only instance of this class
+     */
+    INSTANCE;
 
-	private static Properties props = new Properties();
+    private static final String PROPERTIES_FILE = "project.properties";
 
-	private static final String PROPERTIES_FILE = "project.properties";
+    private static final String PROP_VERSION = "version";
+    private static final String PROP_NAME = "name";
 
-	/***************************************************************
-	 ************************* PROPERTIES **************************
-	 ***************************************************************/
+    private final Log log = LogFactory.getLog(ProjectProperties.class);
+    private final Properties props = new Properties();
 
-	private static final String PROP_VERSION = "version";
-	private static final String PROP_NAME = "name";
+    private ProjectProperties() {
+        log.debug("Loading project properties...");
 
-	/***************************************************************
-	 *********************** INITIALIZATION ************************
-	 ***************************************************************/
+        InputStream is = null;
+        try {
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            is = classloader.getResourceAsStream(PROPERTIES_FILE);
+            props.load(is);
+            log.debug("Properties successfully loaded.");
 
-	static {
-		log.debug("Loading project properties...");
+        }
+        catch (IOException e) {
+            log.warn("Unable to read project properties.", e);
+            props.put(PROP_NAME, "JxMapViewer");
+            props.put(PROP_VERSION, "1.0");
+        }
+        finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            }
+            catch (IOException e) {
+                log.warn("Unable to close stream.", e);
+            }
+        }
+    }
 
-		InputStream is = null;
-		try {
-			ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-			is = classloader.getResourceAsStream(PROPERTIES_FILE);
-			props.load(is);
-			log.debug("Properties successfully loaded.");
+    /***************************************************************
+     ********************* PROPERTIES GETTERS **********************
+     ***************************************************************/
 
-		}
-		catch (IOException e) {
-			throw new RuntimeException("Unable to read project properties." + e);
-		}
-		finally {
-			try {
-				if (is != null) {
-					is.close();
-				}
-			}
-			catch (IOException e) {
-				log.warn("Unable to close stream.", e);
-			}
-		}
-	}
+    /**
+     * @return Project version.
+     */
+    public String getVersion() {
+        return props.getProperty(PROP_VERSION);
+    }
 
-	/***************************************************************
-	 ********************* PROPERTIES GETTERS **********************
-	 ***************************************************************/
-
-	/**
-	 * @return Project version.
-	 */
-	public static String getVersion() {
-		return props.getProperty(PROP_VERSION);
-	}
-
-	/**
-	 * @return Project name.
-	 */
-	public static String getName() {
-		return props.getProperty(PROP_NAME);
-	}
+    /**
+     * @return Project name.
+     */
+    public String getName() {
+        return props.getProperty(PROP_NAME);
+    }
 
 }
