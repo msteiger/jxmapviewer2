@@ -16,11 +16,13 @@ This source code used in this project is based on:
 
 The content of this project are also available at *Maven Central* and can be referenced in your pom.xml:
 
-    <dependency>
-      <groupId>org.jdesktop.swingx</groupId>
-      <artifactId>jxmapviewer2</artifactId>
-      <version>1.3.1</version>
-    </dependency>
+```xml
+<dependency>
+    <groupId>org.jxmapviewer</groupId>
+    <artifactId>jxmapviewer2</artifactId>
+    <version>2.2</version>
+</dependency>
+```
 
 #### What we have done so far ..
 
