@@ -231,7 +231,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 					int oy = ((itpy * getTileFactory().getTileSize(zoom)) - viewportBounds.y);
 
 					// if the tile is off the map to the north/south, then just don't paint anything
-					if (isTileOnMap(itpx, itpy, mapSize))
+					if (isTileOffTheMap(itpx, itpy, mapSize))
 					{
 						if (isOpaque())
 						{
@@ -298,9 +298,9 @@ public class JXMapViewer extends JPanel implements DesignMode
 	}
 
 	@SuppressWarnings("unused")
-	private boolean isTileOnMap(int x, int y, Dimension mapSize)
+	private boolean isTileOffTheMap(int x, int y, Dimension mapSize)
 	{
-		return !isNegativeYAllowed && y < 0 || y >= mapSize.getHeight();
+		return y < 0 || y >= mapSize.getHeight();
 	}
 
 	/**
