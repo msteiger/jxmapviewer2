@@ -63,8 +63,6 @@ public class JXMapViewer extends JPanel implements DesignMode
 {
 	private static final long serialVersionUID = -3530746298586937321L;
 
-	private final boolean isNegativeYAllowed = true; // maybe rename to isNorthBounded and isSouthBounded?
-
 	/**
 	 * The zoom level. Generally a value between 1 and 15 (TODO Is this true for all the mapping worlds? What does this
 	 * mean if some mapping system doesn't support the zoom level?
@@ -137,12 +135,12 @@ public class JXMapViewer extends JPanel implements DesignMode
 
 		// setAddressLocation(new GeoPosition(37.392137,-121.950431)); // Sun campus
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		
+
 		doPaintComponent(g);
 	}
 
@@ -205,10 +203,10 @@ public class JXMapViewer extends JPanel implements DesignMode
 		// TilePoint topLeftTile = getTileFactory().getTileCoordinate(
 		// new Point2D.Double(viewportBounds.x, viewportBounds.y));
 		TileFactoryInfo info = getTileFactory().getInfo();
-		
-		// number of tiles in x direction 
+
+		// number of tiles in x direction
 		int tpx = (int) Math.floor(viewportBounds.getX() / info.getTileSize(0));
-		// number of tiles in y direction 
+		// number of tiles in y direction
 		int tpy = (int) Math.floor(viewportBounds.getY() / info.getTileSize(0));
 		// TilePoint topLeftTile = new TilePoint(tpx, tpy);
 
@@ -231,7 +229,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 					int oy = ((itpy * getTileFactory().getTileSize(zoom)) - viewportBounds.y);
 
 					// if the tile is off the map to the north/south, then just don't paint anything
-					if (isTileOnMap(itpx, itpy, mapSize))
+					if (!isTileOnMap(itpx, itpy, mapSize))
 					{
 						if (isOpaque())
 						{
@@ -246,7 +244,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 					else
 					{
                                                 Tile superTile = null;
-                                                
+
 						// Use tile at higher zoom level with 200% magnification and if we are not already at max resolution
                                                 if( zoom < info.getMaximumZoomLevel() ) {
                                                     superTile = getTileFactory().getTile(itpx / 2, itpy / 2, zoom + 1);
@@ -297,10 +295,9 @@ public class JXMapViewer extends JPanel implements DesignMode
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private boolean isTileOnMap(int x, int y, Dimension mapSize)
 	{
-		return !isNegativeYAllowed && y < 0 || y >= mapSize.getHeight();
+		return y >= 0 && y < mapSize.getHeight();
 	}
 
 	/**
@@ -336,7 +333,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 			AbstractPainter<?> ap = (AbstractPainter<?>) overlay;
 			ap.addPropertyChangeListener("dirty", listener);
 		}
-		
+
 		firePropertyChange("mapOverlay", old, getOverlayPainter());
 		repaint();
 	}
@@ -507,13 +504,13 @@ public class JXMapViewer extends JPanel implements DesignMode
 	{
 		if (factory == null)
 			throw new NullPointerException("factory must not be null");
-		
+
 		this.factory.removeTileListener(tileLoadListener);
 		this.factory.dispose();
-		
+
 		this.factory = factory;
 		this.setZoom(factory.getInfo().getDefaultZoomLevel());
-		
+
 		factory.addTileListener(tileLoadListener);
 
 		repaint();
@@ -553,7 +550,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 	public void setCenter(Point2D center)
 	{
 		Point2D old = this.getCenter();
-		
+
 		double centerX = center.getX();
 		double centerY = center.getY();
 
@@ -608,16 +605,16 @@ public class JXMapViewer extends JPanel implements DesignMode
 		// If center is outside (0, 0,mapWidth, mapHeight)
 		// compute modulo to get it back in.
 		{
-			centerX = centerX % mapWidth; 
-			centerY = centerY % mapHeight; 
-			
+			centerX = centerX % mapWidth;
+			centerY = centerY % mapHeight;
+
 			if (centerX < 0)
 				centerX += mapWidth;
-			
+
 			if (centerY < 0)
 				centerY += mapHeight;
 		}
-		
+
 		GeoPosition oldGP = this.getCenterPosition();
 		this.center = new Point2D.Double(centerX, centerY);
 		firePropertyChange("center", old, this.center);
@@ -669,7 +666,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 			rect = generateBoundingRect(positions, zoom);
 		}
 	}
-	
+
 	/**
 	 * Zoom and center the map to a best fit around the input GeoPositions.
 	 * Best fit is defined as the most zoomed-in possible view where both
@@ -678,26 +675,26 @@ public class JXMapViewer extends JPanel implements DesignMode
 	 * @param positions A set of GeoPositions to calculate the new zoom from
 	 * @param maxFraction the maximum fraction of the viewport that should be covered
 	 */
-	public void zoomToBestFit(Set<GeoPosition> positions, double maxFraction) 
+	public void zoomToBestFit(Set<GeoPosition> positions, double maxFraction)
 	{
 		if (positions.isEmpty())
 			return;
-		
+
 		if (maxFraction <= 0 || maxFraction > 1)
 			throw new IllegalArgumentException("maxFraction must be between 0 and 1");
-		
+
         TileFactory tileFactory = getTileFactory();
         TileFactoryInfo info = tileFactory.getInfo();
-        
+
         if(info == null)
         	return;
 
         // set to central position initially
-        Rectangle2D bounds=generateBoundingRect(positions, getZoom());   
+        Rectangle2D bounds=generateBoundingRect(positions, getZoom());
         Point2D bc = new Point2D.Double(bounds.getCenterX(),bounds.getCenterY());
 		GeoPosition centre = tileFactory.pixelToGeo(bc, getZoom());
         setCenterPosition(centre);
-        
+
         if (positions.size() == 1)
         	return;
 
@@ -707,14 +704,14 @@ public class JXMapViewer extends JPanel implements DesignMode
         // repeatedly zoom in until we find the first zoom level where either the width or height
         // of the points takes up more than the max fraction of the viewport
         int bestZoom = getZoom();
-        
+
         Rectangle2D viewport = getViewportBounds();
-        		
+
         while (true)
         {
             // is this zoom still OK?
             bounds = generateBoundingRect(positions, getZoom());
-            if (bounds.getWidth() < viewport.getWidth() * maxFraction && 
+            if (bounds.getWidth() < viewport.getWidth() * maxFraction &&
             	bounds.getHeight() < viewport.getHeight()* maxFraction)
             {
                 bestZoom = getZoom();
@@ -723,7 +720,7 @@ public class JXMapViewer extends JPanel implements DesignMode
             {
                 break;
             }
-            
+
             if (getZoom() == info.getMinimumZoomLevel())
             {
                 break;
@@ -735,7 +732,7 @@ public class JXMapViewer extends JPanel implements DesignMode
         }
 
         setZoom(bestZoom);
-	}	
+	}
 
 	private Rectangle2D generateBoundingRect(final Set<GeoPosition> positions, int zoom)
 	{
@@ -776,7 +773,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 					}*/
 				}
 			}
-			
+
 	};
 
 	/**
@@ -843,13 +840,13 @@ public class JXMapViewer extends JPanel implements DesignMode
 		return pos;
 	}
 
-
-
 	/**
 	 * @return isNegativeYAllowed
+	 * @deprecated do not use
 	 */
+	@Deprecated
 	public boolean isNegativeYAllowed()
 	{
-		return isNegativeYAllowed;
+		return true;
 	}
 }
