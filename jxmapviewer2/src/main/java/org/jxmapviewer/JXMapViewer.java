@@ -107,6 +107,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 
 	private boolean restrictOutsidePanning = true;
 	private boolean horizontalWrapped = true;
+	private boolean infiniteMapRendering = true;
 
 	/**
 	 * Create a new JXMapViewer. By default it will use the EmptyTileFactory
@@ -297,7 +298,8 @@ public class JXMapViewer extends JPanel implements DesignMode
 
 	private boolean isTileOnMap(int x, int y, Dimension mapSize)
 	{
-		return y >= 0 && y < mapSize.getHeight();
+		return (y >= 0 && y < mapSize.getHeight()) &&
+				  (isInfiniteMapRendering() || x >= 0 && x < mapSize.getWidth());
 	}
 
 	/**
@@ -798,6 +800,24 @@ public class JXMapViewer extends JPanel implements DesignMode
 	public boolean isHorizontalWrapped()
 	{
 		return horizontalWrapped;
+	}
+
+	/**
+	 * Side note: This setting is ignored when  horizontaklWrapped is set to true.
+	 *
+	 * @param infiniteMapRendering true when infinite map rendering should be enabled
+	 */
+	public void setInfiniteMapRendering(boolean infiniteMapRendering)
+	{
+		this.infiniteMapRendering = infiniteMapRendering;
+	}
+
+	/**
+	 * @return true if infinite map rendering is enabled
+	 */
+	public boolean isInfiniteMapRendering()
+	{
+		return horizontalWrapped || infiniteMapRendering;
 	}
 
 	/**
