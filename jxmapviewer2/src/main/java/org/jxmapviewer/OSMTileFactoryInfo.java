@@ -16,10 +16,15 @@ public class OSMTileFactoryInfo extends TileFactoryInfo
 	 */
 	public OSMTileFactoryInfo()
 	{
-		super("OpenStreetMap", 
+		this("OpenStreetMap", "http://tile.openstreetmap.org");
+	}
+
+	public OSMTileFactoryInfo(String name, String baseURL)
+	{
+		super(name, 
 				1, max - 2, max, 
 				256, true, true, 					// tile size is 256 and x/y orientation is normal
-				"http://tile.openstreetmap.org",
+				baseURL,
 				"x", "y", "z");						// 5/15/10.png
 	}
 
