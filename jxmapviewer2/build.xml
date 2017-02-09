@@ -1,0 +1,59 @@
+<project name="JXMapViewer2" default="dist" basedir=".">
+
+    <description>
+        Builds a jar library for JXMapViewer2
+    </description>
+
+  <property name="src.dir" location="src"/>
+  <property name="build.dir" location="build"/>
+  <property name="dist.dir"  location="dist"/>
+  <property name="lib.dir"  location="lib"/>
+
+  <target name="init">
+    <mkdir dir="${build.dir}"/>
+  </target>
+
+  <target name="genarate-doc">
+    <mkdir dir="${dist.dir}/doc"/>
+    <javadoc sourcepath="src"
+             destdir="${dist.dir}/doc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="JXMapviewer2 Documentation" />
+  </target>
+
+  <target name="compile" depends="init" description="compile the source ">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" classpath="${lib.dir}/commons-logging-1.1.1.jar"/>
+  </target>
+
+  <target name="dist" depends="compile,src-dist,genarate-doc" description="generate the distribution" >
+    <mkdir dir="${dist.dir}/lib"/>
+    <copy todir="${dist.dir}/lib">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <jar jarfile="${dist.dir}/lib/jxmapviewer2.jar">
+      <fileset dir="${build.dir}"/>
+      <fileset file="../license.txt"/>
+      <fileset file="../README.md"/>
+    </jar>
+  </target>
+
+  <target name="src-dist" description="generate the source distribution jar file" >
+    <mkdir dir="${dist.dir}/lib"/>
+    <jar jarfile="${dist.dir}/lib/jxmapviewer2-source.jar">
+      <fileset dir="${src.dir}"/>
+      <fileset file="../license.txt"/>
+      <fileset file="../README.md"/>
+    </jar>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+
+</project>
+
