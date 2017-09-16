@@ -40,11 +40,11 @@ The content of this project are also available at *Maven Central* and can be ref
  * Fixed thread leak when setting new TileFactory
  * Supports OSGi bundles (contains MANIFEST.MF)
  * Supports Maven dependency management
+ * Fixed use of deprecated code
  
 #### What we plan to do ..
 
  * Fix bugs that were posted on http://java.net/jira/browse/SWINGX_WS ( mostly complete )
- * Fix use of deprecated code
 
 #### License
 This project has been licensed under the GNU Lesser General Public License (LGPL)
