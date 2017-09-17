@@ -306,8 +306,8 @@ public abstract class AbstractTileFactory extends TileFactory
     }
 
     /**
-     * An inner class which actually loads the tiles. Used by the thread queue. Subclasses can override this if
-     * necessary.
+     * An inner class which actually loads the tiles. Used by the thread queue. Subclasses can override this
+     * via {@link #createTileRunner(Tile)} if necessary.
      */
     private class TileRunner implements Runnable
     {
@@ -326,27 +326,24 @@ public abstract class AbstractTileFactory extends TileFactory
             return new URI(tile.getURL());
         }
 
-        /**
-         * implementation of the Runnable interface.
-         */
         @Override
         public void run()
         {
             /*
-             * 3 strikes and you're out. Attempt to load the url. If it fails, decrement the number of tries left and
-             * try again. Log failures. If I run out of try s just get out. This way, if there is some kind of serious
-             * failure, I can get out and let other tiles try to load.
+             * Attempt to load the tile from its URL. If loading fails, retry two more times.
+             * If all attempts fail, nothing else is done. This way, if there is some kind of
+             * URL-specific failure, the pooled thread can try to load other tiles.
              */
             final Tile tile = tileQueue.remove();
 
-            int trys = 3;
-            while (!tile.isLoaded() && trys > 0)
+            int remainingAttempts = 3;
+            while (!tile.isLoaded() && remainingAttempts > 0)
             {
+                remainingAttempts--;
                 try
                 {
-                    BufferedImage img;
                     URI uri = getURI(tile);
-                    img = cache.get(uri);
+                    BufferedImage img = cache.get(uri);
                     if (img == null)
                     {
                         byte[] bimg = cacheInputStream(uri.toURL());
@@ -359,7 +356,6 @@ public abstract class AbstractTileFactory extends TileFactory
                     {
                         // System.out.println("error loading: " + uri);
                         log.info("Failed to load: " + uri);
-                        trys--;
                     }
                     else
                     {
@@ -382,14 +378,13 @@ public abstract class AbstractTileFactory extends TileFactory
                 }
                 catch (Throwable e)
                 {
-                    if (trys == 0)
+                    if (remainingAttempts == 0)
                     {
-                        log.error("Failed to load a tile at url: " + tile.getURL() + ", stopping", e);
+                        log.error("Failed to load a tile at URL: " + tile.getURL() + ", stopping", e);
                     }
                     else
                     {
-                        log.warn("Failed to load a tile at url: " + tile.getURL() + ", retrying", e);
-                        trys--;
+                        log.warn("Failed to load a tile at URL: " + tile.getURL() + ", retrying", e);
                     }
                 }
             }
