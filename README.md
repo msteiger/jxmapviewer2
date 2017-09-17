@@ -40,6 +40,7 @@ The content of this project are also available at *Maven Central* and can be ref
  * Fixed thread leak when setting new TileFactory
  * Supports OSGi bundles (contains MANIFEST.MF)
  * Supports Maven dependency management
+ * Fixed use of deprecated code
  
 #### What we plan to do ..
 
