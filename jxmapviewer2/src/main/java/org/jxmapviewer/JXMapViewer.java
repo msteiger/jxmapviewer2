@@ -109,6 +109,12 @@ public class JXMapViewer extends JPanel implements DesignMode
 	private boolean horizontalWrapped = true;
 	private boolean infiniteMapRendering = true;
 
+    /**
+     * If true, panning with the mouse should take place. If false, panning should not happen. Does not disable 
+     * explicit setting of position via {@link setCenter}.
+     */
+    private boolean panningEnabled = true;
+    
 	/**
 	 * Create a new JXMapViewer. By default it will use the EmptyTileFactory
 	 */
@@ -869,4 +875,22 @@ public class JXMapViewer extends JPanel implements DesignMode
 	{
 		return true;
 	}
+
+    /**
+     * Enables or disables panning.
+     * Useful for performing selections on the map.
+     * @param enabled if true, panning is enabled (the default), if false, panning is disabled
+     */
+    public void setPanEnabled(boolean enabled)
+    {
+        this.panningEnabled = enabled;
+    }
+
+    /**
+     * Returns whether panning is enabled. If it is disabled, panning should not occur. (Used primarily by {@link PanMouseInputListener}
+     */
+    public boolean isPanningEnabled()
+    {
+        return this.panningEnabled;
+    }
 }
