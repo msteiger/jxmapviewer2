@@ -33,7 +33,9 @@ public class PanMouseInputListener extends MouseInputAdapter
 	{
 		if (!SwingUtilities.isLeftMouseButton(evt))
 			return;
-
+        if (!viewer.isPanningEnabled())
+            return;
+        
 		prev = evt.getPoint();
 		priorCursor = viewer.getCursor();
 		viewer.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -44,7 +46,9 @@ public class PanMouseInputListener extends MouseInputAdapter
 	{
 		if (!SwingUtilities.isLeftMouseButton(evt))
 			return;
-
+        if (!viewer.isPanningEnabled())
+            return;
+        
 		Point current = evt.getPoint();
 		double x = viewer.getCenter().getX();
 		double y = viewer.getCenter().getY();
