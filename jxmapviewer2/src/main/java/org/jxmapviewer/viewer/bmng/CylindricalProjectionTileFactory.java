@@ -6,6 +6,7 @@ import java.awt.geom.Point2D;
 
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactoryInfo;
 
 /**
  * @author joshy
@@ -13,32 +14,11 @@ import org.jxmapviewer.viewer.GeoPosition;
 public class CylindricalProjectionTileFactory extends DefaultTileFactory
 {
 	/**
-     * Uses {@link SLMapServerInfo}
-     */
-	public CylindricalProjectionTileFactory()
-	{
-		this(new SLMapServerInfo());
-	}
-
-	/**
 	 * @param info the tile factory info
 	 */
-	public CylindricalProjectionTileFactory(SLMapServerInfo info)
+	public CylindricalProjectionTileFactory(TileFactoryInfo info)
 	{
 		super(info);
-	}
-
-	@Override
-	public Dimension getMapSize(int zoom)
-	{
-		int midpoint = ((SLMapServerInfo) getInfo()).getMidpoint();
-		if (zoom < midpoint)
-		{
-			int w = (int) Math.pow(2, midpoint - zoom);
-			return new Dimension(w, w / 2);
-			// return super.getMapSize(zoom);
-		}
-		return new Dimension(2, 1);
 	}
 
 	@Override

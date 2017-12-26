@@ -41,7 +41,6 @@ import org.jxmapviewer.viewer.TileFactory;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
-import org.jxmapviewer.viewer.bmng.CylindricalProjectionTileFactory;
 
 /**
  * <p>The JXMapKit is a pair of JXMapViewers preconfigured to be easy to use
@@ -106,7 +105,9 @@ public class JXMapKit extends JPanel
 			thr.printStackTrace();
 		}
 
-		setTileFactory(new CylindricalProjectionTileFactory());
+		TileFactoryInfo info = new OSMTileFactoryInfo();
+        TileFactory tileFactory = new DefaultTileFactory(info);
+        setTileFactory(tileFactory);
 
 		mainMap.setCenterPosition(new GeoPosition(0, 0));
 		miniMap.setCenterPosition(new GeoPosition(0, 0));
