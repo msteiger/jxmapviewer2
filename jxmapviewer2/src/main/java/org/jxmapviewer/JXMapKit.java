@@ -73,10 +73,10 @@ public class JXMapKit extends JPanel
 	@SuppressWarnings("javadoc")
 	public enum DefaultProviders
 	{
-		SwingLabsBlueMarble, OpenStreetMaps, Custom
+		OpenStreetMaps, Custom
 	}
 
-	private DefaultProviders defaultProvider = DefaultProviders.SwingLabsBlueMarble;
+	private DefaultProviders defaultProvider = DefaultProviders.OpenStreetMaps;
 
 	private boolean addressLocationShown = true;
 
@@ -145,8 +145,8 @@ public class JXMapKit extends JPanel
 				miniMap.repaint();
 			}
 		});
-		
-		
+
+
 		// Add interactions
 		MouseInputListener mia = new PanMouseInputListener(mainMap);
 		mainMap.addMouseListener(mia);
@@ -254,7 +254,7 @@ public class JXMapKit extends JPanel
 		Action act = new AbstractAction()
 		{
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 5525706163434375107L;
 
@@ -277,7 +277,7 @@ public class JXMapKit extends JPanel
 		Action act = new AbstractAction()
 		{
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 5779971489365451352L;
 
@@ -610,7 +610,7 @@ public class JXMapKit extends JPanel
 	{
 		return addressLocationShown;
 	}
-	
+
 	/**
 	 * @param b the visibility flag
 	 */
@@ -651,11 +651,6 @@ public class JXMapKit extends JPanel
 	{
 		DefaultProviders old = this.defaultProvider;
 		this.defaultProvider = prov;
-		if (prov == DefaultProviders.SwingLabsBlueMarble)
-		{
-			setTileFactory(new CylindricalProjectionTileFactory());
-			setZoom(3);
-		}
 		if (prov == DefaultProviders.OpenStreetMaps)
 		{
 			TileFactoryInfo info = new OSMTileFactoryInfo();
