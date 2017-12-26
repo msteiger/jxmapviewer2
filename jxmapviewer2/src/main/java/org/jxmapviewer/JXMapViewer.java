@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.painter.AbstractPainter;
 import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -57,7 +58,6 @@ import org.jxmapviewer.viewer.empty.EmptyTileFactory;
  * and adjust your calculations accordingly.  Changing the <B>center</B> property will change the <B>centerPosition</B>
  * property and vice versa.  All three properties are bound.
  * @author Joshua.Marinacci@sun.com
- * @see org.jxmapviewer.viewer.bmng.SLMapServerInfo
  */
 public class JXMapViewer extends JPanel implements DesignMode
 {
@@ -110,11 +110,11 @@ public class JXMapViewer extends JPanel implements DesignMode
 	private boolean infiniteMapRendering = true;
 
     /**
-     * If true, panning with the mouse should take place. If false, panning should not happen. Does not disable 
+     * If true, panning with the mouse should take place. If false, panning should not happen. Does not disable
      * explicit setting of position via {@link setCenter}.
      */
     private boolean panningEnabled = true;
-    
+
 	/**
 	 * Create a new JXMapViewer. By default it will use the EmptyTileFactory
 	 */
@@ -888,6 +888,7 @@ public class JXMapViewer extends JPanel implements DesignMode
 
     /**
      * Returns whether panning is enabled. If it is disabled, panning should not occur. (Used primarily by {@link PanMouseInputListener}
+     * @return true if panning is enabled
      */
     public boolean isPanningEnabled()
     {
