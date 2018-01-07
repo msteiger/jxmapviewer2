@@ -122,7 +122,7 @@ public class GeoBounds
 	 */
 	public GeoPosition getNorthWest()
 	{
-		return new GeoPosition(rects[0].getX(), rects[0].getMaxY());
+		return new GeoPosition(rects[0].getMaxY(), rects[0].getX());
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class GeoBounds
 		{
 			r = rects[1];
 		}
-		return new GeoPosition(r.getMaxX(), r.getY());
+		return new GeoPosition(r.getY(), r.getMaxX());
 	}
 
 }
