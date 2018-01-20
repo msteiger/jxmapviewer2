@@ -20,7 +20,7 @@ The content of this project are also available at *Maven Central* and can be ref
 <dependency>
     <groupId>org.jxmapviewer</groupId>
     <artifactId>jxmapviewer2</artifactId>
-    <version>2.2</version>
+    <version>2.3</version>
 </dependency>
 ```
 
