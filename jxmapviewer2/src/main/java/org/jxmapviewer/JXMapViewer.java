@@ -61,53 +61,53 @@ import org.jxmapviewer.viewer.empty.EmptyTileFactory;
  */
 public class JXMapViewer extends JPanel implements DesignMode
 {
-	private static final long serialVersionUID = -3530746298586937321L;
+    private static final long serialVersionUID = -3530746298586937321L;
 
-	/**
-	 * The zoom level. Generally a value between 1 and 15 (TODO Is this true for all the mapping worlds? What does this
-	 * mean if some mapping system doesn't support the zoom level?
-	 */
-	private int zoomLevel = 1;
+    /**
+     * The zoom level. Generally a value between 1 and 15 (TODO Is this true for all the mapping worlds? What does this
+     * mean if some mapping system doesn't support the zoom level?
+     */
+    private int zoomLevel = 1;
 
-	/**
-	 * The position, in <I>map coordinates</I> of the center point. This is defined as the distance from the top and
-	 * left edges of the map in pixels. Dragging the map component will change the center position. Zooming in/out will
-	 * cause the center to be recalculated so as to remain in the center of the new "map".
-	 */
-	private Point2D center = new Point2D.Double(0, 0);
+    /**
+     * The position, in <I>map coordinates</I> of the center point. This is defined as the distance from the top and
+     * left edges of the map in pixels. Dragging the map component will change the center position. Zooming in/out will
+     * cause the center to be recalculated so as to remain in the center of the new "map".
+     */
+    private Point2D center = new Point2D.Double(0, 0);
 
-	/**
-	 * Indicates whether or not to draw the borders between tiles. Defaults to false. TODO Generally not very nice
-	 * looking, very much a product of testing Consider whether this should really be a property or not.
-	 */
-	private boolean drawTileBorders = false;
+    /**
+     * Indicates whether or not to draw the borders between tiles. Defaults to false. TODO Generally not very nice
+     * looking, very much a product of testing Consider whether this should really be a property or not.
+     */
+    private boolean drawTileBorders = false;
 
-	/**
-	 * Factory used by this component to grab the tiles necessary for painting the map.
-	 */
-	private TileFactory factory;
+    /**
+     * Factory used by this component to grab the tiles necessary for painting the map.
+     */
+    private TileFactory factory;
 
-	/**
-	 * The position in latitude/longitude of the "address" being mapped. This is a special coordinate that, when moved,
-	 * will cause the map to be moved as well. It is separate from "center" in that "center" tracks the current center
-	 * (in pixels) of the viewport whereas this will not change when panning or zooming. Whenever the addressLocation is
-	 * changed, however, the map will be repositioned.
-	 */
-	private GeoPosition addressLocation;
+    /**
+     * The position in latitude/longitude of the "address" being mapped. This is a special coordinate that, when moved,
+     * will cause the map to be moved as well. It is separate from "center" in that "center" tracks the current center
+     * (in pixels) of the viewport whereas this will not change when panning or zooming. Whenever the addressLocation is
+     * changed, however, the map will be repositioned.
+     */
+    private GeoPosition addressLocation;
 
-	/**
-	 * The overlay to delegate to for painting the "foreground" of the map component. This would include painting
-	 * waypoints, day/night, etc. Also receives mouse events.
-	 */
-	private Painter<? super JXMapViewer> overlay;
+    /**
+     * The overlay to delegate to for painting the "foreground" of the map component. This would include painting
+     * waypoints, day/night, etc. Also receives mouse events.
+     */
+    private Painter<? super JXMapViewer> overlay;
 
-	private boolean designTime;
+    private boolean designTime;
 
-	private Image loadingImage;
+    private Image loadingImage;
 
-	private boolean restrictOutsidePanning = true;
-	private boolean horizontalWrapped = true;
-	private boolean infiniteMapRendering = true;
+    private boolean restrictOutsidePanning = true;
+    private boolean horizontalWrapped = true;
+    private boolean infiniteMapRendering = true;
 
     /**
      * If true, panning with the mouse should take place. If false, panning should not happen. Does not disable
@@ -115,766 +115,765 @@ public class JXMapViewer extends JPanel implements DesignMode
      */
     private boolean panningEnabled = true;
 
-	/**
-	 * Create a new JXMapViewer. By default it will use the EmptyTileFactory
-	 */
-	public JXMapViewer()
-	{
-		factory = new EmptyTileFactory();
-		// setTileFactory(new GoogleTileFactory());
+    /**
+     * Create a new JXMapViewer. By default it will use the EmptyTileFactory
+     */
+    public JXMapViewer()
+    {
+        factory = new EmptyTileFactory();
+        // setTileFactory(new GoogleTileFactory());
 
-		// make a dummy loading image
-		try
-		{
-			URL url = JXMapViewer.class.getResource("/images/loading.png");
-			this.setLoadingImage(ImageIO.read(url));
-		}
-		catch (Exception ex)
-		{
-			System.out.println("could not load 'loading.png'");
-			BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2 = img.createGraphics();
-			g2.setColor(Color.black);
-			g2.fillRect(0, 0, 16, 16);
-			g2.dispose();
-			this.setLoadingImage(img);
-		}
+        // make a dummy loading image
+        try
+        {
+            URL url = JXMapViewer.class.getResource("/images/loading.png");
+            this.setLoadingImage(ImageIO.read(url));
+        }
+        catch (Exception ex)
+        {
+            System.out.println("could not load 'loading.png'");
+            BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = img.createGraphics();
+            g2.setColor(Color.black);
+            g2.fillRect(0, 0, 16, 16);
+            g2.dispose();
+            this.setLoadingImage(img);
+        }
 
-		// setAddressLocation(new GeoPosition(37.392137,-121.950431)); // Sun campus
-	}
+        // setAddressLocation(new GeoPosition(37.392137,-121.950431)); // Sun campus
+    }
 
-	@Override
-	protected void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
+    @Override
+    protected void paintComponent(Graphics g)
+    {
+        super.paintComponent(g);
 
-		doPaintComponent(g);
-	}
+        doPaintComponent(g);
+    }
 
-	// the method that does the actual painting
-	private void doPaintComponent(Graphics g)
-	{/*
-	 * if (isOpaque() || isDesignTime()) { g.setColor(getBackground()); g.fillRect(0,0,getWidth(),getHeight()); }
-	 */
+    // the method that does the actual painting
+    private void doPaintComponent(Graphics g)
+    {/*
+     * if (isOpaque() || isDesignTime()) { g.setColor(getBackground()); g.fillRect(0,0,getWidth(),getHeight()); }
+     */
 
-		if (isDesignTime())
-		{
-			// do nothing
-		}
-		else
-		{
-			int z = getZoom();
-			Rectangle viewportBounds = getViewportBounds();
-			drawMapTiles(g, z, viewportBounds);
-			drawOverlays(z, g, viewportBounds);
-		}
+        if (isDesignTime())
+        {
+            // do nothing
+        }
+        else
+        {
+            int z = getZoom();
+            Rectangle viewportBounds = getViewportBounds();
+            drawMapTiles(g, z, viewportBounds);
+            drawOverlays(z, g, viewportBounds);
+        }
 
-		super.paintBorder(g);
-	}
+        super.paintBorder(g);
+    }
 
-	/**
-	 * Indicate that the component is being used at design time, such as in a visual editor like NetBeans' Matisse
-	 * @param b indicates if the component is being used at design time
-	 */
-	@Override
-	public void setDesignTime(boolean b)
-	{
-		this.designTime = b;
-	}
+    /**
+     * Indicate that the component is being used at design time, such as in a visual editor like NetBeans' Matisse
+     * @param b indicates if the component is being used at design time
+     */
+    @Override
+    public void setDesignTime(boolean b)
+    {
+        this.designTime = b;
+    }
 
-	/**
-	 * Indicates whether the component is being used at design time, such as in a visual editor like NetBeans' Matisse
-	 * @return boolean indicating if the component is being used at design time
-	 */
-	@Override
-	public boolean isDesignTime()
-	{
-		return designTime;
-	}
+    /**
+     * Indicates whether the component is being used at design time, such as in a visual editor like NetBeans' Matisse
+     * @return boolean indicating if the component is being used at design time
+     */
+    @Override
+    public boolean isDesignTime()
+    {
+        return designTime;
+    }
 
-	/**
-	 * Draw the map tiles. This method is for implementation use only.
-	 * @param g Graphics
-	 * @param zoom zoom level to draw at
-	 * @param viewportBounds the bounds to draw within
-	 */
-	protected void drawMapTiles(final Graphics g, final int zoom, Rectangle viewportBounds)
-	{
-		int size = getTileFactory().getTileSize(zoom);
-		Dimension mapSize = getTileFactory().getMapSize(zoom);
+    /**
+     * Draw the map tiles. This method is for implementation use only.
+     * @param g Graphics
+     * @param zoom zoom level to draw at
+     * @param viewportBounds the bounds to draw within
+     */
+    protected void drawMapTiles(final Graphics g, final int zoom, Rectangle viewportBounds)
+    {
+        int size = getTileFactory().getTileSize(zoom);
+        Dimension mapSize = getTileFactory().getMapSize(zoom);
 
-		// calculate the "visible" viewport area in tiles
-		int numWide = viewportBounds.width / size + 2;
-		int numHigh = viewportBounds.height / size + 2;
+        // calculate the "visible" viewport area in tiles
+        int numWide = viewportBounds.width / size + 2;
+        int numHigh = viewportBounds.height / size + 2;
 
-		// TilePoint topLeftTile = getTileFactory().getTileCoordinate(
-		// new Point2D.Double(viewportBounds.x, viewportBounds.y));
-		TileFactoryInfo info = getTileFactory().getInfo();
+        // TilePoint topLeftTile = getTileFactory().getTileCoordinate(
+        // new Point2D.Double(viewportBounds.x, viewportBounds.y));
+        TileFactoryInfo info = getTileFactory().getInfo();
 
-		// number of tiles in x direction
-		int tpx = (int) Math.floor(viewportBounds.getX() / info.getTileSize(0));
-		// number of tiles in y direction
-		int tpy = (int) Math.floor(viewportBounds.getY() / info.getTileSize(0));
-		// TilePoint topLeftTile = new TilePoint(tpx, tpy);
+        // number of tiles in x direction
+        int tpx = (int) Math.floor(viewportBounds.getX() / info.getTileSize(0));
+        // number of tiles in y direction
+        int tpy = (int) Math.floor(viewportBounds.getY() / info.getTileSize(0));
+        // TilePoint topLeftTile = new TilePoint(tpx, tpy);
 
-		// p("top tile = " + topLeftTile);
-		// fetch the tiles from the factory and store them in the tiles cache
-		// attach the tileLoadListener
-		for (int x = 0; x <= numWide; x++)
-		{
-			for (int y = 0; y <= numHigh; y++)
-			{
-				int itpx = x + tpx;// topLeftTile.getX();
-				int itpy = y + tpy;// topLeftTile.getY();
-				// TilePoint point = new TilePoint(x + topLeftTile.getX(), y + topLeftTile.getY());
-				// only proceed if the specified tile point lies within the area being painted
-				if (g.getClipBounds().intersects(
-						new Rectangle(itpx * size - viewportBounds.x, itpy * size - viewportBounds.y, size, size)))
-				{
-					Tile tile = getTileFactory().getTile(itpx, itpy, zoom);
-					int ox = ((itpx * getTileFactory().getTileSize(zoom)) - viewportBounds.x);
-					int oy = ((itpy * getTileFactory().getTileSize(zoom)) - viewportBounds.y);
+        // p("top tile = " + topLeftTile);
+        // fetch the tiles from the factory and store them in the tiles cache
+        // attach the tileLoadListener
+        for (int x = 0; x <= numWide; x++)
+        {
+            for (int y = 0; y <= numHigh; y++)
+            {
+                int itpx = x + tpx;// topLeftTile.getX();
+                int itpy = y + tpy;// topLeftTile.getY();
+                // TilePoint point = new TilePoint(x + topLeftTile.getX(), y + topLeftTile.getY());
+                // only proceed if the specified tile point lies within the area being painted
+                if (g.getClipBounds().intersects(
+                        new Rectangle(itpx * size - viewportBounds.x, itpy * size - viewportBounds.y, size, size)))
+                {
+                    Tile tile = getTileFactory().getTile(itpx, itpy, zoom);
+                    int ox = ((itpx * getTileFactory().getTileSize(zoom)) - viewportBounds.x);
+                    int oy = ((itpy * getTileFactory().getTileSize(zoom)) - viewportBounds.y);
 
-					// if the tile is off the map to the north/south, then just don't paint anything
-					if (!isTileOnMap(itpx, itpy, mapSize))
-					{
-						if (isOpaque())
-						{
-							g.setColor(getBackground());
-							g.fillRect(ox, oy, size, size);
-						}
-					}
-					else if (tile.isLoaded())
-					{
-						g.drawImage(tile.getImage(), ox, oy, null);
-					}
-					else
-					{
+                    // if the tile is off the map to the north/south, then just don't paint anything
+                    if (!isTileOnMap(itpx, itpy, mapSize))
+                    {
+                        if (isOpaque())
+                        {
+                            g.setColor(getBackground());
+                            g.fillRect(ox, oy, size, size);
+                        }
+                    }
+                    else if (tile.isLoaded())
+                    {
+                        g.drawImage(tile.getImage(), ox, oy, null);
+                    }
+                    else
+                    {
                                                 Tile superTile = null;
 
-						// Use tile at higher zoom level with 200% magnification and if we are not already at max resolution
+                        // Use tile at higher zoom level with 200% magnification and if we are not already at max resolution
                                                 if( zoom < info.getMaximumZoomLevel() ) {
                                                     superTile = getTileFactory().getTile(itpx / 2, itpy / 2, zoom + 1);
                                                 }
 
-						if ( superTile != null && superTile.isLoaded())
-						{
-							int offX = (itpx % 2) * size / 2;
-							int offY = (itpy % 2) * size / 2;
-							g.drawImage(superTile.getImage(), ox, oy, ox + size, oy + size, offX, offY, offX + size / 2, offY + size / 2, null);
-						}
-						else
-						{
-							int imageX = (getTileFactory().getTileSize(zoom) - getLoadingImage().getWidth(null)) / 2;
-							int imageY = (getTileFactory().getTileSize(zoom) - getLoadingImage().getHeight(null)) / 2;
-							g.setColor(Color.GRAY);
-							g.fillRect(ox, oy, size, size);
-							g.drawImage(getLoadingImage(), ox + imageX, oy + imageY, null);
-						}
-					}
-					if (isDrawTileBorders())
-					{
+                        if ( superTile != null && superTile.isLoaded())
+                        {
+                            int offX = (itpx % 2) * size / 2;
+                            int offY = (itpy % 2) * size / 2;
+                            g.drawImage(superTile.getImage(), ox, oy, ox + size, oy + size, offX, offY, offX + size / 2, offY + size / 2, null);
+                        }
+                        else
+                        {
+                            int imageX = (getTileFactory().getTileSize(zoom) - getLoadingImage().getWidth(null)) / 2;
+                            int imageY = (getTileFactory().getTileSize(zoom) - getLoadingImage().getHeight(null)) / 2;
+                            g.setColor(Color.GRAY);
+                            g.fillRect(ox, oy, size, size);
+                            g.drawImage(getLoadingImage(), ox + imageX, oy + imageY, null);
+                        }
+                    }
+                    if (isDrawTileBorders())
+                    {
 
-						g.setColor(Color.black);
-						g.drawRect(ox, oy, size, size);
-						g.drawRect(ox + size / 2 - 5, oy + size / 2 - 5, 10, 10);
-						g.setColor(Color.white);
-						g.drawRect(ox + 1, oy + 1, size, size);
+                        g.setColor(Color.black);
+                        g.drawRect(ox, oy, size, size);
+                        g.drawRect(ox + size / 2 - 5, oy + size / 2 - 5, 10, 10);
+                        g.setColor(Color.white);
+                        g.drawRect(ox + 1, oy + 1, size, size);
 
-						String text = itpx + ", " + itpy + ", " + getZoom();
-						g.setColor(Color.BLACK);
-						g.drawString(text, ox + 10, oy + 30);
-						g.drawString(text, ox + 10 + 2, oy + 30 + 2);
-						g.setColor(Color.WHITE);
-						g.drawString(text, ox + 10 + 1, oy + 30 + 1);
-					}
-				}
-			}
-		}
-	}
+                        String text = itpx + ", " + itpy + ", " + getZoom();
+                        g.setColor(Color.BLACK);
+                        g.drawString(text, ox + 10, oy + 30);
+                        g.drawString(text, ox + 10 + 2, oy + 30 + 2);
+                        g.setColor(Color.WHITE);
+                        g.drawString(text, ox + 10 + 1, oy + 30 + 1);
+                    }
+                }
+            }
+        }
+    }
 
-	@SuppressWarnings("unused")
-	private void drawOverlays(final int zoom, final Graphics g, final Rectangle viewportBounds)
-	{
-		if (overlay != null)
-		{
-			overlay.paint((Graphics2D) g, this, getWidth(), getHeight());
-		}
-	}
+    @SuppressWarnings("unused")
+    private void drawOverlays(final int zoom, final Graphics g, final Rectangle viewportBounds)
+    {
+        if (overlay != null)
+        {
+            overlay.paint((Graphics2D) g, this, getWidth(), getHeight());
+        }
+    }
 
-	private boolean isTileOnMap(int x, int y, Dimension mapSize)
-	{
-		return (y >= 0 && y < mapSize.getHeight()) &&
-				  (isInfiniteMapRendering() || x >= 0 && x < mapSize.getWidth());
-	}
+    private boolean isTileOnMap(int x, int y, Dimension mapSize)
+    {
+        return (y >= 0 && y < mapSize.getHeight()) &&
+                  (isInfiniteMapRendering() || x >= 0 && x < mapSize.getWidth());
+    }
 
-	/**
-	 * Sets the map overlay. This is a {@code Painter<JXMapViewer>} which will paint on top of the map. It can be used to draw waypoints,
-	 * lines, or static overlays like text messages.
-	 * @param overlay the map overlay to use
-	 */
-	public void setOverlayPainter(Painter<? super JXMapViewer> overlay)
-	{
-		Painter<? super JXMapViewer> old = getOverlayPainter();
-		this.overlay = overlay;
+    /**
+     * Sets the map overlay. This is a {@code Painter<JXMapViewer>} which will paint on top of the map. It can be used to draw waypoints,
+     * lines, or static overlays like text messages.
+     * @param overlay the map overlay to use
+     */
+    public void setOverlayPainter(Painter<? super JXMapViewer> overlay)
+    {
+        Painter<? super JXMapViewer> old = getOverlayPainter();
+        this.overlay = overlay;
 
-		PropertyChangeListener listener = new PropertyChangeListener()
-		{
-			@Override
-			public void propertyChange(PropertyChangeEvent evt)
-			{
-				if (evt.getNewValue().equals(Boolean.TRUE))
-				{
-					repaint();
-				}
-			}
-		};
+        PropertyChangeListener listener = new PropertyChangeListener()
+        {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt)
+            {
+                if (evt.getNewValue().equals(Boolean.TRUE))
+                {
+                    repaint();
+                }
+            }
+        };
 
-		if (old instanceof AbstractPainter)
-		{
-			AbstractPainter<?> ap = (AbstractPainter<?>) old;
-			ap.removePropertyChangeListener("dirty", listener);
-		}
+        if (old instanceof AbstractPainter)
+        {
+            AbstractPainter<?> ap = (AbstractPainter<?>) old;
+            ap.removePropertyChangeListener("dirty", listener);
+        }
 
-		if (overlay instanceof AbstractPainter)
-		{
-			AbstractPainter<?> ap = (AbstractPainter<?>) overlay;
-			ap.addPropertyChangeListener("dirty", listener);
-		}
+        if (overlay instanceof AbstractPainter)
+        {
+            AbstractPainter<?> ap = (AbstractPainter<?>) overlay;
+            ap.addPropertyChangeListener("dirty", listener);
+        }
 
-		firePropertyChange("mapOverlay", old, getOverlayPainter());
-		repaint();
-	}
+        firePropertyChange("mapOverlay", old, getOverlayPainter());
+        repaint();
+    }
 
-	/**
-	 * Gets the current map overlay
-	 * @return the current map overlay
-	 */
-	public Painter<? super JXMapViewer> getOverlayPainter()
-	{
-		return overlay;
-	}
+    /**
+     * Gets the current map overlay
+     * @return the current map overlay
+     */
+    public Painter<? super JXMapViewer> getOverlayPainter()
+    {
+        return overlay;
+    }
 
-	/**
-	 * Returns the bounds of the viewport in pixels. This can be used to transform points into the world bitmap
-	 * coordinate space.
-	 * @return the bounds in <em>pixels</em> of the "view" of this map
-	 */
-	public Rectangle getViewportBounds()
-	{
-		return calculateViewportBounds(getCenter());
-	}
+    /**
+     * Returns the bounds of the viewport in pixels. This can be used to transform points into the world bitmap
+     * coordinate space.
+     * @return the bounds in <em>pixels</em> of the "view" of this map
+     */
+    public Rectangle getViewportBounds()
+    {
+        return calculateViewportBounds(getCenter());
+    }
 
-	private Rectangle calculateViewportBounds(Point2D centr)
-	{
-		Insets insets = getInsets();
-		// calculate the "visible" viewport area in pixels
-		int viewportWidth = getWidth() - insets.left - insets.right;
-		int viewportHeight = getHeight() - insets.top - insets.bottom;
-		double viewportX = (centr.getX() - viewportWidth / 2);
-		double viewportY = (centr.getY() - viewportHeight / 2);
-		return new Rectangle((int) viewportX, (int) viewportY, viewportWidth, viewportHeight);
-	}
+    private Rectangle calculateViewportBounds(Point2D centr)
+    {
+        Insets insets = getInsets();
+        // calculate the "visible" viewport area in pixels
+        int viewportWidth = getWidth() - insets.left - insets.right;
+        int viewportHeight = getHeight() - insets.top - insets.bottom;
+        double viewportX = (centr.getX() - viewportWidth / 2);
+        double viewportY = (centr.getY() - viewportHeight / 2);
+        return new Rectangle((int) viewportX, (int) viewportY, viewportWidth, viewportHeight);
+    }
 
-	/**
-	 * Set the current zoom level
-	 * @param zoom the new zoom level
-	 */
-	public void setZoom(int zoom)
-	{
-		if (zoom == this.zoomLevel)
-		{
-			return;
-		}
+    /**
+     * Set the current zoom level
+     * @param zoom the new zoom level
+     */
+    public void setZoom(int zoom)
+    {
+        if (zoom == this.zoomLevel)
+        {
+            return;
+        }
 
-		TileFactoryInfo info = getTileFactory().getInfo();
-		// don't repaint if we are out of the valid zoom levels
-		if (info != null && (zoom < info.getMinimumZoomLevel() || zoom > info.getMaximumZoomLevel()))
-		{
-			return;
-		}
+        TileFactoryInfo info = getTileFactory().getInfo();
+        // don't repaint if we are out of the valid zoom levels
+        if (info != null && (zoom < info.getMinimumZoomLevel() || zoom > info.getMaximumZoomLevel()))
+        {
+            return;
+        }
 
-		// if(zoom >= 0 && zoom <= 15 && zoom != this.zoom) {
-		int oldzoom = this.zoomLevel;
-		Point2D oldCenter = getCenter();
-		Dimension oldMapSize = getTileFactory().getMapSize(oldzoom);
-		this.zoomLevel = zoom;
-		this.firePropertyChange("zoom", oldzoom, zoom);
+        // if(zoom >= 0 && zoom <= 15 && zoom != this.zoom) {
+        int oldzoom = this.zoomLevel;
+        Point2D oldCenter = getCenter();
+        Dimension oldMapSize = getTileFactory().getMapSize(oldzoom);
+        this.zoomLevel = zoom;
+        this.firePropertyChange("zoom", oldzoom, zoom);
 
-		Dimension mapSize = getTileFactory().getMapSize(zoom);
+        Dimension mapSize = getTileFactory().getMapSize(zoom);
 
-		setCenter(new Point2D.Double(oldCenter.getX() * (mapSize.getWidth() / oldMapSize.getWidth()), oldCenter.getY()
-				* (mapSize.getHeight() / oldMapSize.getHeight())));
+        setCenter(new Point2D.Double(oldCenter.getX() * (mapSize.getWidth() / oldMapSize.getWidth()), oldCenter.getY()
+                * (mapSize.getHeight() / oldMapSize.getHeight())));
 
-		repaint();
-	}
+        repaint();
+    }
 
-	/**
-	 * Gets the current zoom level
-	 * @return the current zoom level
-	 */
-	public int getZoom()
-	{
-		return this.zoomLevel;
-	}
+    /**
+     * Gets the current zoom level
+     * @return the current zoom level
+     */
+    public int getZoom()
+    {
+        return this.zoomLevel;
+    }
 
-	/**
-	 * Gets the current address location of the map. This property does not change when the user pans the map. This
-	 * property is bound.
-	 * @return the current map location (address)
-	 */
-	public GeoPosition getAddressLocation()
-	{
-		return addressLocation;
-	}
+    /**
+     * Gets the current address location of the map. This property does not change when the user pans the map. This
+     * property is bound.
+     * @return the current map location (address)
+     */
+    public GeoPosition getAddressLocation()
+    {
+        return addressLocation;
+    }
 
-	/**
-	 * Gets the current address location of the map
-	 * @param addressLocation the new address location
-	 */
-	public void setAddressLocation(GeoPosition addressLocation)
-	{
-		GeoPosition old = getAddressLocation();
-		this.addressLocation = addressLocation;
-		setCenter(getTileFactory().geoToPixel(addressLocation, getZoom()));
+    /**
+     * Gets the current address location of the map
+     * @param addressLocation the new address location
+     */
+    public void setAddressLocation(GeoPosition addressLocation)
+    {
+        GeoPosition old = getAddressLocation();
+        this.addressLocation = addressLocation;
+        setCenter(getTileFactory().geoToPixel(addressLocation, getZoom()));
 
-		firePropertyChange("addressLocation", old, getAddressLocation());
-		repaint();
-	}
+        firePropertyChange("addressLocation", old, getAddressLocation());
+        repaint();
+    }
 
-	/**
-	 * Re-centers the map to have the current address location be at the center of the map, accounting for the map's
-	 * width and height.
-	 */
-	public void recenterToAddressLocation()
-	{
-		setCenter(getTileFactory().geoToPixel(getAddressLocation(), getZoom()));
-		repaint();
-	}
+    /**
+     * Re-centers the map to have the current address location be at the center of the map, accounting for the map's
+     * width and height.
+     */
+    public void recenterToAddressLocation()
+    {
+        setCenter(getTileFactory().geoToPixel(getAddressLocation(), getZoom()));
+        repaint();
+    }
 
-	/**
-	 * Indicates if the tile borders should be drawn. Mainly used for debugging.
-	 * @return the value of this property
-	 */
-	public boolean isDrawTileBorders()
-	{
-		return drawTileBorders;
-	}
+    /**
+     * Indicates if the tile borders should be drawn. Mainly used for debugging.
+     * @return the value of this property
+     */
+    public boolean isDrawTileBorders()
+    {
+        return drawTileBorders;
+    }
 
-	/**
-	 * Set if the tile borders should be drawn. Mainly used for debugging.
-	 * @param drawTileBorders new value of this drawTileBorders
-	 */
-	public void setDrawTileBorders(boolean drawTileBorders)
-	{
-		boolean old = isDrawTileBorders();
-		this.drawTileBorders = drawTileBorders;
-		firePropertyChange("drawTileBorders", old, isDrawTileBorders());
-		repaint();
-	}
+    /**
+     * Set if the tile borders should be drawn. Mainly used for debugging.
+     * @param drawTileBorders new value of this drawTileBorders
+     */
+    public void setDrawTileBorders(boolean drawTileBorders)
+    {
+        boolean old = isDrawTileBorders();
+        this.drawTileBorders = drawTileBorders;
+        firePropertyChange("drawTileBorders", old, isDrawTileBorders());
+        repaint();
+    }
 
-	/**
-	 * A property indicating the center position of the map
-	 * @param geoPosition the new property value
-	 */
-	public void setCenterPosition(GeoPosition geoPosition)
-	{
-		GeoPosition oldVal = getCenterPosition();
-		setCenter(getTileFactory().geoToPixel(geoPosition, zoomLevel));
-		repaint();
-		GeoPosition newVal = getCenterPosition();
-		firePropertyChange("centerPosition", oldVal, newVal);
-	}
+    /**
+     * A property indicating the center position of the map
+     * @param geoPosition the new property value
+     */
+    public void setCenterPosition(GeoPosition geoPosition)
+    {
+        GeoPosition oldVal = getCenterPosition();
+        setCenter(getTileFactory().geoToPixel(geoPosition, zoomLevel));
+        repaint();
+        GeoPosition newVal = getCenterPosition();
+        firePropertyChange("centerPosition", oldVal, newVal);
+    }
 
-	/**
-	 * A property indicating the center position of the map
-	 * @return the current center position
-	 */
-	public GeoPosition getCenterPosition()
-	{
-		return getTileFactory().pixelToGeo(getCenter(), zoomLevel);
-	}
+    /**
+     * A property indicating the center position of the map
+     * @return the current center position
+     */
+    public GeoPosition getCenterPosition()
+    {
+        return getTileFactory().pixelToGeo(getCenter(), zoomLevel);
+    }
 
-	/**
-	 * Get the current factory
-	 * @return the current property value
-	 */
-	public TileFactory getTileFactory()
-	{
-		return factory;
-	}
+    /**
+     * Get the current factory
+     * @return the current property value
+     */
+    public TileFactory getTileFactory()
+    {
+        return factory;
+    }
 
-	/**
-	 * Set the current tile factory (must not be <code>null</code>)
-	 * @param factory the new property value
-	 */
-	public void setTileFactory(TileFactory factory)
-	{
-		if (factory == null)
-			throw new NullPointerException("factory must not be null");
+    /**
+     * Set the current tile factory (must not be <code>null</code>)
+     * @param factory the new property value
+     */
+    public void setTileFactory(TileFactory factory)
+    {
+        if (factory == null)
+            throw new NullPointerException("factory must not be null");
 
-		this.factory.removeTileListener(tileLoadListener);
-		this.factory.dispose();
+        this.factory.removeTileListener(tileLoadListener);
+        this.factory.dispose();
 
-		this.factory = factory;
-		this.setZoom(factory.getInfo().getDefaultZoomLevel());
+        this.factory = factory;
+        this.setZoom(factory.getInfo().getDefaultZoomLevel());
 
-		factory.addTileListener(tileLoadListener);
+        factory.addTileListener(tileLoadListener);
 
-		repaint();
-	}
+        repaint();
+    }
 
-	/**
-	 * A property for an image which will be display when an image is still loading.
-	 * @return the current property value
-	 */
-	public Image getLoadingImage()
-	{
-		return loadingImage;
-	}
+    /**
+     * A property for an image which will be display when an image is still loading.
+     * @return the current property value
+     */
+    public Image getLoadingImage()
+    {
+        return loadingImage;
+    }
 
-	/**
-	 * A property for an image which will be display when an image is still loading.
-	 * @param loadingImage the new property value
-	 */
-	public void setLoadingImage(Image loadingImage)
-	{
-		this.loadingImage = loadingImage;
-	}
+    /**
+     * A property for an image which will be display when an image is still loading.
+     * @param loadingImage the new property value
+     */
+    public void setLoadingImage(Image loadingImage)
+    {
+        this.loadingImage = loadingImage;
+    }
 
-	/**
-	 * Gets the current pixel center of the map. This point is in the global bitmap coordinate system, not as lat/longs.
-	 * @return the current center of the map as a pixel value
-	 */
-	public Point2D getCenter()
-	{
-		return center;
-	}
+    /**
+     * Gets the current pixel center of the map. This point is in the global bitmap coordinate system, not as lat/longs.
+     * @return the current center of the map as a pixel value
+     */
+    public Point2D getCenter()
+    {
+        return center;
+    }
 
-	/**
-	 * Sets the new center of the map in pixel coordinates.
-	 * @param center the new center of the map in pixel coordinates
-	 */
-	public void setCenter(Point2D center)
-	{
-		Point2D old = this.getCenter();
+    /**
+     * Sets the new center of the map in pixel coordinates.
+     * @param center the new center of the map in pixel coordinates
+     */
+    public void setCenter(Point2D center)
+    {
+        Point2D old = this.getCenter();
 
-		double centerX = center.getX();
-		double centerY = center.getY();
+        double centerX = center.getX();
+        double centerY = center.getY();
 
-		Dimension mapSize = getTileFactory().getMapSize(getZoom());
-		int mapHeight = (int) mapSize.getHeight() * getTileFactory().getTileSize(getZoom());
-		int mapWidth = (int) mapSize.getWidth() * getTileFactory().getTileSize(getZoom());
+        Dimension mapSize = getTileFactory().getMapSize(getZoom());
+        int mapHeight = (int) mapSize.getHeight() * getTileFactory().getTileSize(getZoom());
+        int mapWidth = (int) mapSize.getWidth() * getTileFactory().getTileSize(getZoom());
 
-		if (isRestrictOutsidePanning())
-		{
-			Insets insets = getInsets();
-			int viewportHeight = getHeight() - insets.top - insets.bottom;
-			int viewportWidth = getWidth() - insets.left - insets.right;
+        if (isRestrictOutsidePanning())
+        {
+            Insets insets = getInsets();
+            int viewportHeight = getHeight() - insets.top - insets.bottom;
+            int viewportWidth = getWidth() - insets.left - insets.right;
 
-			// don't let the user pan over the top edge
-			Rectangle newVP = calculateViewportBounds(center);
-			if (newVP.getY() < 0)
-			{
-				centerY = viewportHeight / 2;
-			}
+            // don't let the user pan over the top edge
+            Rectangle newVP = calculateViewportBounds(center);
+            if (newVP.getY() < 0)
+            {
+                centerY = viewportHeight / 2;
+            }
 
-			// don't let the user pan over the left edge
-			if (!isHorizontalWrapped() && newVP.getX() < 0)
-			{
-				centerX = viewportWidth / 2;
-			}
+            // don't let the user pan over the left edge
+            if (!isHorizontalWrapped() && newVP.getX() < 0)
+            {
+                centerX = viewportWidth / 2;
+            }
 
-			// don't let the user pan over the bottom edge
-			if (newVP.getY() + newVP.getHeight() > mapHeight)
-			{
-				centerY = mapHeight - viewportHeight / 2;
-			}
+            // don't let the user pan over the bottom edge
+            if (newVP.getY() + newVP.getHeight() > mapHeight)
+            {
+                centerY = mapHeight - viewportHeight / 2;
+            }
 
-			// don't let the user pan over the right edge
-			if (!isHorizontalWrapped() && (newVP.getX() + newVP.getWidth() > mapWidth))
-			{
-				centerX = mapWidth - viewportWidth / 2;
-			}
+            // don't let the user pan over the right edge
+            if (!isHorizontalWrapped() && (newVP.getX() + newVP.getWidth() > mapWidth))
+            {
+                centerX = mapWidth - viewportWidth / 2;
+            }
 
-			// if map is to small then just center it vert
-			if (mapHeight < newVP.getHeight())
-			{
-				centerY = mapHeight / 2;// viewportHeight/2;// - mapHeight/2;
-			}
+            // if map is to small then just center it vert
+            if (mapHeight < newVP.getHeight())
+            {
+                centerY = mapHeight / 2;// viewportHeight/2;// - mapHeight/2;
+            }
 
-			// if map is too small then just center it horiz
-			if (!isHorizontalWrapped() && mapWidth < newVP.getWidth())
-			{
-				centerX = mapWidth / 2;
-			}
-		}
+            // if map is too small then just center it horiz
+            if (!isHorizontalWrapped() && mapWidth < newVP.getWidth())
+            {
+                centerX = mapWidth / 2;
+            }
+        }
 
-		// If center is outside (0, 0,mapWidth, mapHeight)
-		// compute modulo to get it back in.
-		{
-			centerX = centerX % mapWidth;
-			centerY = centerY % mapHeight;
+        // If center is outside (0, 0,mapWidth, mapHeight)
+        // compute modulo to get it back in.
+        {
+            centerX = centerX % mapWidth;
+            centerY = centerY % mapHeight;
 
-			if (centerX < 0)
-				centerX += mapWidth;
+            if (centerX < 0)
+                centerX += mapWidth;
 
-			if (centerY < 0)
-				centerY += mapHeight;
-		}
+            if (centerY < 0)
+                centerY += mapHeight;
+        }
 
-		GeoPosition oldGP = this.getCenterPosition();
-		this.center = new Point2D.Double(centerX, centerY);
-		firePropertyChange("center", old, this.center);
-		firePropertyChange("centerPosition", oldGP, this.getCenterPosition());
-		repaint();
-	}
+        GeoPosition oldGP = this.getCenterPosition();
+        this.center = new Point2D.Double(centerX, centerY);
+        firePropertyChange("center", old, this.center);
+        firePropertyChange("centerPosition", oldGP, this.getCenterPosition());
+        repaint();
+    }
 
-	/**
-	 * Calculates a zoom level so that all points in the specified set will be visible on screen. This is useful if you
-	 * have a bunch of points in an area like a city and you want to zoom out so that the entire city and it's points
-	 * are visible without panning.
-	 * @param positions A set of GeoPositions to calculate the new zoom from
-	 */
-	public void calculateZoomFrom(Set<GeoPosition> positions)
-	{
-		// u.p("calculating a zoom based on: ");
-		// u.p(positions);
-		if (positions.size() < 2)
-		{
-			return;
-		}
+    /**
+     * Calculates a zoom level so that all points in the specified set will be visible on screen. This is useful if you
+     * have a bunch of points in an area like a city and you want to zoom out so that the entire city and it's points
+     * are visible without panning.
+     * @param positions A set of GeoPositions to calculate the new zoom from
+     */
+    public void calculateZoomFrom(Set<GeoPosition> positions)
+    {
+        // u.p("calculating a zoom based on: ");
+        // u.p(positions);
+        if (positions.size() < 2)
+        {
+            return;
+        }
 
-		int zoom = getZoom();
-		Rectangle2D rect = generateBoundingRect(positions, zoom);
-		// Rectangle2D viewport = map.getViewportBounds();
-		int count = 0;
-		while (!getViewportBounds().contains(rect))
-		{
-			// u.p("not contained");
-			Point2D centr = new Point2D.Double(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
-			GeoPosition px = getTileFactory().pixelToGeo(centr, zoom);
-			// u.p("new geo = " + px);
-			setCenterPosition(px);
-			count++;
-			if (count > 30)
-				break;
+        int zoom = getZoom();
+        Rectangle2D rect = generateBoundingRect(positions, zoom);
+        // Rectangle2D viewport = map.getViewportBounds();
+        int count = 0;
+        while (!getViewportBounds().contains(rect))
+        {
+            // u.p("not contained");
+            Point2D centr = new Point2D.Double(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
+            GeoPosition px = getTileFactory().pixelToGeo(centr, zoom);
+            // u.p("new geo = " + px);
+            setCenterPosition(px);
+            count++;
+            if (count > 30)
+                break;
 
-			if (getViewportBounds().contains(rect))
-			{
-				// u.p("did it finally");
-				break;
-			}
-			zoom = zoom + 1;
-			if (zoom > 15) //TODO: use maxZoom of the tfInfo
-			{
-				break;
-			}
-			setZoom(zoom);
-			rect = generateBoundingRect(positions, zoom);
-		}
-	}
+            if (getViewportBounds().contains(rect))
+            {
+                // u.p("did it finally");
+                break;
+            }
+            zoom = zoom + 1;
+            if (zoom > 15) //TODO: use maxZoom of the tfInfo
+            {
+                break;
+            }
+            setZoom(zoom);
+            rect = generateBoundingRect(positions, zoom);
+        }
+    }
 
-	/**
-	 * Zoom and center the map to a best fit around the input GeoPositions.
-	 * Best fit is defined as the most zoomed-in possible view where both
-	 * the width and height of a bounding box around the positions take up
-	 * no more than maxFraction of the viewport width or height respectively.
-	 * @param positions A set of GeoPositions to calculate the new zoom from
-	 * @param maxFraction the maximum fraction of the viewport that should be covered
-	 */
-	public void zoomToBestFit(Set<GeoPosition> positions, double maxFraction)
-	{
-		if (positions.isEmpty())
-			return;
+    /**
+     * Zoom and center the map to a best fit around the input GeoPositions.
+     * Best fit is defined as the most zoomed-in possible view where both
+     * the width and height of a bounding box around the positions take up
+     * no more than maxFraction of the viewport width or height respectively.
+     * @param positions A set of GeoPositions to calculate the new zoom from
+     * @param maxFraction the maximum fraction of the viewport that should be covered
+     */
+    public void zoomToBestFit(Set<GeoPosition> positions, double maxFraction)
+    {
+        if (positions.isEmpty())
+            return;
 
-		if (maxFraction <= 0 || maxFraction > 1)
-			throw new IllegalArgumentException("maxFraction must be between 0 and 1");
+        if (maxFraction <= 0 || maxFraction > 1)
+            throw new IllegalArgumentException("maxFraction must be between 0 and 1");
 
         TileFactory tileFactory = getTileFactory();
         TileFactoryInfo info = tileFactory.getInfo();
 
         if(info == null)
-        	return;
+            return;
 
         // set to central position initially
-        Rectangle2D bounds=generateBoundingRect(positions, getZoom());
-        Point2D bc = new Point2D.Double(bounds.getCenterX(),bounds.getCenterY());
-		GeoPosition centre = tileFactory.pixelToGeo(bc, getZoom());
+        GeoPosition centre = computeGeoCenter(positions);
         setCenterPosition(centre);
 
         if (positions.size() == 1)
-        	return;
-
-        // set map to maximum zoomed out
-        setZoom(info.getMaximumZoomLevel());
+            return;
 
         // repeatedly zoom in until we find the first zoom level where either the width or height
         // of the points takes up more than the max fraction of the viewport
-        int bestZoom = getZoom();
+
+        // start with zoomed out at maximum
+        int bestZoom = info.getMaximumZoomLevel();
 
         Rectangle2D viewport = getViewportBounds();
 
-        while (true)
-        {
-            // is this zoom still OK?
-            bounds = generateBoundingRect(positions, getZoom());
-            if (bounds.getWidth() < viewport.getWidth() * maxFraction &&
-            	bounds.getHeight() < viewport.getHeight()* maxFraction)
-            {
-                bestZoom = getZoom();
-            }
-            else
-            {
-                break;
-            }
+        Rectangle2D bounds = generateBoundingRect(positions, bestZoom);
 
-            if (getZoom() == info.getMinimumZoomLevel())
-            {
-                break;
-            }
-            else
-            {
-                setZoom(getZoom()-1);
-            }
+        // is this zoom still OK?
+        while (bestZoom >= info.getMinimumZoomLevel() &&
+               bounds.getWidth() < viewport.getWidth() * maxFraction &&
+               bounds.getHeight() < viewport.getHeight() * maxFraction)
+        {
+            bestZoom--;
+            bounds = generateBoundingRect(positions, bestZoom);
         }
 
-        setZoom(bestZoom);
-	}
+        setZoom(bestZoom + 1);
+    }
 
-	private Rectangle2D generateBoundingRect(final Set<GeoPosition> positions, int zoom)
-	{
-		Point2D point1 = getTileFactory().geoToPixel(positions.iterator().next(), zoom);
-		Rectangle2D rect = new Rectangle2D.Double(point1.getX(), point1.getY(), 0, 0);
+    private Rectangle2D generateBoundingRect(final Set<GeoPosition> positions, int zoom)
+    {
+        Point2D point1 = getTileFactory().geoToPixel(positions.iterator().next(), zoom);
+        Rectangle2D rect = new Rectangle2D.Double(point1.getX(), point1.getY(), 0, 0);
 
-		for (GeoPosition pos : positions)
-		{
-			Point2D point = getTileFactory().geoToPixel(pos, zoom);
-			rect.add(point);
-		}
-		return rect;
-	}
+        for (GeoPosition pos : positions)
+        {
+            Point2D point = getTileFactory().geoToPixel(pos, zoom);
+            rect.add(point);
+        }
+        return rect;
+    }
 
-	// a property change listener which forces repaints when tiles finish loading
-	private TileListener tileLoadListener = new TileListener()
-	{
-		@Override
-		public void tileLoaded(Tile tile)
-		{
-				if (tile.getZoom() == getZoom())
-				{
-					repaint();
-					/* this optimization doesn't save much and it doesn't work if you
-					* wrap around the world
-					Rectangle viewportBounds = getViewportBounds();
-					TilePoint tilePoint = t.getLocation();
-					Point point = new Point(tilePoint.getX() * getTileFactory().getTileSize(), tilePoint.getY() * getTileFactory().getTileSize());
-					Rectangle tileRect = new Rectangle(point, new Dimension(getTileFactory().getTileSize(), getTileFactory().getTileSize()));
-					if (viewportBounds.intersects(tileRect)) {
-					//convert tileRect from world space to viewport space
-					repaint(new Rectangle(
-						tileRect.x - viewportBounds.x,
-						tileRect.y - viewportBounds.y,
-						tileRect.width,
-						tileRect.height
-						));
-					}*/
-				}
-			}
+    private GeoPosition computeGeoCenter(final Set<GeoPosition> positions)
+    {
+        double sumLat = 0;
+        double sumLon = 0;
 
-	};
+        for (GeoPosition pos : positions)
+        {
+            sumLat += pos.getLatitude();
+            sumLon += pos.getLongitude();
+        }
+        double avgLat = sumLat / positions.size();
+        double avgLon = sumLon / positions.size();
+        return new GeoPosition(avgLat, avgLon);
+    }
 
-	/**
-	 * @return true if panning is restricted or not
-	 */
-	public boolean isRestrictOutsidePanning()
-	{
-		return restrictOutsidePanning;
-	}
+    // a property change listener which forces repaints when tiles finish loading
+    private TileListener tileLoadListener = new TileListener()
+    {
+        @Override
+        public void tileLoaded(Tile tile)
+        {
+                if (tile.getZoom() == getZoom())
+                {
+                    repaint();
+                    /* this optimization doesn't save much and it doesn't work if you
+                    * wrap around the world
+                    Rectangle viewportBounds = getViewportBounds();
+                    TilePoint tilePoint = t.getLocation();
+                    Point point = new Point(tilePoint.getX() * getTileFactory().getTileSize(), tilePoint.getY() * getTileFactory().getTileSize());
+                    Rectangle tileRect = new Rectangle(point, new Dimension(getTileFactory().getTileSize(), getTileFactory().getTileSize()));
+                    if (viewportBounds.intersects(tileRect)) {
+                    //convert tileRect from world space to viewport space
+                    repaint(new Rectangle(
+                        tileRect.x - viewportBounds.x,
+                        tileRect.y - viewportBounds.y,
+                        tileRect.width,
+                        tileRect.height
+                        ));
+                    }*/
+                }
+            }
 
-	/**
-	 * @param restrictOutsidePanning set if panning is restricted or not
-	 */
-	public void setRestrictOutsidePanning(boolean restrictOutsidePanning)
-	{
-		this.restrictOutsidePanning = restrictOutsidePanning;
-	}
+    };
 
-	/**
-	 * @return true if horizontally wrapped or not
-	 */
-	public boolean isHorizontalWrapped()
-	{
-		return horizontalWrapped;
-	}
+    /**
+     * @return true if panning is restricted or not
+     */
+    public boolean isRestrictOutsidePanning()
+    {
+        return restrictOutsidePanning;
+    }
 
-	/**
-	 * Side note: This setting is ignored when  horizontaklWrapped is set to true.
-	 *
-	 * @param infiniteMapRendering true when infinite map rendering should be enabled
-	 */
-	public void setInfiniteMapRendering(boolean infiniteMapRendering)
-	{
-		this.infiniteMapRendering = infiniteMapRendering;
-	}
+    /**
+     * @param restrictOutsidePanning set if panning is restricted or not
+     */
+    public void setRestrictOutsidePanning(boolean restrictOutsidePanning)
+    {
+        this.restrictOutsidePanning = restrictOutsidePanning;
+    }
 
-	/**
-	 * @return true if infinite map rendering is enabled
-	 */
-	public boolean isInfiniteMapRendering()
-	{
-		return horizontalWrapped || infiniteMapRendering;
-	}
+    /**
+     * @return true if horizontally wrapped or not
+     */
+    public boolean isHorizontalWrapped()
+    {
+        return horizontalWrapped;
+    }
 
-	/**
-	 * @param horizontalWrapped true if horizontal wrap is enabled
-	 */
-	public void setHorizontalWrapped(boolean horizontalWrapped)
-	{
-		this.horizontalWrapped = horizontalWrapped;
-	}
+    /**
+     * Side note: This setting is ignored when  horizontaklWrapped is set to true.
+     *
+     * @param infiniteMapRendering true when infinite map rendering should be enabled
+     */
+    public void setInfiniteMapRendering(boolean infiniteMapRendering)
+    {
+        this.infiniteMapRendering = infiniteMapRendering;
+    }
 
-	/**
-	 * Converts the specified GeoPosition to a point in the JXMapViewer's local coordinate space. This method is
-	 * especially useful when drawing lat/long positions on the map.
-	 * @param pos a GeoPosition on the map
-	 * @return the point in the local coordinate space of the map
-	 */
-	public Point2D convertGeoPositionToPoint(GeoPosition pos)
-	{
-		// convert from geo to world bitmap
-		Point2D pt = getTileFactory().geoToPixel(pos, getZoom());
-		// convert from world bitmap to local
-		Rectangle bounds = getViewportBounds();
-		return new Point2D.Double(pt.getX() - bounds.getX(), pt.getY() - bounds.getY());
-	}
+    /**
+     * @return true if infinite map rendering is enabled
+     */
+    public boolean isInfiniteMapRendering()
+    {
+        return horizontalWrapped || infiniteMapRendering;
+    }
 
-	/**
-	 * Converts the specified Point2D in the JXMapViewer's local coordinate space to a GeoPosition on the map. This
-	 * method is especially useful for determining the GeoPosition under the mouse cursor.
-	 * @param pt a point in the local coordinate space of the map
-	 * @return the point converted to a GeoPosition
-	 */
-	public GeoPosition convertPointToGeoPosition(Point2D pt)
-	{
-		// convert from local to world bitmap
-		Rectangle bounds = getViewportBounds();
-		Point2D pt2 = new Point2D.Double(pt.getX() + bounds.getX(), pt.getY() + bounds.getY());
+    /**
+     * @param horizontalWrapped true if horizontal wrap is enabled
+     */
+    public void setHorizontalWrapped(boolean horizontalWrapped)
+    {
+        this.horizontalWrapped = horizontalWrapped;
+    }
 
-		// convert from world bitmap to geo
-		GeoPosition pos = getTileFactory().pixelToGeo(pt2, getZoom());
-		return pos;
-	}
+    /**
+     * Converts the specified GeoPosition to a point in the JXMapViewer's local coordinate space. This method is
+     * especially useful when drawing lat/long positions on the map.
+     * @param pos a GeoPosition on the map
+     * @return the point in the local coordinate space of the map
+     */
+    public Point2D convertGeoPositionToPoint(GeoPosition pos)
+    {
+        // convert from geo to world bitmap
+        Point2D pt = getTileFactory().geoToPixel(pos, getZoom());
+        // convert from world bitmap to local
+        Rectangle bounds = getViewportBounds();
+        return new Point2D.Double(pt.getX() - bounds.getX(), pt.getY() - bounds.getY());
+    }
 
-	/**
-	 * @return isNegativeYAllowed
-	 * @deprecated do not use
-	 */
-	@Deprecated
-	public boolean isNegativeYAllowed()
-	{
-		return true;
-	}
+    /**
+     * Converts the specified Point2D in the JXMapViewer's local coordinate space to a GeoPosition on the map. This
+     * method is especially useful for determining the GeoPosition under the mouse cursor.
+     * @param pt a point in the local coordinate space of the map
+     * @return the point converted to a GeoPosition
+     */
+    public GeoPosition convertPointToGeoPosition(Point2D pt)
+    {
+        // convert from local to world bitmap
+        Rectangle bounds = getViewportBounds();
+        Point2D pt2 = new Point2D.Double(pt.getX() + bounds.getX(), pt.getY() + bounds.getY());
+
+        // convert from world bitmap to geo
+        GeoPosition pos = getTileFactory().pixelToGeo(pt2, getZoom());
+        return pos;
+    }
+
+    /**
+     * @return isNegativeYAllowed
+     * @deprecated do not use
+     */
+    @Deprecated
+    public boolean isNegativeYAllowed()
+    {
+        return true;
+    }
 
     /**
      * Enables or disables panning.
