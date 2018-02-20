@@ -13,7 +13,7 @@ public class GoogleMapsTileFactoryInfo extends TileFactoryInfo
     /**
      * Currently only 256x256 works - see https://github.com/msteiger/jxmapviewer2/issues/62
      */
-    private static final int TILE_SIZE = 256;
+    private static final int TILE_SIZE = 512;
 
     private final String key;
 
@@ -36,18 +36,17 @@ public class GoogleMapsTileFactoryInfo extends TileFactoryInfo
     }
 
     @Override
-    public String getTileUrl(int x, int y, int zoom)
+    public String getTileUrl(int x, int y, int orgZoom)
     {
-        System.out.println("testing for validity: X " + x + " Y = " + y);
-
-        zoom = getTotalMapZoom() - zoom;
+        int zoom = getTotalMapZoom() - orgZoom;
+        int f = TILE_SIZE / 256;
 
         double xtile = x + 0.5;
         double ytile = y + 0.5;
 
         double n = Math.pow(2.0,zoom);
-        double lon_deg = ((xtile / n) * 360.0) - 180.0;
-        double lat_rad = Math.atan(Math.sinh(Math.PI * (1 - 2 * ytile / n)));
+        double lon_deg = f * (((xtile / n) * 360.0) - 180);
+        double lat_rad = Math.atan(Math.sinh(Math.PI * (1 - f * 2 * ytile / n)));
         double lat_deg = (lat_rad * 180.0) / Math.PI;
 
 
