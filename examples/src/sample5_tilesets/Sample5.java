@@ -34,84 +34,84 @@ import org.jxmapviewer.viewer.TileFactoryInfo;
  */
 public class Sample5
 {
-	/**
-	 * @param args the program args (ignored)
-	 */
-	public static void main(String[] args)
-	{
-		final List<TileFactory> factories = new ArrayList<TileFactory>();
+    /**
+     * @param args the program args (ignored)
+     */
+    public static void main(String[] args)
+    {
+        final List<TileFactory> factories = new ArrayList<TileFactory>();
 
-		TileFactoryInfo osmInfo = new OSMTileFactoryInfo();
-		TileFactoryInfo veInfo = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP);
+        TileFactoryInfo osmInfo = new OSMTileFactoryInfo();
+        TileFactoryInfo veInfo = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP);
 
-//		factories.add(new EmptyTileFactory());
-		factories.add(new DefaultTileFactory(osmInfo));
-		factories.add(new DefaultTileFactory(veInfo));
-		
-		// Setup JXMapViewer
-		final JXMapViewer mapViewer = new JXMapViewer();
-		mapViewer.setTileFactory(factories.get(0));
+//        factories.add(new EmptyTileFactory());
+        factories.add(new DefaultTileFactory(osmInfo));
+        factories.add(new DefaultTileFactory(veInfo));
 
-		GeoPosition frankfurt = new GeoPosition(50.11, 8.68);
+        // Setup JXMapViewer
+        final JXMapViewer mapViewer = new JXMapViewer();
+        mapViewer.setTileFactory(factories.get(0));
 
-		// Set the focus
-		mapViewer.setZoom(7);
-		mapViewer.setAddressLocation(frankfurt);
+        GeoPosition frankfurt = new GeoPosition(50.11, 8.68);
 
-		// Add interactions
-		MouseInputListener mia = new PanMouseInputListener(mapViewer);
-		mapViewer.addMouseListener(mia);
-		mapViewer.addMouseMotionListener(mia);
+        // Set the focus
+        mapViewer.setZoom(7);
+        mapViewer.setAddressLocation(frankfurt);
 
-		mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mapViewer));
+        // Add interactions
+        MouseInputListener mia = new PanMouseInputListener(mapViewer);
+        mapViewer.addMouseListener(mia);
+        mapViewer.addMouseMotionListener(mia);
 
-		JPanel panel = new JPanel();
-		JLabel label = new JLabel("Select a TileFactory ");
-		
-		String[] tfLabels = new String[factories.size()];
-		for (int i = 0; i < factories.size(); i++)
-		{
-			tfLabels[i] = factories.get(i).getInfo().getName();
-		}
-		
-		final JComboBox combo = new JComboBox(tfLabels);
-		combo.addItemListener(new ItemListener()
-		{
-			@Override
-			public void itemStateChanged(ItemEvent e)
-			{
-				TileFactory factory = factories.get(combo.getSelectedIndex());
-				mapViewer.setTileFactory(factory);
-			}
-		});
-		
-		panel.setLayout(new GridLayout());
-		panel.add(label);
-		panel.add(combo);
-		
-		final JLabel labelThreadCount = new JLabel("Threads: ");
-		
-		// Display the viewer in a JFrame
-		JFrame frame = new JFrame("JXMapviewer2 Example 5");
-		frame.setLayout(new BorderLayout());
-		frame.add(panel, BorderLayout.NORTH);
-		frame.add(mapViewer);
-		frame.add(labelThreadCount, BorderLayout.SOUTH);
-		frame.setSize(800, 600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		
-		Timer t = new Timer(500, new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Set<Thread> threads = Thread.getAllStackTraces().keySet();
-				labelThreadCount.setText("Threads: " + threads.size());
-			}
-		}); 
-		
-		t.start();
-	}
-	
+        mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mapViewer));
+
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Select a TileFactory ");
+
+        String[] tfLabels = new String[factories.size()];
+        for (int i = 0; i < factories.size(); i++)
+        {
+            tfLabels[i] = factories.get(i).getInfo().getName();
+        }
+
+        final JComboBox combo = new JComboBox(tfLabels);
+        combo.addItemListener(new ItemListener()
+        {
+            @Override
+            public void itemStateChanged(ItemEvent e)
+            {
+                TileFactory factory = factories.get(combo.getSelectedIndex());
+                mapViewer.setTileFactory(factory);
+            }
+        });
+
+        panel.setLayout(new GridLayout());
+        panel.add(label);
+        panel.add(combo);
+
+        final JLabel labelThreadCount = new JLabel("Threads: ");
+
+        // Display the viewer in a JFrame
+        JFrame frame = new JFrame("JXMapviewer2 Example 5");
+        frame.setLayout(new BorderLayout());
+        frame.add(panel, BorderLayout.NORTH);
+        frame.add(mapViewer);
+        frame.add(labelThreadCount, BorderLayout.SOUTH);
+        frame.setSize(800, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        Timer t = new Timer(500, new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                Set<Thread> threads = Thread.getAllStackTraces().keySet();
+                labelThreadCount.setText("Threads: " + threads.size());
+            }
+        }); 
+
+        t.start();
+    }
+
 }

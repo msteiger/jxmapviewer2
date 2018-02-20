@@ -20,75 +20,75 @@ import org.jxmapviewer.painter.Painter;
  */
 public class RoutePainter implements Painter<JXMapViewer>
 {
-	private Color color = Color.RED;
-	private boolean antiAlias = true;
-	
-	private List<GeoPosition> track;
-	
-	/**
-	 * @param track the track
-	 */
-	public RoutePainter(List<GeoPosition> track)
-	{
-		// copy the list so that changes in the 
-		// original list do not have an effect here
-		this.track = new ArrayList<GeoPosition>(track);
-	}
+    private Color color = Color.RED;
+    private boolean antiAlias = true;
 
-	@Override
-	public void paint(Graphics2D g, JXMapViewer map, int w, int h)
-	{
-		g = (Graphics2D) g.create();
+    private List<GeoPosition> track;
 
-		// convert from viewport to world bitmap
-		Rectangle rect = map.getViewportBounds();
-		g.translate(-rect.x, -rect.y);
+    /**
+     * @param track the track
+     */
+    public RoutePainter(List<GeoPosition> track)
+    {
+        // copy the list so that changes in the 
+        // original list do not have an effect here
+        this.track = new ArrayList<GeoPosition>(track);
+    }
 
-		if (antiAlias)
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    @Override
+    public void paint(Graphics2D g, JXMapViewer map, int w, int h)
+    {
+        g = (Graphics2D) g.create();
 
-		// do the drawing
-		g.setColor(Color.BLACK);
-		g.setStroke(new BasicStroke(4));
+        // convert from viewport to world bitmap
+        Rectangle rect = map.getViewportBounds();
+        g.translate(-rect.x, -rect.y);
 
-		drawRoute(g, map);
+        if (antiAlias)
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		// do the drawing again
-		g.setColor(color);
-		g.setStroke(new BasicStroke(2));
+        // do the drawing
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(4));
 
-		drawRoute(g, map);
+        drawRoute(g, map);
 
-		g.dispose();
-	}
+        // do the drawing again
+        g.setColor(color);
+        g.setStroke(new BasicStroke(2));
 
-	/**
-	 * @param g the graphics object
-	 * @param map the map
-	 */
-	private void drawRoute(Graphics2D g, JXMapViewer map)
-	{
-		int lastX = 0;
-		int lastY = 0;
-		
-		boolean first = true;
-		
-		for (GeoPosition gp : track)
-		{
-			// convert geo-coordinate to world bitmap pixel
-			Point2D pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
+        drawRoute(g, map);
 
-			if (first)
-			{
-				first = false;
-			}
-			else
-			{
-				g.drawLine(lastX, lastY, (int) pt.getX(), (int) pt.getY());
-			}
-			
-			lastX = (int) pt.getX();
-			lastY = (int) pt.getY();
-		}
-	}
+        g.dispose();
+    }
+
+    /**
+     * @param g the graphics object
+     * @param map the map
+     */
+    private void drawRoute(Graphics2D g, JXMapViewer map)
+    {
+        int lastX = 0;
+        int lastY = 0;
+
+        boolean first = true;
+
+        for (GeoPosition gp : track)
+        {
+            // convert geo-coordinate to world bitmap pixel
+            Point2D pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
+
+            if (first)
+            {
+                first = false;
+            }
+            else
+            {
+                g.drawLine(lastX, lastY, (int) pt.getX(), (int) pt.getY());
+            }
+
+            lastX = (int) pt.getX();
+            lastY = (int) pt.getY();
+        }
+    }
 }
