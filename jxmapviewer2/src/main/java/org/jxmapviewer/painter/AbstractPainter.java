@@ -396,38 +396,38 @@ public abstract class AbstractPainter<T> extends AbstractBean implements Painter
                     cache = GraphicsUtilities.createCompatibleTranslucentImage(width, height);
                 }
                 if (cache != null) {
-	                Graphics2D gfx = cache.createGraphics();
-	                
-	                try {
-	                    gfx.setClip(0, 0, width, height);
-	
-	                    if (!invalidCache) {
-	                        // If we are doing a repaint, but we didn't have to
-	                        // recreate the image, we need to clear it back
-	                        // to a fully transparent background.
-	                        Composite composite = gfx.getComposite();
-	                        gfx.setComposite(AlphaComposite.Clear);
-	                        gfx.fillRect(0, 0, width, height);
-	                        gfx.setComposite(composite);
-	                    }
-	
-	                    configureGraphics(gfx);
-	                    doPaint(gfx, obj, width, height);
-	                } finally {
-	                    gfx.dispose();
-	                }
-	
-	                if (!isInPaintContext()) {
-	                    for (BufferedImageOp f : getFilters()) {
-	                        cache = f.filter(cache, null);
-	                    }
-	                }
-	
-	                //only save the temporary image as the cacheable if I'm caching
-	                if (shouldUseCache()) {
-	                    cachedImage = new SoftReference<BufferedImage>(cache);
-	                    cacheCleared = false;
-	                }
+                    Graphics2D gfx = cache.createGraphics();
+                    
+                    try {
+                        gfx.setClip(0, 0, width, height);
+    
+                        if (!invalidCache) {
+                            // If we are doing a repaint, but we didn't have to
+                            // recreate the image, we need to clear it back
+                            // to a fully transparent background.
+                            Composite composite = gfx.getComposite();
+                            gfx.setComposite(AlphaComposite.Clear);
+                            gfx.fillRect(0, 0, width, height);
+                            gfx.setComposite(composite);
+                        }
+    
+                        configureGraphics(gfx);
+                        doPaint(gfx, obj, width, height);
+                    } finally {
+                        gfx.dispose();
+                    }
+    
+                    if (!isInPaintContext()) {
+                        for (BufferedImageOp f : getFilters()) {
+                            cache = f.filter(cache, null);
+                        }
+                    }
+    
+                    //only save the temporary image as the cacheable if I'm caching
+                    if (shouldUseCache()) {
+                        cachedImage = new SoftReference<BufferedImage>(cache);
+                        cacheCleared = false;
+                    }
                 }
             }
 

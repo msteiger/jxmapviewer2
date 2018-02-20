@@ -16,13 +16,13 @@ package org.jxmapviewer.viewer;
  */
 public class DefaultTileFactory extends AbstractTileFactory
 {
-	/**
-	 * Creates a new instance of DefaultTileFactory using the spcified TileFactoryInfo
-	 * @param info a TileFactoryInfo to configure this TileFactory
-	 */
-	public DefaultTileFactory(TileFactoryInfo info)
-	{
-		super(info);
-	}
+    /**
+     * Creates a new instance of DefaultTileFactory using the spcified TileFactoryInfo
+     * @param info a TileFactoryInfo to configure this TileFactory
+     */
+    public DefaultTileFactory(TileFactoryInfo info)
+    {
+        super(info);
+    }
 
 }

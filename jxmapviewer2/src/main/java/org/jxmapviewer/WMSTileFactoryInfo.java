@@ -8,38 +8,38 @@ import org.jxmapviewer.viewer.util.MercatorUtils;
  */
 public class WMSTileFactoryInfo extends TileFactoryInfo
 {
-	private String layers;
-	private String styles;
-	private String tileBgColor;
-	private String tileFormat;
-	private String srs;
-	
+    private String layers;
+    private String styles;
+    private String tileBgColor;
+    private String tileFormat;
+    private String srs;
+    
 
-	public WMSTileFactoryInfo(int minZoom, int maxZoom, int totalMapZoom, String baseURL, String layers, String styles, String defaultBgColor, String tileFormat, String srs, int tileSize)
-	{
-		super(minZoom, maxZoom, totalMapZoom, tileSize, true, true, baseURL, "x", "y", "zoom");
-		this.layers = layers;
-		this.styles = styles;
-		this.tileBgColor = defaultBgColor;
-		this.tileFormat = tileFormat;
-		this.srs = srs;
-	}
-	
-	public WMSTileFactoryInfo(int minZoom, int maxZoom, int totalMapZoom, String baseURL, String layers, String styles, String defaultBgColor){
-	  this(minZoom, maxZoom, totalMapZoom, baseURL, layers, styles, defaultBgColor, "image/jpeg", "EPSG:4326", 255);
-	}
-	
-	public WMSTileFactoryInfo(int minZoom, int maxZoom, int totalMapZoom, String baseURL, String layers, String defaultBgColor){
-	  this(minZoom, maxZoom, totalMapZoom, baseURL, layers, "", defaultBgColor);
-	}
-	
-	public WMSTileFactoryInfo(int minZoom, int maxZoom, int totalMapZoom, String baseURL, String layers){
-	  this(minZoom, maxZoom, totalMapZoom, baseURL, layers, "0xAFDAF6");
-	}
+    public WMSTileFactoryInfo(int minZoom, int maxZoom, int totalMapZoom, String baseURL, String layers, String styles, String defaultBgColor, String tileFormat, String srs, int tileSize)
+    {
+        super(minZoom, maxZoom, totalMapZoom, tileSize, true, true, baseURL, "x", "y", "zoom");
+        this.layers = layers;
+        this.styles = styles;
+        this.tileBgColor = defaultBgColor;
+        this.tileFormat = tileFormat;
+        this.srs = srs;
+    }
+    
+    public WMSTileFactoryInfo(int minZoom, int maxZoom, int totalMapZoom, String baseURL, String layers, String styles, String defaultBgColor){
+      this(minZoom, maxZoom, totalMapZoom, baseURL, layers, styles, defaultBgColor, "image/jpeg", "EPSG:4326", 255);
+    }
+    
+    public WMSTileFactoryInfo(int minZoom, int maxZoom, int totalMapZoom, String baseURL, String layers, String defaultBgColor){
+      this(minZoom, maxZoom, totalMapZoom, baseURL, layers, "", defaultBgColor);
+    }
+    
+    public WMSTileFactoryInfo(int minZoom, int maxZoom, int totalMapZoom, String baseURL, String layers){
+      this(minZoom, maxZoom, totalMapZoom, baseURL, layers, "0xAFDAF6");
+    }
 
-	@Override
-	public String getTileUrl(int x, int y, int zoom)
-	{
+    @Override
+    public String getTileUrl(int x, int y, int zoom)
+    {
             int tileSize = getTileSize(zoom);
             zoom = getTotalMapZoom() - zoom;
             int z = (int) Math.pow(2, (double) zoom - 1);
@@ -58,9 +58,9 @@ public class WMSTileFactoryInfo extends TileFactoryInfo
             if(lrx<ulx){lrx = -lrx;}
             String bbox = ulx + "," + uly + "," + lrx + "," + lry;
             String url = getBaseURL() + "?version=1.1.1&request=GetMap&layers=" + this.getLayers() + "&format=" + this.getTileFormat()
-                            + "&bbox=" + bbox + "&width=" + tileSize + "&height=" + tileSize + "&srs=" + this.getSrs() + "&styles=" + this.getStyles() +	(this.getTileBgColor()==null?"":"&bgcolor="+this.getTileBgColor());
+                            + "&bbox=" + bbox + "&width=" + tileSize + "&height=" + tileSize + "&srs=" + this.getSrs() + "&styles=" + this.getStyles() +    (this.getTileBgColor()==null?"":"&bgcolor="+this.getTileBgColor());
             return url;
-	}
+    }
 
     /**
      * @return the layers

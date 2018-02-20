@@ -7,10 +7,10 @@ package org.jxmapviewer.viewer;
  */
 public interface TileListener
 {
-	/**
-	 * Notification when a tile is loaded
-	 * @param tile the tile
-	 */
-	public void tileLoaded(Tile tile);
+    /**
+     * Notification when a tile is loaded
+     * @param tile the tile
+     */
+    public void tileLoaded(Tile tile);
 
 }

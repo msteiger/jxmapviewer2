@@ -12,19 +12,19 @@ import org.jxmapviewer.JXMapViewer;
  */
 public class ZoomMouseWheelListenerCenter implements MouseWheelListener
 {
-	private JXMapViewer viewer;
-	
-	/**
-	 * @param viewer the jxmapviewer
-	 */
-	public ZoomMouseWheelListenerCenter(JXMapViewer viewer)
-	{
-		this.viewer = viewer;
-	}
+    private JXMapViewer viewer;
+    
+    /**
+     * @param viewer the jxmapviewer
+     */
+    public ZoomMouseWheelListenerCenter(JXMapViewer viewer)
+    {
+        this.viewer = viewer;
+    }
 
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e)
-	{
-		viewer.setZoom(viewer.getZoom() + e.getWheelRotation());
-	}
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e)
+    {
+        viewer.setZoom(viewer.getZoom() + e.getWheelRotation());
+    }
 }

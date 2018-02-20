@@ -17,9 +17,9 @@ package org.jxmapviewer.viewer;
  */
 public interface Waypoint
 {
-	/**
-	 * Get the current GeoPosition of this Waypoint
-	 * @return the current position
-	 */
-	public GeoPosition getPosition();
+    /**
+     * Get the current GeoPosition of this Waypoint
+     * @return the current position
+     */
+    public GeoPosition getPosition();
 }

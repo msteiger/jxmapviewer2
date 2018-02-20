@@ -533,7 +533,7 @@ public class GraphicsUtilities {
                     g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                                     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                 }
-                if (g2 != null)	// always the case
+                if (g2 != null)    // always the case
                 g2.drawImage(thumb, 0, 0, width, height,
                         0, 0, previousWidth, previousHeight, null);
     
@@ -638,7 +638,7 @@ public class GraphicsUtilities {
                     g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                                     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
                 }
-                if (g2 != null)	// always the case
+                if (g2 != null)    // always the case
                 g2.drawImage(thumb, 0, 0, width, height,
                              0, 0, previousWidth, previousHeight, null);
     

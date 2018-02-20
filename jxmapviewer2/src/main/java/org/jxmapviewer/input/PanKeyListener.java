@@ -14,47 +14,47 @@ import org.jxmapviewer.JXMapViewer;
  */
 public class PanKeyListener extends KeyAdapter
 {
-	private static final int OFFSET = 10;
+    private static final int OFFSET = 10;
 
-	private JXMapViewer viewer;
-	
-	/**
-	 * @param viewer the jxmapviewer
-	 */
-	public PanKeyListener(JXMapViewer viewer)
-	{
-		this.viewer = viewer;
-	}
+    private JXMapViewer viewer;
+    
+    /**
+     * @param viewer the jxmapviewer
+     */
+    public PanKeyListener(JXMapViewer viewer)
+    {
+        this.viewer = viewer;
+    }
 
-	@Override
-	public void keyPressed(KeyEvent e)
-	{
-		int delta_x = 0;
-		int delta_y = 0;
+    @Override
+    public void keyPressed(KeyEvent e)
+    {
+        int delta_x = 0;
+        int delta_y = 0;
 
-		switch (e.getKeyCode())
-		{
-		case KeyEvent.VK_LEFT:
-			delta_x = -OFFSET;
-			break;
-		case KeyEvent.VK_RIGHT:
-			delta_x = OFFSET;
-			break;
-		case KeyEvent.VK_UP:
-			delta_y = -OFFSET;
-			break;
-		case KeyEvent.VK_DOWN:
-			delta_y = OFFSET;
-			break;
-		}
+        switch (e.getKeyCode())
+        {
+        case KeyEvent.VK_LEFT:
+            delta_x = -OFFSET;
+            break;
+        case KeyEvent.VK_RIGHT:
+            delta_x = OFFSET;
+            break;
+        case KeyEvent.VK_UP:
+            delta_y = -OFFSET;
+            break;
+        case KeyEvent.VK_DOWN:
+            delta_y = OFFSET;
+            break;
+        }
 
-		if (delta_x != 0 || delta_y != 0)
-		{
-			Rectangle bounds = viewer.getViewportBounds();
-			double x = bounds.getCenterX() + delta_x;
-			double y = bounds.getCenterY() + delta_y;
-			viewer.setCenter(new Point2D.Double(x, y));
-			viewer.repaint();
-		}
-	}
+        if (delta_x != 0 || delta_y != 0)
+        {
+            Rectangle bounds = viewer.getViewportBounds();
+            double x = bounds.getCenterX() + delta_x;
+            double y = bounds.getCenterY() + delta_y;
+            viewer.setCenter(new Point2D.Double(x, y));
+            viewer.repaint();
+        }
+    }
 }
