@@ -99,7 +99,7 @@ public abstract class TileFactory
     {
         return info;
     }
-    
+
     /**
      * Adds a tile listener
      * @param listener the listener
@@ -108,7 +108,7 @@ public abstract class TileFactory
     {
         tileListeners.add(listener);
     }
-    
+
     /**
      * Removes a tile listener
      * @param listener the listener
@@ -117,12 +117,12 @@ public abstract class TileFactory
     {
         tileListeners.remove(listener);
     }
-    
+
     /**
      * Disposes this TileFactory
      */
     public abstract void dispose();
-    
+
     /**
      * Notifies all tile listeners
      * @param tile the tile
@@ -141,4 +141,5 @@ public abstract class TileFactory
      */
     protected abstract void startLoading(Tile tile);
 
+    public void setLocalCache(LocalCache cache) { }
 }

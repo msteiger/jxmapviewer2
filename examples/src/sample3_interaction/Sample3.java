@@ -43,6 +43,7 @@ public class Sample3
 
         // Setup JXMapViewer
         final JXMapViewer mapViewer = new JXMapViewer();
+        tileFactory.setLocalCache(new FileBasedLocalCache(cacheDir, false));
         mapViewer.setTileFactory(tileFactory);
 
         GeoPosition frankfurt = new GeoPosition(50.11, 8.68);
@@ -63,10 +64,10 @@ public class Sample3
         mapViewer.addKeyListener(new PanKeyListener(mapViewer));
 
         // Add a selection painter
-        SelectionAdapter sa = new SelectionAdapter(mapViewer); 
-        SelectionPainter sp = new SelectionPainter(sa); 
-        mapViewer.addMouseListener(sa); 
-        mapViewer.addMouseMotionListener(sa); 
+        SelectionAdapter sa = new SelectionAdapter(mapViewer);
+        SelectionPainter sp = new SelectionPainter(sa);
+        mapViewer.addMouseListener(sa);
+        mapViewer.addMouseMotionListener(sa);
         mapViewer.setOverlayPainter(sp);
 
         // Display the viewer in a JFrame
@@ -105,7 +106,7 @@ public class Sample3
         double lon = mapViewer.getCenterPosition().getLongitude();
         int zoom = mapViewer.getZoom();
 
-        frame.setTitle(String.format("JXMapviewer2 Example 3 (%.2f / %.2f) - Zoom: %d", lat, lon, zoom)); 
+        frame.setTitle(String.format("JXMapviewer2 Example 3 (%.2f / %.2f) - Zoom: %d", lat, lon, zoom));
     }
 
 }
