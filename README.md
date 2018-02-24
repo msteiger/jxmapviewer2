@@ -1,4 +1,4 @@
-#### Overview
+### Overview
 
 ![sample2](images/sample2.png "MapViewer Sample2")
 ![sample2](images/sample5.png "MapViewer Sample5")
@@ -7,14 +7,9 @@ This project is based on the JXMapViewer component of SwingX-WS.
 
 The project was hosted at SwingLabs.org, but has been discontinued. We extracted the JXMapViewer part from the latest SwingX-WS version available and continue developing it.
 
-The [JXMapViewer Tutorial by Joshua Marinacci](http://today.java.net/pub/a/today/2007/10/30/building-maps-into-swing-app-with-jxmapviewer.html) gives a good overview over the functionality of the component.
+The JXMapViewer Tutorial by Joshua Marinacci provided a good overview over the functionality of the component, but unfortunately it's no longer available. Please have a look at the [examples section](https://github.com/msteiger/jxmapviewer2/tree/master/examples/src) instead.
 
-This source code used in this project is based on: 
-
- * SwingX-ws-2009_06_14.jar http://java.net/projects/swingx 
- * SwingX 1.6.3 (released Feb 2012) http://java.net/projects/swingx-ws
-
-The content of this project are also available at *Maven Central* and can be referenced in your pom.xml:
+The content of this project are also available at [Maven Central](https://mvnrepository.com/artifact/org.jxmapviewer/jxmapviewer2) and can be referenced in your `pom.xml` with the following coordinates:
 
 ```xml
 <dependency>
@@ -24,7 +19,14 @@ The content of this project are also available at *Maven Central* and can be ref
 </dependency>
 ```
 
-#### What we have done so far ..
+### History
+
+This source code used in this project is based on: 
+
+ * SwingX-ws-2009_06_14.jar http://java.net/projects/swingx 
+ * SwingX 1.6.3 (released Feb 2012) http://java.net/projects/swingx-ws
+
+This is what we have done so far ...
 
  * Extract the JXMapViewer part from the full package
  * Upgrade to Java 6
@@ -41,11 +43,8 @@ The content of this project are also available at *Maven Central* and can be ref
  * Supports OSGi bundles (contains MANIFEST.MF)
  * Supports Maven dependency management
  * Fixed use of deprecated code
- 
-#### What we plan to do ..
+ * Fix bugs that were posted on http://java.net/jira/browse/SWINGX_WS
 
- * Fix bugs that were posted on http://java.net/jira/browse/SWINGX_WS ( mostly complete )
-
-#### License
+### License
 This project has been licensed under the GNU Lesser General Public License (LGPL)
 
