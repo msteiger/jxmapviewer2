@@ -25,6 +25,8 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jxmapviewer.cache.LocalCache;
+import org.jxmapviewer.cache.NoOpLocalCache;
 import org.jxmapviewer.util.ProjectProperties;
 import org.jxmapviewer.viewer.util.GeoUtil;
 

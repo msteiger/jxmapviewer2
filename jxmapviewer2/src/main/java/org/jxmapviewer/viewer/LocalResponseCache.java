@@ -18,10 +18,13 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jxmapviewer.cache.FileBasedLocalCache;
+import org.jxmapviewer.cache.LocalCache;
 
 /**
  * @author joshy
  */
+@Deprecated
 public class LocalResponseCache extends ResponseCache
 {
     private static final Log log = LogFactory.getLog(LocalResponseCache.class);
@@ -47,7 +50,9 @@ public class LocalResponseCache extends ResponseCache
      * @param baseURL the URL, the caching should be restricted to or <code>null</code> for none
      * @param cacheDir the cache directory
      * @param checkForUpdates true if the URL is queried for newer versions of a file first
+     * @deprecated Use {@link TileFactory#setLocalCache(LocalCache)} instead
      */
+    @Deprecated
     public static void installResponseCache(String baseURL, File cacheDir, boolean checkForUpdates)
     {
         ResponseCache.setDefault(new LocalResponseCache(baseURL, cacheDir, checkForUpdates));

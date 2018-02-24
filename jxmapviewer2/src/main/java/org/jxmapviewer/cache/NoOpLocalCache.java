@@ -1,10 +1,10 @@
-package org.jxmapviewer.viewer;
+package org.jxmapviewer.cache;
 
 import java.io.InputStream;
 import java.net.URL;
 
 /**
- * TODO: describe
+ * A dummy implementation that does nothing
  */
 public class NoOpLocalCache implements LocalCache {
 

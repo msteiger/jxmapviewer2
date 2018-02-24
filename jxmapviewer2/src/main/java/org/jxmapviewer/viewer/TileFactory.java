@@ -14,6 +14,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jxmapviewer.cache.LocalCache;
 import org.jxmapviewer.viewer.util.GeoUtil;
 
 /**
@@ -141,5 +142,8 @@ public abstract class TileFactory
      */
     protected abstract void startLoading(Tile tile);
 
-    public void setLocalCache(LocalCache cache) { }
+    /**
+     * @param cache the local cache to use
+     */
+    public void setLocalCache(LocalCache cache) { /* to not break existing implementations */ }
 }

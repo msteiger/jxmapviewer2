@@ -1,4 +1,4 @@
-package org.jxmapviewer.viewer;
+package org.jxmapviewer.cache;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * TODO: describe
+ * A file/folder-based cache
  */
 public class FileBasedLocalCache implements LocalCache {
 
@@ -24,6 +24,10 @@ public class FileBasedLocalCache implements LocalCache {
     private final File cacheDir;
     private final boolean checkForUpdates;
 
+    /**
+     * @param cacheDir the root cache folder
+     * @param checkForUpdates true, if the remote URL should be checked for updates first
+     */
     public FileBasedLocalCache(File cacheDir, boolean checkForUpdates) {
         this.cacheDir = cacheDir;
         if (!cacheDir.exists())

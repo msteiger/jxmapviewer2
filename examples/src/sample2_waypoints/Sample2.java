@@ -29,7 +29,7 @@ public class Sample2
     /**
      * @param args the program args (ignored)
      */
-    public static <T> void main(String[] args)
+    public static void main(String[] args)
     {
         JXMapViewer mapViewer = new JXMapViewer();
 
@@ -43,7 +43,6 @@ public class Sample2
         // Create a TileFactoryInfo for OpenStreetMap
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-        tileFactory.setThreadPoolSize(8);
         mapViewer.setTileFactory(tileFactory);
 
         GeoPosition frankfurt = new GeoPosition(50,  7, 0, 8, 41, 0);
