@@ -25,6 +25,8 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jxmapviewer.cache.LocalCache;
+import org.jxmapviewer.cache.NoOpLocalCache;
 import org.jxmapviewer.util.ProjectProperties;
 import org.jxmapviewer.viewer.util.GeoUtil;
 
@@ -185,6 +187,8 @@ public abstract class AbstractTileFactory extends TileFactory
         }
     });
 
+    private LocalCache localCache = new NoOpLocalCache();
+
     /**
      * Subclasses may override this method to provide their own executor services. This method will be called each time
      * a tile needs to be loaded. Implementations should cache the ExecutorService when possible.
@@ -305,6 +309,11 @@ public abstract class AbstractTileFactory extends TileFactory
         }
     }
 
+    @Override
+    public void setLocalCache(LocalCache cache) {
+        this.localCache = cache;
+    }
+
     /**
      * An inner class which actually loads the tiles. Used by the thread queue. Subclasses can override this
      * via {@link #createTileRunner(Tile)} if necessary.
@@ -393,10 +402,23 @@ public abstract class AbstractTileFactory extends TileFactory
 
         private byte[] cacheInputStream(URL url) throws IOException
         {
-            URLConnection connection = url.openConnection();
-            connection.setRequestProperty("User-Agent", userAgent);
-            InputStream ins = connection.getInputStream();
+            InputStream ins = localCache.get(url);
+            if (ins == null) {
+                URLConnection connection = url.openConnection();
+                connection.setRequestProperty("User-Agent", userAgent);
+                ins = connection.getInputStream();
+            }
+            try {
+                byte[] data = readAllBytes(ins);
+                localCache.put(url, new ByteArrayInputStream(data));
+                return data;
+            }
+            finally {
+                ins.close();
+            }
+        }
 
+        private byte[] readAllBytes(InputStream ins) throws IOException {
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             byte[] buf = new byte[256];
             while (true)
@@ -406,11 +428,7 @@ public abstract class AbstractTileFactory extends TileFactory
                     break;
                 bout.write(buf, 0, n);
             }
-            ins.close();
-
-            byte[] data = bout.toByteArray();
-            bout.close();
-            return data;
+            return bout.toByteArray();
         }
     }
 }

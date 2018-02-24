@@ -2,7 +2,6 @@
 package org.jxmapviewer.viewer;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.io.OutputStream;
 import java.net.CacheRequest;
 import java.net.CacheResponse;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.ResponseCache;
 import java.net.URI;
 import java.net.URLConnection;
@@ -20,19 +18,20 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jxmapviewer.cache.FileBasedLocalCache;
+import org.jxmapviewer.cache.LocalCache;
 
 /**
  * @author joshy
  */
+@Deprecated
 public class LocalResponseCache extends ResponseCache
 {
     private static final Log log = LogFactory.getLog(LocalResponseCache.class);
-    
-    private final File cacheDir;
 
-    private boolean checkForUpdates;
+    private final String baseURL;
 
-    private String baseURL;
+    private FileBasedLocalCache cache;
 
     /**
      * Private constructor to prevent instantiation.
@@ -43,13 +42,7 @@ public class LocalResponseCache extends ResponseCache
     private LocalResponseCache(String baseURL, File cacheDir, boolean checkForUpdates)
     {
         this.baseURL = baseURL;
-        this.cacheDir = cacheDir;
-        this.checkForUpdates = checkForUpdates;
-
-        if (!cacheDir.exists())
-        {
-            cacheDir.mkdirs();
-        }
+        this.cache = new FileBasedLocalCache(cacheDir, checkForUpdates);
     }
 
     /**
@@ -57,159 +50,38 @@ public class LocalResponseCache extends ResponseCache
      * @param baseURL the URL, the caching should be restricted to or <code>null</code> for none
      * @param cacheDir the cache directory
      * @param checkForUpdates true if the URL is queried for newer versions of a file first
+     * @deprecated Use {@link TileFactory#setLocalCache(LocalCache)} instead
      */
+    @Deprecated
     public static void installResponseCache(String baseURL, File cacheDir, boolean checkForUpdates)
     {
         ResponseCache.setDefault(new LocalResponseCache(baseURL, cacheDir, checkForUpdates));
     }
 
-    /**
-     * Returns the local File corresponding to the given remote URI.
-     * @param remoteUri the remote URI
-     * @return the corresponding local file
-     */
-    public File getLocalFile(URI remoteUri)
-    {
-        if (baseURL != null)
-        {
-            String remote = remoteUri.toString();
-            
-            if (!remote.startsWith(baseURL))
-            {
-                return null;
-            }
-        }
-        
-        
-        StringBuilder sb = new StringBuilder();
-        
-        String host = remoteUri.getHost();
-        String query = remoteUri.getQuery();
-        String path = remoteUri.getPath();
-        String fragment = remoteUri.getFragment();
-        
-        if (host != null)
-        {
-            sb.append(host);
-        }
-        if (path != null)
-        {
-            sb.append(path);
-        }
-        if (query != null)
-        {
-            sb.append('?');
-            sb.append(query);
-        }
-        if (fragment != null)
-        {
-            sb.append('#');
-            sb.append(fragment);
-        }
-
-        String name;
-        
-        final int maxLen = 250;
-        
-        if (sb.length() < maxLen)
-        {
-            name = sb.toString();
-        }
-        else
-        {
-            name = sb.substring(0, maxLen);
-        }
-        
-        name = name.replace('?', '$');
-        name = name.replace('*', '$');
-        name = name.replace(':', '$');
-        name = name.replace('<', '$');
-        name = name.replace('>', '$');
-        name = name.replace('"', '$');
-        
-        File f = new File(cacheDir, name);
-        
-        return f;
-    }
-
-    /**
-     * @param remoteUri the remote URI
-     * @param localFile the corresponding local file
-     * @return true if the resource at the given remote URI is newer than the resource cached locally.
-     */
-    private static boolean isUpdateAvailable(URI remoteUri, File localFile)
-    {
-        URLConnection conn;
-        try
-        {
-            conn = remoteUri.toURL().openConnection();
-        }
-        catch (MalformedURLException ex)
-        {
-            log.error("An exception occurred", ex);
-            return false;
-        }
-        catch (IOException ex)
-        {
-            log.error("An exception occurred", ex);
-            return false;
-        }
-        if (!(conn instanceof HttpURLConnection))
-        {
-            // don't bother with non-http connections
-            return false;
-        }
-
-        long localLastMod = localFile.lastModified();
-        long remoteLastMod = 0L;
-        HttpURLConnection httpconn = (HttpURLConnection) conn;
-        // disable caching so we don't get in feedback loop with ResponseCache
-        httpconn.setUseCaches(false);
-        try
-        {
-            httpconn.connect();
-            remoteLastMod = httpconn.getLastModified();
-        }
-        catch (IOException ex)
-        {
-            // log.error("An exception occurred", ex);();
-            return false;
-        }
-        finally
-        {
-            httpconn.disconnect();
-        }
-
-        return (remoteLastMod > localLastMod);
-    }
-
     @Override
     public CacheResponse get(URI uri, String rqstMethod, Map<String, List<String>> rqstHeaders) throws IOException
     {
-        File localFile = getLocalFile(uri);
-        
-        if (localFile == null)
-        {
-            // we don't want to cache this URL 
-            return null;
-        }
-        
-        if (!localFile.exists())
-        {
-            // the file isn't already in our cache, return null
+        if (!wantsToCache(uri)) {
             return null;
         }
 
-        if (checkForUpdates)
-        {
-            if (isUpdateAvailable(uri, localFile))
-            {
-                // there is an update available, so don't return cached version
-                return null;
+        InputStream localData = cache.get(uri.toURL());
+        if (localData == null) {
+            return null;
+        }
+
+        return new LocalCacheResponse(localData, rqstHeaders);
+    }
+
+    private boolean wantsToCache(URI uri) {
+        if (baseURL != null) {
+            String remote = uri.toString();
+
+            if (!remote.startsWith(baseURL)) {
+                return false;
             }
         }
-
-        return new LocalCacheResponse(localFile, rqstHeaders);
+        return true;
     }
 
     @Override
@@ -221,34 +93,22 @@ public class LocalResponseCache extends ResponseCache
             return null;
         }
 
-        File localFile = getLocalFile(uri);
-        
-        if (localFile == null)
-        {
-            // we don't want to cache this URL 
+        if (!wantsToCache(uri)) {
             return null;
         }
-        
-        new File(localFile.getParent()).mkdirs();
+
+        File localFile = cache.getLocalFile(uri.toURL());
         return new LocalCacheRequest(localFile);
     }
 
     private class LocalCacheResponse extends CacheResponse
     {
-        private FileInputStream fis;
+        private InputStream is;
         private final Map<String, List<String>> headers;
 
-        private LocalCacheResponse(File localFile, Map<String, List<String>> rqstHeaders)
+        private LocalCacheResponse(InputStream localData, Map<String, List<String>> rqstHeaders)
         {
-            try
-            {
-                this.fis = new FileInputStream(localFile);
-            }
-            catch (FileNotFoundException ex)
-            {
-                // should not happen, since we already checked for existence
-                log.error("An exception occurred", ex);
-            }
+            this.is = localData;
             this.headers = rqstHeaders;
         }
 
@@ -261,7 +121,7 @@ public class LocalResponseCache extends ResponseCache
         @Override
         public InputStream getBody() throws IOException
         {
-            return fis;
+            return is;
         }
     }
 
@@ -275,6 +135,7 @@ public class LocalResponseCache extends ResponseCache
             this.localFile = localFile;
             try
             {
+                localFile.getParentFile().mkdirs();
                 this.fos = new FileOutputStream(localFile);
             }
             catch (FileNotFoundException ex)

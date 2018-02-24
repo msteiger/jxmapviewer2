@@ -11,13 +11,13 @@ import javax.swing.event.MouseInputListener;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.cache.FileBasedLocalCache;
 import org.jxmapviewer.input.CenterMapListener;
 import org.jxmapviewer.input.PanKeyListener;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
-import org.jxmapviewer.viewer.LocalResponseCache;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 
 /**
@@ -35,11 +35,10 @@ public class Sample3
         // Create a TileFactoryInfo for OpenStreetMap
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-        tileFactory.setThreadPoolSize(8);
 
         // Setup local file cache
         File cacheDir = new File(System.getProperty("user.home") + File.separator + ".jxmapviewer2");
-        LocalResponseCache.installResponseCache(info.getBaseURL(), cacheDir, false);
+        tileFactory.setLocalCache(new FileBasedLocalCache(cacheDir, false));
 
         // Setup JXMapViewer
         final JXMapViewer mapViewer = new JXMapViewer();
@@ -63,10 +62,10 @@ public class Sample3
         mapViewer.addKeyListener(new PanKeyListener(mapViewer));
 
         // Add a selection painter
-        SelectionAdapter sa = new SelectionAdapter(mapViewer); 
-        SelectionPainter sp = new SelectionPainter(sa); 
-        mapViewer.addMouseListener(sa); 
-        mapViewer.addMouseMotionListener(sa); 
+        SelectionAdapter sa = new SelectionAdapter(mapViewer);
+        SelectionPainter sp = new SelectionPainter(sa);
+        mapViewer.addMouseListener(sa);
+        mapViewer.addMouseMotionListener(sa);
         mapViewer.setOverlayPainter(sp);
 
         // Display the viewer in a JFrame
@@ -105,7 +104,7 @@ public class Sample3
         double lon = mapViewer.getCenterPosition().getLongitude();
         int zoom = mapViewer.getZoom();
 
-        frame.setTitle(String.format("JXMapviewer2 Example 3 (%.2f / %.2f) - Zoom: %d", lat, lon, zoom)); 
+        frame.setTitle(String.format("JXMapviewer2 Example 3 (%.2f / %.2f) - Zoom: %d", lat, lon, zoom));
     }
 
 }

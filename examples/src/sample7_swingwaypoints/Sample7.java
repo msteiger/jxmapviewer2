@@ -1,23 +1,24 @@
 package sample7_swingwaypoints;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.JFrame;
+import javax.swing.event.MouseInputListener;
+
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.cache.FileBasedLocalCache;
 import org.jxmapviewer.input.CenterMapListener;
 import org.jxmapviewer.input.PanKeyListener;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
-import org.jxmapviewer.viewer.LocalResponseCache;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.WaypointPainter;
-
-import javax.swing.JFrame;
-import javax.swing.event.MouseInputListener;
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A sample application demonstrating usage of Swing components as waypoints
@@ -34,7 +35,7 @@ public class Sample7 {
 
         // Setup local file cache
         File cacheDir = new File(System.getProperty("user.home") + File.separator + ".jxmapviewer2");
-        LocalResponseCache.installResponseCache(info.getBaseURL(), cacheDir, false);
+        tileFactory.setLocalCache(new FileBasedLocalCache(cacheDir, false));
 
         // Setup JXMapViewer
         JXMapViewer mapViewer = new JXMapViewer();

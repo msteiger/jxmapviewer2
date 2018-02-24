@@ -14,6 +14,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jxmapviewer.cache.LocalCache;
 import org.jxmapviewer.viewer.util.GeoUtil;
 
 /**
@@ -99,7 +100,7 @@ public abstract class TileFactory
     {
         return info;
     }
-    
+
     /**
      * Adds a tile listener
      * @param listener the listener
@@ -108,7 +109,7 @@ public abstract class TileFactory
     {
         tileListeners.add(listener);
     }
-    
+
     /**
      * Removes a tile listener
      * @param listener the listener
@@ -117,12 +118,12 @@ public abstract class TileFactory
     {
         tileListeners.remove(listener);
     }
-    
+
     /**
      * Disposes this TileFactory
      */
     public abstract void dispose();
-    
+
     /**
      * Notifies all tile listeners
      * @param tile the tile
@@ -141,4 +142,8 @@ public abstract class TileFactory
      */
     protected abstract void startLoading(Tile tile);
 
+    /**
+     * @param cache the local cache to use
+     */
+    public void setLocalCache(LocalCache cache) { /* to not break existing implementations */ }
 }
