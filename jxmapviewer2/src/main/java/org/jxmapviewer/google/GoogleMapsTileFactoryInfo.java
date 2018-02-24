@@ -4,7 +4,9 @@ package org.jxmapviewer.google;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 
 /**
- * Uses OpenStreetMap
+ * Uses Google Maps API - it has several glitches, so don't use it unless you know what you're doing.
+ * Most importantly, gmaps cuts of small text leftovers that reach into the visible tile. As a result
+ * you cannot really tile the rendered tiles.
  */
 public class GoogleMapsTileFactoryInfo extends TileFactoryInfo
 {
@@ -18,7 +20,7 @@ public class GoogleMapsTileFactoryInfo extends TileFactoryInfo
     private final String key;
 
     /**
-     * Default constructor
+     * @param key the Google Map API key
      */
     public GoogleMapsTileFactoryInfo(String key)
     {

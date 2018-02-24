@@ -12,14 +12,14 @@ public interface LocalCache {
     /**
      * @param url the URL request to cache
      * @return a (local) stream to use instead or <code>null</code>.
-     * @throws IOException
+     * @throws IOException if the data cannot be read
      */
     InputStream get(URL url) throws IOException;
 
     /**
      * @param url the URL request that should be cached
      * @param data the input stream that provides the data
-     * @throws IOException
+     * @throws IOException if the data cannot be written
      */
     void put(URL url, InputStream data) throws IOException;
 
