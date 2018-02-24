@@ -46,17 +46,7 @@ public abstract class AbstractTileFactory extends TileFactory
     private static final String DEFAULT_USER_AGENT = ProjectProperties.INSTANCE.getName() + "/"
             + ProjectProperties.INSTANCE.getVersion();
 
-    /**
-     * Creates a new instance of DefaultTileFactory using the spcified TileFactoryInfo
-     * @param info a TileFactoryInfo to configure this TileFactory
-     */
-    public AbstractTileFactory(TileFactoryInfo info)
-    {
-        super(info);
-    }
-
-    // private static final boolean doEagerLoading = true;
-
+    private volatile int pendingTiles = 0;
     private int threadPoolSize = 4;
     private String userAgent = DEFAULT_USER_AGENT;
     private ExecutorService service;
@@ -66,6 +56,15 @@ public abstract class AbstractTileFactory extends TileFactory
     private Map<String, Tile> tileMap = new HashMap<String, Tile>();
 
     private TileCache cache = new TileCache();
+
+    /**
+     * Creates a new instance of DefaultTileFactory using the spcified TileFactoryInfo
+     * @param info a TileFactoryInfo to configure this TileFactory
+     */
+    public AbstractTileFactory(TileFactoryInfo info)
+    {
+        super(info);
+    }
 
     /**
      * Returns the tile that is located at the given tilePoint
@@ -258,6 +257,7 @@ public abstract class AbstractTileFactory extends TileFactory
         this.userAgent = userAgent;
     }
 
+
     @Override
     protected synchronized void startLoading(Tile tile)
     {
@@ -266,6 +266,7 @@ public abstract class AbstractTileFactory extends TileFactory
             // System.out.println("already loading. bailing");
             return;
         }
+        pendingTiles++;
         tile.setLoading(true);
         try
         {
@@ -312,6 +313,13 @@ public abstract class AbstractTileFactory extends TileFactory
     @Override
     public void setLocalCache(LocalCache cache) {
         this.localCache = cache;
+    }
+
+    /**
+     * @return the number of pending (loading or queues) tiles
+     */
+    public int getPendingTiles() {
+        return pendingTiles;
     }
 
     /**
@@ -376,6 +384,7 @@ public abstract class AbstractTileFactory extends TileFactory
                             {
                                 tile.image = new SoftReference<BufferedImage>(i);
                                 tile.setLoaded(true);
+                                pendingTiles--;
                                 fireTileLoadedEvent(tile);
                             }
                         });
