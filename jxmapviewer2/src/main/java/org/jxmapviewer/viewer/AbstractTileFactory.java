@@ -19,6 +19,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
@@ -57,6 +59,10 @@ public abstract class AbstractTileFactory extends TileFactory
 
     private TileCache cache = new TileCache();
 
+    private ZipFile zip;
+    private String name;
+    private String offlineZipFileName;
+    
     /**
      * Creates a new instance of DefaultTileFactory using the spcified TileFactoryInfo
      * @param info a TileFactoryInfo to configure this TileFactory
@@ -64,6 +70,16 @@ public abstract class AbstractTileFactory extends TileFactory
     public AbstractTileFactory(TileFactoryInfo info)
     {
         super(info);
+        if (info.isZipArchive() == true) {
+           try {
+               zip = new ZipFile(info.getBaseURL());
+               name = info.getName();
+               offlineZipFileName = info.getBaseURL();
+           }
+           catch (IOException ex) {
+               log.info("Failed to load zip archive: " + info.getBaseURL());
+           }
+       }
     }
 
     /**
@@ -360,14 +376,28 @@ public abstract class AbstractTileFactory extends TileFactory
                 try
                 {
                     URI uri = getURI(tile);
-                    BufferedImage img = cache.get(uri);
-                    if (img == null)
-                    {
-                        byte[] bimg = cacheInputStream(uri.toURL());
-                        // img = PaintUtils.loadCompatibleImage(new ByteArrayInputStream(bimg));
-                        img = ImageIO.read(new ByteArrayInputStream(bimg));
-                        cache.put(uri, bimg, img);
+                    BufferedImage img = null;
+                    
+                    if (zip != null) {
+                        String imageURIstring = uri.toString();
+                        imageURIstring = name + imageURIstring.substring(imageURIstring.indexOf(offlineZipFileName) 
+                                + offlineZipFileName.length());
+                        ZipEntry zipEntry = zip.getEntry(imageURIstring);
+                        if (zipEntry != null) {
+                            InputStream is = zip.getInputStream(zipEntry);
+                            img = ImageIO.read(is);
+                        }
+                    }
+                    else {
                         img = cache.get(uri);
+                        if (img == null)
+                        {
+                            byte[] bimg = cacheInputStream(uri.toURL());
+                            // img = PaintUtils.loadCompatibleImage(new ByteArrayInputStream(bimg));
+                            img = ImageIO.read(new ByteArrayInputStream(bimg));
+                            cache.put(uri, bimg, img);
+                            img = cache.get(uri);
+                        }
                     }
                     if (img == null)
                     {

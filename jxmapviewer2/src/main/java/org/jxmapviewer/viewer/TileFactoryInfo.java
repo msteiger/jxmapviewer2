@@ -56,10 +56,11 @@ public class TileFactoryInfo
     private boolean yt2b = true;
 
     private int defaultZoomLevel;
-
+  
     /** A name for this info. */
     private String name;
-
+    private boolean zipArchive = false;
+    
     /**
      * Creates a new instance of TileFactoryInfo. Note that TileFactoryInfo should be considered invariate, meaning that
      * subclasses should ensure all of the properties stay the same after the class is constructed. Returning different
@@ -87,7 +88,38 @@ public class TileFactoryInfo
         this("name not provided", minimumZoomLevel, maximumZoomLevel, totalMapZoom, tileSize, xr2l, yt2b, baseURL,
                 xparam, yparam, zparam);
     }
-
+      
+    /**
+     * Creates a new instance of TileFactoryInfo.Note that TileFactoryInfo should be considered invariate, meaning that
+       subclasses should ensure all of the properties stay the same after the class is constructed.Returning different
+       values of getTileSize() for example is considered an error and may result in unexpected behavior.
+     * @param name the folder name that contains tiles inside the zip archive
+     * @param minimumZoomLevel The minimum zoom level
+     * @param maximumZoomLevel the maximum zoom level
+     * @param totalMapZoom the top zoom level, essentially the height of the pyramid
+     * @param tileSize the size of the tiles in pixels (must be square)
+     * @param xr2l if the x goes r to l (is this backwards?)
+     * @param yt2b if the y goes top to bottom
+     * @param baseURL the base url for grabbing tiles
+     * @param xparam the x parameter for the tile url
+     * @param yparam the y parameter for the tile url
+     * @param zparam the z parameter for the tile url
+     * @param zipArchive if the tiles should be loaded from a zip archive
+     */
+    /*
+     * @param xr2l true if tile x is measured from the far left of the map to the far right, or else false if based on
+     * the center line.
+     * @param yt2b true if tile y is measured from the top (north pole) to the bottom (south pole) or else false if
+     * based on the equator.
+     */
+    public TileFactoryInfo(String name, int minimumZoomLevel, int maximumZoomLevel, int totalMapZoom, int tileSize, boolean xr2l,
+            boolean yt2b, String baseURL, String xparam, String yparam, String zparam, boolean zipArchive)
+    {
+        this(name, minimumZoomLevel, maximumZoomLevel, totalMapZoom, tileSize, xr2l, yt2b, baseURL,
+                xparam, yparam, zparam);
+        this.zipArchive = zipArchive;
+    }
+    
     /**
      * Creates a new instance of TileFactoryInfo. Note that TileFactoryInfo should be considered invariate, meaning that
      * subclasses should ensure all of the properties stay the same after the class is constructed. Returning different
@@ -321,5 +353,11 @@ public class TileFactoryInfo
         return baseURL;
     }
 
-    
+    /**
+     * @return if the tiles are requested from a zip archive
+     */
+    public boolean isZipArchive() {
+        return zipArchive;
+    }
+  
 }
