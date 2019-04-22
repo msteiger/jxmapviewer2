@@ -39,4 +39,16 @@ public class OSMTileFactoryInfo extends TileFactoryInfo
         return url;
     }
 
+    @Override
+    public String getAttribution() {
+        return "\u00A9 OpenStreetMap contributors";
+    }
+
+    @Override
+    public String getLicense() {
+        return "Creative Commons Attribution-ShareAlike 2.0";
+    }
+
+
+
 }

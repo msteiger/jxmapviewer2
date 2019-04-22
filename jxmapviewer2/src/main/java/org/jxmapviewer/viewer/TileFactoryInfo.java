@@ -321,5 +321,20 @@ public class TileFactoryInfo
         return baseURL;
     }
 
-    
+    /**
+     * Some map providers require explicit attribution, can be <code>null</code>
+     * @return the attribution text
+     */
+    public String getAttribution() {
+        return null;
+    }
+
+    /**
+     * @return the license of the map provider, can be <code>null</code>
+     */
+    public String getLicense() {
+        return null;
+    }
+
+
 }

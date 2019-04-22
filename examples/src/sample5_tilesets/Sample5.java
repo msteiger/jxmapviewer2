@@ -43,14 +43,21 @@ public class Sample5
 
         TileFactoryInfo osmInfo = new OSMTileFactoryInfo();
         TileFactoryInfo veInfo = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP);
+//        TileFactoryInfo googleInfo = new GoogleMapsTileFactoryInfo("<key>");
 
-//        factories.add(new EmptyTileFactory());
         factories.add(new DefaultTileFactory(osmInfo));
         factories.add(new DefaultTileFactory(veInfo));
+//        factories.add(new DefaultTileFactory(googleInfo));
 
         // Setup JXMapViewer
         final JXMapViewer mapViewer = new JXMapViewer();
-        mapViewer.setTileFactory(factories.get(0));
+        final JLabel labelAttr = new JLabel();
+        mapViewer.setLayout(new BorderLayout());
+        mapViewer.add(labelAttr, BorderLayout.SOUTH);
+
+        TileFactory firstFactory = factories.get(0);
+        mapViewer.setTileFactory(firstFactory);
+        labelAttr.setText(firstFactory.getInfo().getAttribution() + " - " + firstFactory.getInfo().getLicense());
 
         GeoPosition frankfurt = new GeoPosition(50.11, 8.68);
 
@@ -81,7 +88,9 @@ public class Sample5
             public void itemStateChanged(ItemEvent e)
             {
                 TileFactory factory = factories.get(combo.getSelectedIndex());
+                TileFactoryInfo info = factory.getInfo();
                 mapViewer.setTileFactory(factory);
+                labelAttr.setText(info.getAttribution() + " - " + info.getLicense());
             }
         });
 
@@ -101,6 +110,7 @@ public class Sample5
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
+
         Timer t = new Timer(500, new ActionListener()
         {
             @Override
@@ -109,7 +119,7 @@ public class Sample5
                 Set<Thread> threads = Thread.getAllStackTraces().keySet();
                 labelThreadCount.setText("Threads: " + threads.size());
             }
-        }); 
+        });
 
         t.start();
     }

@@ -63,4 +63,15 @@ public class GoogleMapsTileFactoryInfo extends TileFactoryInfo
         return url;
     }
 
+    @Override
+    public String getAttribution() {
+        return "\u00A9 Google";
+    }
+
+    @Override
+    public String getLicense() {
+        return "https://www.google.com/intl/en_US/help/terms_maps/";
+    }
+
+
 }

@@ -61,7 +61,7 @@ public class VirtualEarthTileFactoryInfo extends TileFactoryInfo
     public VirtualEarthTileFactoryInfo(MVEMode mode)
     {
         super("Virtual Earth", MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL, TOP_ZOOM_LEVEL, TILE_SIZE, false, false, "", "", "", "");
-        
+
         this.mode = mode;
     }
 
@@ -72,7 +72,7 @@ public class VirtualEarthTileFactoryInfo extends TileFactoryInfo
     {
         return mode.name;
     }
-    
+
     /**
      * @return the label of the selected mode
      */
@@ -80,12 +80,12 @@ public class VirtualEarthTileFactoryInfo extends TileFactoryInfo
     {
         return mode.label;
     }
-    
+
     @Override
     public String getTileUrl(final int x, final int y, final int zoom)
     {
         final String quad = tileToQuadKey(x, y, TOP_ZOOM_LEVEL - 0 - zoom);
-        return "http://" + mode.type + quad.charAt(quad.length() - 1) + 
+        return "http://" + mode.type + quad.charAt(quad.length() - 1) +
                 ".ortho.tiles.virtualearth.net/tiles/"
                 + mode.type + quad + mode.ext + "?g=1";
     }
@@ -114,5 +114,17 @@ public class VirtualEarthTileFactoryInfo extends TileFactoryInfo
 
         return quad;
     }
+
+    @Override
+    public String getAttribution() {
+        return "\u00A9 Microsoft";
+    }
+
+    @Override
+    public String getLicense() {
+        return "https://www.microsoft.com/en-us/maps/licensing";
+    }
+
+
 }
 
