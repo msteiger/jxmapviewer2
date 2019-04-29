@@ -7,7 +7,7 @@ This project is based on the JXMapViewer component of SwingX-WS.
 
 The project was hosted at SwingLabs.org, but has been discontinued. We extracted the JXMapViewer part from the latest SwingX-WS version available and continue developing it.
 
-The JXMapViewer Tutorial by Joshua Marinacci provided a good overview over the functionality of the component, which is now gone from java.net but available on [archive.org](https://web.archive.org/web/20100304220334/http://www.java.net/author/joshua-marinacci). Please have a look at the [examples section](https://github.com/msteiger/jxmapviewer2/tree/master/examples/src) in addition.
+The JXMapViewer Tutorial by Joshua Marinacci provided a good overview over the functionality of the component, which is now gone from java.net but available on [archive.org](https://web.archive.org/web/20100309081606/http://today.java.net/pub/a/today/2007/10/30/building-maps-into-swing-app-with-jxmapviewer.html). Please have a look at the [examples section](https://github.com/msteiger/jxmapviewer2/tree/master/examples/src) in addition.
 
 The content of this project are also available at [Maven Central](https://mvnrepository.com/artifact/org.jxmapviewer/jxmapviewer2) and can be referenced in your `pom.xml` with the following coordinates:
 
