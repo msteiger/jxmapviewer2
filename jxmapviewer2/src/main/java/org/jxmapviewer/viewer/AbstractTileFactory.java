@@ -4,6 +4,7 @@ package org.jxmapviewer.viewer;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
@@ -393,6 +394,11 @@ public abstract class AbstractTileFactory extends TileFactory
                 catch (OutOfMemoryError memErr)
                 {
                     cache.needMoreMemory();
+                }
+                catch (FileNotFoundException fnfe)  // relevant for local URLs such as JAR/ZIP files only
+                {
+                    log.error("Unable to load tile: " + fnfe.getMessage());
+                    remainingAttempts = 0;
                 }
                 catch (Throwable e)
                 {
