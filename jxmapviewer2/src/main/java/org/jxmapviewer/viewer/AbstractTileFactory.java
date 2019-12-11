@@ -119,6 +119,14 @@ public abstract class AbstractTileFactory extends TileFactory
         else
         {
             tile = tileMap.get(url);
+            
+            //Remove the tile from the map if its loading failed. This will allow the factory to try
+            //and re-load the tile when it is requested sometime in the future.
+            if (tile.loadingFailed()) {
+                log.info("Removing from map: " + tile.getURL() + ", tile failed to load");
+                tileMap.remove(url);
+            }
+            
             // if its in the map but is low and isn't loaded yet
             // but we are in high mode
             if (tile.getPriority() == Tile.Priority.Low && eagerLoad && !tile.isLoaded())
@@ -319,8 +327,8 @@ public abstract class AbstractTileFactory extends TileFactory
     /**
      * @return the number of pending (loading or queues) tiles
      */
-    public int getPendingTiles() {
-        return pendingTiles;
+    public synchronized int getPendingTiles() {
+        return tileQueue.size();
     }
 
     /**
@@ -353,6 +361,7 @@ public abstract class AbstractTileFactory extends TileFactory
              * URL-specific failure, the pooled thread can try to load other tiles.
              */
             final Tile tile = tileQueue.remove();
+            tile.setLoadingFailed(false);
 
             int remainingAttempts = 3;
             while (!tile.isLoaded() && remainingAttempts > 0)
@@ -399,12 +408,14 @@ public abstract class AbstractTileFactory extends TileFactory
                 {
                     log.error("Unable to load tile: " + fnfe.getMessage());
                     remainingAttempts = 0;
+                    tile.setLoadingFailed(true);
                 }
                 catch (Throwable e)
                 {
                     if (remainingAttempts == 0)
                     {
                         log.error("Failed to load a tile at URL: " + tile.getURL() + ", stopping", e);
+                        tile.setLoadingFailed(true);
                     }
                     else
                     {

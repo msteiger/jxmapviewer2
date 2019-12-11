@@ -51,6 +51,14 @@ public class Tile extends AbstractBean
      */
 
     private boolean loaded = false;
+    
+    
+    /**
+     * Indicates that the loading has failed.
+     */
+    private boolean loadFailed = false;
+    
+    
     /**
      * The zoom level this tile is for
      */
@@ -115,6 +123,25 @@ public class Tile extends AbstractBean
         this.loaded = loaded;
         firePropertyChange("loaded", old, isLoaded());
     }
+      
+    /**
+     * Indicates if this tile's underlying image failed loading.
+     * @return true if the Tile has been loaded
+     */
+    public synchronized boolean loadingFailed()
+    {
+        return loadFailed;
+    }
+
+    /**
+     * Toggles the failed state
+     * @param fail the fail flag
+     */
+    synchronized void setLoadingFailed(boolean fail)
+    {
+        loadFailed = fail;
+    }
+    
 
     /**
      * @return the Image associated with this Tile. This is a read only property This may return null at any time,
