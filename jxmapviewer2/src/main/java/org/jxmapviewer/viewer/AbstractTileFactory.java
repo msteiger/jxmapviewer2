@@ -47,7 +47,6 @@ public abstract class AbstractTileFactory extends TileFactory
     private static final String DEFAULT_USER_AGENT = ProjectProperties.INSTANCE.getName() + "/"
             + ProjectProperties.INSTANCE.getVersion();
 
-    private volatile int pendingTiles = 0;
     private int threadPoolSize = 4;
     private String userAgent = DEFAULT_USER_AGENT;
     private ExecutorService service;
@@ -119,14 +118,14 @@ public abstract class AbstractTileFactory extends TileFactory
         else
         {
             tile = tileMap.get(url);
-            
+
             //Remove the tile from the map if its loading failed. This will allow the factory to try
             //and re-load the tile when it is requested sometime in the future.
             if (tile.loadingFailed()) {
                 log.info("Removing from map: " + tile.getURL() + ", tile failed to load");
                 tileMap.remove(url);
             }
-            
+
             // if its in the map but is low and isn't loaded yet
             // but we are in high mode
             if (tile.getPriority() == Tile.Priority.Low && eagerLoad && !tile.isLoaded())
@@ -275,7 +274,6 @@ public abstract class AbstractTileFactory extends TileFactory
             // System.out.println("already loading. bailing");
             return;
         }
-        pendingTiles++;
         tile.setLoading(true);
         try
         {
@@ -394,7 +392,6 @@ public abstract class AbstractTileFactory extends TileFactory
                             {
                                 tile.image = new SoftReference<BufferedImage>(i);
                                 tile.setLoaded(true);
-                                pendingTiles--;
                                 fireTileLoadedEvent(tile);
                             }
                         });

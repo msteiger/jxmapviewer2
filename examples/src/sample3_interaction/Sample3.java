@@ -7,6 +7,7 @@ import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.WindowConstants;
 import javax.swing.event.MouseInputListener;
 
 import org.jxmapviewer.JXMapViewer;
@@ -71,10 +72,11 @@ public class Sample3
         // Display the viewer in a JFrame
         final JFrame frame = new JFrame();
         frame.setLayout(new BorderLayout());
-        frame.add(new JLabel("Use left mouse button to pan, mouse wheel to zoom and right mouse to select"), BorderLayout.NORTH);
+        String text = "Use left mouse button to pan, mouse wheel to zoom and right mouse to select";
+        frame.add(new JLabel(text), BorderLayout.NORTH);
         frame.add(mapViewer);
         frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
         mapViewer.addPropertyChangeListener("zoom", new PropertyChangeListener()
