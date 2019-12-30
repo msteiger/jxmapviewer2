@@ -23,13 +23,14 @@ The content of this project are also available at [Maven Central](https://mvnrep
 
 This source code used in this project is based on: 
 
- * SwingX-ws-2009_06_14.jar http://java.net/projects/swingx 
- * SwingX 1.6.3 (released Feb 2012) http://java.net/projects/swingx-ws
+ * SwingX-ws-2009_06_14.jar formerly hosted at java.net/projects/swingx
+ * SwingX 1.6.3 (released Feb 2012) formerly hosted at java.net/projects/swingx-ws
 
 This is what we have done so far ...
 
  * Extract the JXMapViewer part from the full package
- * Upgrade to Java 6
+ * Upgrade to Java 6 (version 2.1)
+ * Upgrade to Java 7 (version 2.5)
  * Fixed javadoc
  * Replaced `system.out.println()` with `apache.commons.logging` 
  * Removed broken TileProviders
@@ -43,7 +44,7 @@ This is what we have done so far ...
  * Supports OSGi bundles (contains MANIFEST.MF)
  * Supports Maven dependency management
  * Fixed use of deprecated code
- * Fix bugs that were posted on http://java.net/jira/browse/SWINGX_WS
+ * Fix bugs that were posted on java.net/jira/browse/SWINGX_WS
 
 ### License
 This project has been licensed under the GNU Lesser General Public License (LGPL)
