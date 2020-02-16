@@ -38,7 +38,7 @@ public enum ProjectProperties {
             log.debug("Properties successfully loaded.");
 
         }
-        catch (IOException e) {
+        catch (IOException | NullPointerException e) {
             log.warn("Unable to read project properties.", e);
             props.put(PROP_NAME, "JxMapViewer");
             props.put(PROP_VERSION, "1.0");
