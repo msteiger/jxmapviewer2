@@ -34,11 +34,16 @@ public enum ProjectProperties {
         try {
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
             is = classloader.getResourceAsStream(PROPERTIES_FILE);
-            props.load(is);
-            log.debug("Properties successfully loaded.");
-
+            if (is != null) {
+                props.load(is);
+                log.debug("Properties successfully loaded.");
+            } else {
+                log.warn("Project properties file not found. Set default values.");
+                props.put(PROP_NAME, "JxMapViewer");
+                props.put(PROP_VERSION, "1.0");
+            }
         }
-        catch (IOException | NullPointerException e) {
+        catch (IOException e) {
             log.warn("Unable to read project properties.", e);
             props.put(PROP_NAME, "JxMapViewer");
             props.put(PROP_VERSION, "1.0");
