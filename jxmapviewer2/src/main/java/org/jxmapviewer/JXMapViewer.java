@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.painter.AbstractPainter;
 import org.jxmapviewer.painter.Painter;
+import org.jxmapviewer.viewer.GeoBounds;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.Tile;
 import org.jxmapviewer.viewer.TileFactory;
@@ -694,11 +695,12 @@ public class JXMapViewer extends JPanel implements DesignMode
         TileFactory tileFactory = getTileFactory();
         TileFactoryInfo info = tileFactory.getInfo();
 
-        if(info == null)
+        if (info == null)
             return;
 
         // set to central position initially
-        GeoPosition centre = computeGeoCenter(positions);
+        GeoPosition centre = new GeoBounds(positions).getCenter();
+
         setCenterPosition(centre);
 
         if (positions.size() == 1)
@@ -737,21 +739,6 @@ public class JXMapViewer extends JPanel implements DesignMode
             rect.add(point);
         }
         return rect;
-    }
-
-    private GeoPosition computeGeoCenter(final Set<GeoPosition> positions)
-    {
-        double sumLat = 0;
-        double sumLon = 0;
-
-        for (GeoPosition pos : positions)
-        {
-            sumLat += pos.getLatitude();
-            sumLon += pos.getLongitude();
-        }
-        double avgLat = sumLat / positions.size();
-        double avgLon = sumLon / positions.size();
-        return new GeoPosition(avgLat, avgLon);
     }
 
     // a property change listener which forces repaints when tiles finish loading

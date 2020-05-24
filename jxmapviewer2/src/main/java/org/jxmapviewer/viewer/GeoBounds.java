@@ -139,4 +139,14 @@ public class GeoBounds
         return new GeoPosition(r.getY(), r.getMaxX());
     }
 
+    /**
+     * @return the center of the bounds
+     */
+    public GeoPosition getCenter() {
+        GeoPosition nw = getNorthWest();
+        GeoPosition se = getSouthEast();
+        double lat = (nw.getLatitude() + se.getLatitude()) * 0.5;
+        double lon = (nw.getLongitude() + se.getLongitude()) * 0.5;
+        return new GeoPosition(lat, lon);
+    }
 }
