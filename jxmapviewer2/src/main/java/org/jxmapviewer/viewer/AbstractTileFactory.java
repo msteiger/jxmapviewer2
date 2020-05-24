@@ -429,6 +429,7 @@ public abstract class AbstractTileFactory extends TileFactory
             if (ins == null) {
                 URLConnection connection = url.openConnection();
                 connection.setRequestProperty("User-Agent", userAgent);
+                addCustomRequestProperties(connection);
                 ins = connection.getInputStream();
             }
             try {
@@ -453,5 +454,16 @@ public abstract class AbstractTileFactory extends TileFactory
             }
             return bout.toByteArray();
         }
+    }
+
+    /**
+     * Adds custom request properties to the connection before sending the request.
+     * By default, no properties are added at all.
+     *
+     * @param connection connection for tile request
+     */
+    protected void addCustomRequestProperties(URLConnection connection)
+    {
+        // no further headers by default
     }
 }
