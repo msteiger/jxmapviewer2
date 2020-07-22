@@ -717,11 +717,12 @@ public class JXMapViewer extends JPanel implements DesignMode
         Rectangle2D bounds = generateBoundingRect(positions, bestZoom);
 
         // is this zoom still OK?
-        while (bestZoom >= info.getMinimumZoomLevel() &&
-               bounds.getWidth() < viewport.getWidth() * maxFraction &&
+        while (bounds.getWidth() < viewport.getWidth() * maxFraction &&
                bounds.getHeight() < viewport.getHeight() * maxFraction)
         {
-            bestZoom--;
+            if (--bestZoom < info.getMinimumZoomLevel()) 
+                break;
+
             bounds = generateBoundingRect(positions, bestZoom);
         }
 
