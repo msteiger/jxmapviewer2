@@ -19,6 +19,16 @@ The content of this project are also available at [Maven Central](https://mvnrep
 </dependency>
 ```
 
+### Examples
+
+You can find some examples as part of this source code repository. You can open them as a separate project in your IDE and run them there.
+Alternatively, they can be run from the command line after creating a Maven package from them.
+
+```bash
+$ mvn clean package
+$ java -cp target/jxmapviewer2-examples-2.5.jar sample1_basics.Sample1
+```
+
 ### History
 
 This source code used in this project is based on: 
