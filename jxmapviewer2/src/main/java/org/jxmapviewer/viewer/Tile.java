@@ -139,7 +139,9 @@ public class Tile extends AbstractBean
      */
     synchronized void setLoadingFailed(boolean fail)
     {
-        loadFailed = fail;
+        boolean old = loadFailed;
+        this.loadFailed = fail;
+        firePropertyChange("failed", old, this.loadFailed);
     }
     
 
