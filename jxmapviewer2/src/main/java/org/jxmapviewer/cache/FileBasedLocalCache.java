@@ -2,6 +2,7 @@ package org.jxmapviewer.cache;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,10 +39,10 @@ public class FileBasedLocalCache implements LocalCache {
     }
 
     @Override
-    public InputStream get(URL url) throws IOException {
+    public InputStream get(URL url) {
         File localFile = getLocalFile(url);
 
-        if (!localFile.exists())
+        if (!localFile.exists())  //early check on file exists
         {
             // the file isn't already in our cache, return null
             return null;
@@ -55,7 +56,11 @@ public class FileBasedLocalCache implements LocalCache {
                 return null;
             }
         }
-        return new FileInputStream(localFile);
+        try {
+            return new FileInputStream(localFile);
+        } catch (FileNotFoundException ex) {
+            return null;  //file may have been deleted since we checked above
+        }
     }
 
     @Override
