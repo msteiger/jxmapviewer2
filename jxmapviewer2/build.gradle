@@ -82,6 +82,11 @@ wrapper {
     gradleVersion = '6.0.1'
 }
 
+jar {
+    manifest {
+        attributes('Automatic-Module-Name': 'org.jxmapviewer.jxmapviewer2')
+    }
+}
 
 task sourceJar(type: Jar) {
     description = "Create a JAR with all sources"
