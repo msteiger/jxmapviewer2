@@ -44,13 +44,6 @@ public class FancyWaypointRenderer implements WaypointRenderer<MyWaypoint>
      */
     public FancyWaypointRenderer()
     {
-//         URL resource = getClass().getResource("waypoint_white.png");
-
-//         try
-//         {
-//             origImage = ImageIO.read(resource);
-//         }
-// Fixed bug of not being able to read "waypoint_white.png"
         File x = new File("waypoint_white.png");
         try
         {
