@@ -31,12 +31,7 @@ import javax.swing.JPanel;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.painter.AbstractPainter;
 import org.jxmapviewer.painter.Painter;
-import org.jxmapviewer.viewer.GeoBounds;
-import org.jxmapviewer.viewer.GeoPosition;
-import org.jxmapviewer.viewer.Tile;
-import org.jxmapviewer.viewer.TileFactory;
-import org.jxmapviewer.viewer.TileFactoryInfo;
-import org.jxmapviewer.viewer.TileListener;
+import org.jxmapviewer.viewer.*;
 import org.jxmapviewer.viewer.empty.EmptyTileFactory;
 
 /**
@@ -110,7 +105,7 @@ public class JXMapViewer extends JPanel implements DesignMode
     private boolean horizontalWrapped = true;
     private boolean infiniteMapRendering = true;
 
-    /**
+    /*
      * If true, panning with the mouse should take place. If false, panning should not happen. Does not disable
      * explicit setting of position via {@link setCenter}.
      */
@@ -166,7 +161,11 @@ public class JXMapViewer extends JPanel implements DesignMode
         {
             int z = getZoom();
             Rectangle viewportBounds = getViewportBounds();
-            drawMapTiles(g, z, viewportBounds);
+
+            MapTileDrawer drawer=new MapTileDrawer(getTileFactory(),getLoadingImage(),getZoom(),isInfiniteMapRendering(),isDrawTileBorders(),isOpaque(),getBackground());
+            drawer.drawMapTiles(g,z,viewportBounds);
+
+           // drawMapTiles(g, z, viewportBounds);
             drawOverlays(z, g, viewportBounds);
         }
 
@@ -199,7 +198,7 @@ public class JXMapViewer extends JPanel implements DesignMode
      * @param zoom zoom level to draw at
      * @param viewportBounds the bounds to draw within
      */
-    protected void drawMapTiles(final Graphics g, final int zoom, Rectangle viewportBounds)
+   /* protected void drawMapTiles(final Graphics g, final int zoom, Rectangle viewportBounds)
     {
         int size = getTileFactory().getTileSize(zoom);
         Dimension mapSize = getTileFactory().getMapSize(zoom);
@@ -229,70 +228,93 @@ public class JXMapViewer extends JPanel implements DesignMode
                 int itpy = y + tpy;// topLeftTile.getY();
                 // TilePoint point = new TilePoint(x + topLeftTile.getX(), y + topLeftTile.getY());
                 // only proceed if the specified tile point lies within the area being painted
-                if (g.getClipBounds().intersects(
-                        new Rectangle(itpx * size - viewportBounds.x, itpy * size - viewportBounds.y, size, size)))
-                {
-                    Tile tile = getTileFactory().getTile(itpx, itpy, zoom);
-                    int ox = ((itpx * getTileFactory().getTileSize(zoom)) - viewportBounds.x);
-                    int oy = ((itpy * getTileFactory().getTileSize(zoom)) - viewportBounds.y);
-
-                    // if the tile is off the map to the north/south, then just don't paint anything
-                    if (!isTileOnMap(itpx, itpy, mapSize))
-                    {
-                        if (isOpaque())
-                        {
-                            g.setColor(getBackground());
-                            g.fillRect(ox, oy, size, size);
-                        }
-                    }
-                    else if (tile.isLoaded())
-                    {
-                        g.drawImage(tile.getImage(), ox, oy, null);
-                    }
-                    else
-                    {
-                        Tile superTile = null;
-
-                        // Use tile at higher zoom level with 200% magnification and if we are not already at max resolution
-                        if (zoom < info.getMaximumZoomLevel()) {
-                            superTile = getTileFactory().getTile(itpx / 2, itpy / 2, zoom + 1);
-                        }
-
-                        if ( superTile != null && superTile.isLoaded())
-                        {
-                            int offX = (itpx % 2) * size / 2;
-                            int offY = (itpy % 2) * size / 2;
-                            g.drawImage(superTile.getImage(), ox, oy, ox + size, oy + size, offX, offY, offX + size / 2, offY + size / 2, null);
-                        }
-                        else
-                        {
-                            int imageX = (getTileFactory().getTileSize(zoom) - getLoadingImage().getWidth(null)) / 2;
-                            int imageY = (getTileFactory().getTileSize(zoom) - getLoadingImage().getHeight(null)) / 2;
-                            g.setColor(Color.GRAY);
-                            g.fillRect(ox, oy, size, size);
-                            g.drawImage(getLoadingImage(), ox + imageX, oy + imageY, null);
-                        }
-                    }
-                    if (isDrawTileBorders())
-                    {
-
-                        g.setColor(Color.black);
-                        g.drawRect(ox, oy, size, size);
-                        g.drawRect(ox + size / 2 - 5, oy + size / 2 - 5, 10, 10);
-                        g.setColor(Color.white);
-                        g.drawRect(ox + 1, oy + 1, size, size);
-
-                        String text = itpx + ", " + itpy + ", " + getZoom();
-                        g.setColor(Color.BLACK);
-                        g.drawString(text, ox + 10, oy + 30);
-                        g.drawString(text, ox + 10 + 2, oy + 30 + 2);
-                        g.setColor(Color.WHITE);
-                        g.drawString(text, ox + 10 + 1, oy + 30 + 1);
-                    }
-                }
+                drawGraphic(g, zoom, viewportBounds, size, mapSize, info, itpx, itpy);
             }
         }
     }
+
+    private void drawGraphic(Graphics g, int zoom, Rectangle viewportBounds, int size, Dimension mapSize, TileFactoryInfo info, int itpx, int itpy) {
+        if (g.getClipBounds().intersects(
+                new Rectangle(itpx * size - viewportBounds.x, itpy * size - viewportBounds.y, size, size)))
+        {
+
+            int ox = ((itpx * getTileFactory().getTileSize(zoom)) - viewportBounds.x);
+            int oy = ((itpy * getTileFactory().getTileSize(zoom)) - viewportBounds.y);
+
+            // if the tile is off the map to the north/south, then just don't paint anything
+            if (!isTileOnMap(itpx, itpy, mapSize))
+            {
+                if (isOpaque())
+                {
+                    g.setColor(getBackground());
+                    g.fillRect(ox, oy, size, size);
+                }
+            }
+            else{
+                drawImage(g, zoom, size, info, itpx, itpy, ox, oy);
+            }
+
+            if (isDrawTileBorders())
+            {
+                drawTileBorders(g, size, itpx, itpy, ox, oy);
+            }
+        }
+    }
+
+    private void drawImage(Graphics g, int zoom, int size, TileFactoryInfo info, int itpx, int itpy, int ox, int oy) {
+        Tile tile = getTileFactory().getTile(itpx, itpy, zoom);
+
+        if (tile.isLoaded())
+        {
+            g.drawImage(tile.getImage(), ox, oy, null);
+        }
+        else
+        {
+            Tile superTile = null;
+
+            // Use tile at higher zoom level with 200% magnification and if we are not already at max resolution
+            if (zoom < info.getMaximumZoomLevel()) {
+                superTile = getTileFactory().getTile(itpx / 2, itpy / 2, zoom + 1);
+            }
+
+            if ( superTile != null && superTile.isLoaded())
+            {
+                int offX = (itpx % 2) * size / 2;
+                int offY = (itpy % 2) * size / 2;
+                g.drawImage(superTile.getImage(), ox, oy, ox + size, oy + size, offX, offY, offX + size / 2, offY + size / 2, null);
+            }
+            else
+            {
+                int imageX = (getTileFactory().getTileSize(zoom) - getLoadingImage().getWidth(null)) / 2;
+                int imageY = (getTileFactory().getTileSize(zoom) - getLoadingImage().getHeight(null)) / 2;
+                g.setColor(Color.GRAY);
+                g.fillRect(ox, oy, size, size);
+                g.drawImage(getLoadingImage(), ox + imageX, oy + imageY, null);
+            }
+        }
+    }
+
+    private void drawTileBorders(Graphics g, int size, int itpx, int itpy, int ox, int oy) {
+        g.setColor(Color.black);
+        g.drawRect(ox, oy, size, size);
+        g.drawRect(ox + size / 2 - 5, oy + size / 2 - 5, 10, 10);
+        g.setColor(Color.white);
+        g.drawRect(ox + 1, oy + 1, size, size);
+
+        String text = itpx + ", " + itpy + ", " + getZoom();
+        g.setColor(Color.BLACK);
+        g.drawString(text, ox + 10, oy + 30);
+        g.drawString(text, ox + 10 + 2, oy + 30 + 2);
+        g.setColor(Color.WHITE);
+        g.drawString(text, ox + 10 + 1, oy + 30 + 1);
+    }
+
+        private boolean isTileOnMap(int x, int y, Dimension mapSize)
+    {
+        return (y >= 0 && y < mapSize.getHeight()) &&
+                  (isInfiniteMapRendering() || x >= 0 && x < mapSize.getWidth());
+    }
+    */
 
     @SuppressWarnings("unused")
     private void drawOverlays(final int zoom, final Graphics g, final Rectangle viewportBounds)
@@ -303,11 +325,10 @@ public class JXMapViewer extends JPanel implements DesignMode
         }
     }
 
-    private boolean isTileOnMap(int x, int y, Dimension mapSize)
-    {
-        return (y >= 0 && y < mapSize.getHeight()) &&
-                  (isInfiniteMapRendering() || x >= 0 && x < mapSize.getWidth());
-    }
+
+
+
+
 
     /**
      * Sets the map overlay. This is a {@code Painter<JXMapViewer>} which will paint on top of the map. It can be used to draw waypoints,
@@ -560,6 +581,16 @@ public class JXMapViewer extends JPanel implements DesignMode
     {
         Point2D old = this.getCenter();
 
+        GeoPosition oldGP = this.getCenterPosition();
+        this.center = getNewCenter(center);
+        firePropertyChange("center", old, this.center);
+        firePropertyChange("centerPosition", oldGP, this.getCenterPosition());
+        repaint();
+    }
+
+
+
+    public Point2D.Double getNewCenter(Point2D center){
         double centerX = center.getX();
         double centerY = center.getY();
 
@@ -569,46 +600,21 @@ public class JXMapViewer extends JPanel implements DesignMode
 
         if (isRestrictOutsidePanning())
         {
+
             Insets insets = getInsets();
             int viewportHeight = getHeight() - insets.top - insets.bottom;
             int viewportWidth = getWidth() - insets.left - insets.right;
 
             // don't let the user pan over the top edge
             Rectangle newVP = calculateViewportBounds(center);
-            if (newVP.getY() < 0)
-            {
-                centerY = viewportHeight / 2;
+
+            centerY = getCenterY(centerY, mapHeight, viewportHeight, newVP);
+
+
+            if(!isHorizontalWrapped()){
+                centerX = getCenterX(centerX, mapWidth, viewportWidth, newVP);
             }
 
-            // don't let the user pan over the left edge
-            if (!isHorizontalWrapped() && newVP.getX() < 0)
-            {
-                centerX = viewportWidth / 2;
-            }
-
-            // don't let the user pan over the bottom edge
-            if (newVP.getY() + newVP.getHeight() > mapHeight)
-            {
-                centerY = mapHeight - viewportHeight / 2;
-            }
-
-            // don't let the user pan over the right edge
-            if (!isHorizontalWrapped() && (newVP.getX() + newVP.getWidth() > mapWidth))
-            {
-                centerX = mapWidth - viewportWidth / 2;
-            }
-
-            // if map is to small then just center it vert
-            if (mapHeight < newVP.getHeight())
-            {
-                centerY = mapHeight / 2;// viewportHeight/2;// - mapHeight/2;
-            }
-
-            // if map is too small then just center it horiz
-            if (!isHorizontalWrapped() && mapWidth < newVP.getWidth())
-            {
-                centerX = mapWidth / 2;
-            }
         }
 
         // If center is outside (0, 0,mapWidth, mapHeight)
@@ -623,12 +629,49 @@ public class JXMapViewer extends JPanel implements DesignMode
             if (centerY < 0)
                 centerY += mapHeight;
         }
+        return new Point2D.Double(centerX,centerY);
+    }
 
-        GeoPosition oldGP = this.getCenterPosition();
-        this.center = new Point2D.Double(centerX, centerY);
-        firePropertyChange("center", old, this.center);
-        firePropertyChange("centerPosition", oldGP, this.getCenterPosition());
-        repaint();
+    private double getCenterX(double centerX, int mapWidth, int viewportWidth, Rectangle newVP) {
+
+        if (newVP.getX() < 0)
+        {
+            centerX = viewportWidth / 2;
+        }
+
+        // don't let the user pan over the right edge
+        if ((newVP.getX() + newVP.getWidth() > mapWidth))
+        {
+            centerX = mapWidth - viewportWidth / 2;
+        }
+
+
+        // if map is too small then just center it horiz
+        if (mapWidth < newVP.getWidth())
+        {
+            centerX = mapWidth / 2;
+        }
+        return centerX;
+    }
+
+    private double getCenterY(double centerY, int mapHeight, int viewportHeight, Rectangle newVP) {
+        if (newVP.getY() < 0)
+        {
+            centerY = viewportHeight / 2;
+        }
+
+        // don't let the user pan over the bottom edge
+        if (newVP.getY() + newVP.getHeight() > mapHeight)
+        {
+            centerY = mapHeight - viewportHeight / 2;
+        }
+
+        // if map is to small then just center it vert
+        if (mapHeight < newVP.getHeight())
+        {
+            centerY = mapHeight / 2;// viewportHeight/2;// - mapHeight/2;
+        }
+        return centerY;
     }
 
     /**
@@ -881,4 +924,7 @@ public class JXMapViewer extends JPanel implements DesignMode
     {
         return this.panningEnabled;
     }
+
+
+
 }
