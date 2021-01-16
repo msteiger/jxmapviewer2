@@ -17,7 +17,7 @@ import java.awt.geom.Point2D;
  * customized TileFactoryInfo. Currently
  * @author joshy
  */
-public class TileFactoryInfo
+public abstract class TileFactoryInfo
 {
     private int minimumZoomLevel;
     private int maximumZoomLevel;
