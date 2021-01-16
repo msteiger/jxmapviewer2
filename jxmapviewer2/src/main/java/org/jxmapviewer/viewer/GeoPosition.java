@@ -2,9 +2,6 @@
  * GeoPosition.java
  *
  * Created on March 31, 2006, 9:15 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
  */
 package org.jxmapviewer.viewer;
 
