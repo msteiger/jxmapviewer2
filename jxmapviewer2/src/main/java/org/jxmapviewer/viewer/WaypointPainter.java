@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.AbstractPainter;
 
@@ -24,7 +25,7 @@ import org.jxmapviewer.painter.AbstractPainter;
  * @param <W> the waypoint type
  * @author rbair
  */
-public class WaypointPainter<W extends Waypoint> extends AbstractPainter<JXMapViewer>
+public class WaypointPainter<W extends Waypoint> extends AbstractPainter<AbstractJXMapViewer>
 {
     private WaypointRenderer<? super W> renderer = new DefaultWaypointRenderer();
     private Set<W> waypoints = new HashSet<W>();
@@ -67,7 +68,7 @@ public class WaypointPainter<W extends Waypoint> extends AbstractPainter<JXMapVi
     }
 
     @Override
-    protected void doPaint(Graphics2D g, JXMapViewer map, int width, int height)
+    protected void doPaint(Graphics2D g, AbstractJXMapViewer map, int width, int height)
     {
         if (renderer == null)
         {

@@ -635,7 +635,7 @@ public class JXMapKit extends JPanel
     @SuppressWarnings("unchecked")
     private void rebuildMainMapOverlay()
     {
-        CompoundPainter<JXMapViewer> cp = new CompoundPainter<JXMapViewer>();
+        CompoundPainter<AbstractJXMapViewer> cp = new CompoundPainter<>();
         cp.setCacheable(false);
         /*
          * List<Painter> ptrs = new ArrayList<Painter>(); if(isDataProviderCreditShown()) {
@@ -672,10 +672,10 @@ public class JXMapKit extends JPanel
         return this.defaultProvider;
     }
 
-    private AbstractPainter<JXMapViewer> dataProviderCreditPainter = new AbstractPainter<JXMapViewer>(false)
+    private AbstractPainter<AbstractJXMapViewer> dataProviderCreditPainter = new AbstractPainter<AbstractJXMapViewer>(false)
     {
         @Override
-        protected void doPaint(Graphics2D g, JXMapViewer map, int width, int height)
+        protected void doPaint(Graphics2D g, AbstractJXMapViewer map, int width, int height)
         {
             g.setPaint(Color.WHITE);
             g.drawString("data ", 50, map.getHeight() - 10);

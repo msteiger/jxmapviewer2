@@ -1,5 +1,6 @@
 package sample7_swingwaypoints;
 
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.WaypointPainter;
 
@@ -15,7 +16,7 @@ import java.awt.geom.Point2D;
 public class SwingWaypointOverlayPainter extends WaypointPainter<SwingWaypoint> {
 
     @Override
-    protected void doPaint(Graphics2D g, JXMapViewer jxMapViewer, int width, int height) {
+    protected void doPaint(Graphics2D g, AbstractJXMapViewer jxMapViewer, int width, int height) {
         for (SwingWaypoint swingWaypoint : getWaypoints()) {
             Point2D point = jxMapViewer.getTileFactory().geoToPixel(
                     swingWaypoint.getPosition(), jxMapViewer.getZoom());

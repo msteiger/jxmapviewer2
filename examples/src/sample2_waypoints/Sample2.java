@@ -57,7 +57,7 @@ public class Sample2
         RoutePainter routePainter = new RoutePainter(track);
 
         // Set the focus
-        mapViewer.zoomToBestFit(new HashSet<GeoPosition>(track), 0.7);
+        mapViewer.zoomToBestFit(new HashSet<>(track), 0.7);
 
         // Create waypoints from the geo-positions
         Set<Waypoint> waypoints = new HashSet<Waypoint>(Arrays.asList(
@@ -72,11 +72,11 @@ public class Sample2
         waypointPainter.setWaypoints(waypoints);
 
         // Create a compound painter that uses both the route-painter and the waypoint-painter
-        List<Painter<AbstractJXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+        List<Painter<AbstractJXMapViewer>> painters = new ArrayList<Painter<AbstractJXMapViewer>>();
         painters.add(routePainter);
         painters.add(waypointPainter);
 
-        CompoundPainter<AbstractJXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+        CompoundPainter<AbstractJXMapViewer> painter = new CompoundPainter<>(painters);
         mapViewer.setOverlayPainter(painter);
     }
 }
