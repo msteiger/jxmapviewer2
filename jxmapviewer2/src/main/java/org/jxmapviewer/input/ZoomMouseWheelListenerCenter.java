@@ -4,7 +4,7 @@ package org.jxmapviewer.input;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.AbstractJXMapViewer;
 
 /**
  * zooms using the mouse wheel on the view center
@@ -12,12 +12,12 @@ import org.jxmapviewer.JXMapViewer;
  */
 public class ZoomMouseWheelListenerCenter implements MouseWheelListener
 {
-    private JXMapViewer viewer;
+    private AbstractJXMapViewer viewer;
     
     /**
      * @param viewer the jxmapviewer
      */
-    public ZoomMouseWheelListenerCenter(JXMapViewer viewer)
+    public ZoomMouseWheelListenerCenter(AbstractJXMapViewer viewer)
     {
         this.viewer = viewer;
     }

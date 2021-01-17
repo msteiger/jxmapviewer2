@@ -170,10 +170,10 @@ public class JXMapKit extends JPanel
         });
 
         // an overlay for the mini-map which shows a rectangle representing the main map
-        miniMap.setOverlayPainter(new Painter<JXMapViewer>()
+        miniMap.setOverlayPainter(new Painter<AbstractJXMapViewer>()
         {
             @Override
-            public void paint(Graphics2D g, JXMapViewer map, int width, int height)
+            public void paint(Graphics2D g, AbstractJXMapViewer map, int width, int height)
             {
                 // get the viewport rect of the main map
                 Rectangle mainMapBounds = mainMap.getViewportBounds();
@@ -560,7 +560,7 @@ public class JXMapKit extends JPanel
      * Returns a reference to the mini embedded JXMapViewer component
      * @return the minimap JXMapViewer component
      */
-    public JXMapViewer getMiniMap()
+    public AbstractJXMapViewer getMiniMap()
     {
         return this.miniMap;
     }

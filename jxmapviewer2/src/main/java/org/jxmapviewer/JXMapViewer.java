@@ -55,7 +55,7 @@ import org.jxmapviewer.viewer.empty.EmptyTileFactory;
  * property and vice versa.  All three properties are bound.
  * @author Joshua.Marinacci@sun.com
  */
-public class JXMapViewer extends JPanel implements DesignMode
+public class JXMapViewer extends AbstractJXMapViewer implements DesignMode
 {
     private static final long serialVersionUID = -3530746298586937321L;
 
@@ -217,7 +217,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * lines, or static overlays like text messages.
      * @param overlay the map overlay to use
      */
-    public void setOverlayPainter(Painter<? super JXMapViewer> overlay)
+    @Override
+	public void setOverlayPainter(Painter<? super JXMapViewer> overlay)
     {
         Painter<? super JXMapViewer> old = getOverlayPainter();
         this.overlay = overlay;
@@ -254,7 +255,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Gets the current map overlay
      * @return the current map overlay
      */
-    public Painter<? super JXMapViewer> getOverlayPainter()
+    @Override
+	public Painter<? super JXMapViewer> getOverlayPainter()
     {
         return overlay;
     }
@@ -264,7 +266,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * coordinate space.
      * @return the bounds in <em>pixels</em> of the "view" of this map
      */
-    public Rectangle getViewportBounds()
+    @Override
+	public Rectangle getViewportBounds()
     {
         return calculateViewportBounds(getCenter());
     }
@@ -284,7 +287,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Set the current zoom level
      * @param zoom the new zoom level
      */
-    public void setZoom(int zoom)
+    @Override
+	public void setZoom(int zoom)
     {
         if (zoom == this.zoomLevel)
         {
@@ -317,7 +321,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Gets the current zoom level
      * @return the current zoom level
      */
-    public int getZoom()
+    @Override
+	public int getZoom()
     {
         return this.zoomLevel;
     }
@@ -327,7 +332,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * property is bound.
      * @return the current map location (address)
      */
-    public GeoPosition getAddressLocation()
+    @Override
+	public GeoPosition getAddressLocation()
     {
         return addressLocation;
     }
@@ -336,7 +342,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Gets the current address location of the map
      * @param addressLocation the new address location
      */
-    public void setAddressLocation(GeoPosition addressLocation)
+    @Override
+	public void setAddressLocation(GeoPosition addressLocation)
     {
         GeoPosition old = getAddressLocation();
         this.addressLocation = addressLocation;
@@ -350,7 +357,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Re-centers the map to have the current address location be at the center of the map, accounting for the map's
      * width and height.
      */
-    public void recenterToAddressLocation()
+    @Override
+	public void recenterToAddressLocation()
     {
         setCenter(getTileFactory().geoToPixel(getAddressLocation(), getZoom()));
         repaint();
@@ -360,7 +368,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Indicates if the tile borders should be drawn. Mainly used for debugging.
      * @return the value of this property
      */
-    public boolean isDrawTileBorders()
+    @Override
+	public boolean isDrawTileBorders()
     {
         return drawTileBorders;
     }
@@ -369,7 +378,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Set if the tile borders should be drawn. Mainly used for debugging.
      * @param drawTileBorders new value of this drawTileBorders
      */
-    public void setDrawTileBorders(boolean drawTileBorders)
+    @Override
+	public void setDrawTileBorders(boolean drawTileBorders)
     {
         boolean old = isDrawTileBorders();
         this.drawTileBorders = drawTileBorders;
@@ -381,7 +391,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * A property indicating the center position of the map
      * @param geoPosition the new property value
      */
-    public void setCenterPosition(GeoPosition geoPosition)
+    @Override
+	public void setCenterPosition(GeoPosition geoPosition)
     {
         GeoPosition oldVal = getCenterPosition();
         setCenter(getTileFactory().geoToPixel(geoPosition, zoomLevel));
@@ -394,7 +405,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * A property indicating the center position of the map
      * @return the current center position
      */
-    public GeoPosition getCenterPosition()
+    @Override
+	public GeoPosition getCenterPosition()
     {
         return getTileFactory().pixelToGeo(getCenter(), zoomLevel);
     }
@@ -403,7 +415,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Get the current factory
      * @return the current property value
      */
-    public TileFactory getTileFactory()
+    @Override
+	public TileFactory getTileFactory()
     {
         return factory;
     }
@@ -412,7 +425,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Set the current tile factory (must not be <code>null</code>)
      * @param factory the new property value
      */
-    public void setTileFactory(TileFactory factory)
+    @Override
+	public void setTileFactory(TileFactory factory)
     {
         if (factory == null)
             throw new NullPointerException("factory must not be null");
@@ -432,7 +446,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * A property for an image which will be display when an image is still loading.
      * @return the current property value
      */
-    public Image getLoadingImage()
+    @Override
+	public Image getLoadingImage()
     {
         return loadingImage;
     }
@@ -441,7 +456,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * A property for an image which will be display when an image is still loading.
      * @param loadingImage the new property value
      */
-    public void setLoadingImage(Image loadingImage)
+    @Override
+	public void setLoadingImage(Image loadingImage)
     {
         this.loadingImage = loadingImage;
     }
@@ -450,7 +466,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Gets the current pixel center of the map. This point is in the global bitmap coordinate system, not as lat/longs.
      * @return the current center of the map as a pixel value
      */
-    public Point2D getCenter()
+    @Override
+	public Point2D getCenter()
     {
         return center;
     }
@@ -459,7 +476,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Sets the new center of the map in pixel coordinates.
      * @param center the new center of the map in pixel coordinates
      */
-    public void setCenter(Point2D center)
+    @Override
+	public void setCenter(Point2D center)
     {
         Point2D old = this.getCenter();
 
@@ -472,7 +490,8 @@ public class JXMapViewer extends JPanel implements DesignMode
 
 
 
-    public Point2D.Double getNewCenter(Point2D center){
+    @Override
+	public Point2D.Double getNewCenter(Point2D center){
         double centerX = center.getX();
         double centerY = center.getY();
 
@@ -562,7 +581,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * are visible without panning.
      * @param positions A set of GeoPositions to calculate the new zoom from
      */
-    public void calculateZoomFrom(Set<GeoPosition> positions)
+    @Override
+	public void calculateZoomFrom(Set<GeoPosition> positions)
     {
         // u.p("calculating a zoom based on: ");
         // u.p(positions);
@@ -609,7 +629,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * @param positions A set of GeoPositions to calculate the new zoom from
      * @param maxFraction the maximum fraction of the viewport that should be covered
      */
-    public void zoomToBestFit(Set<GeoPosition> positions, double maxFraction)
+    @Override
+	public void zoomToBestFit(Set<GeoPosition> positions, double maxFraction)
     {
         if (positions.isEmpty())
             return;
@@ -699,7 +720,8 @@ public class JXMapViewer extends JPanel implements DesignMode
     /**
      * @return true if panning is restricted or not
      */
-    public boolean isRestrictOutsidePanning()
+    @Override
+	public boolean isRestrictOutsidePanning()
     {
         return restrictOutsidePanning;
     }
@@ -707,7 +729,8 @@ public class JXMapViewer extends JPanel implements DesignMode
     /**
      * @param restrictOutsidePanning set if panning is restricted or not
      */
-    public void setRestrictOutsidePanning(boolean restrictOutsidePanning)
+    @Override
+	public void setRestrictOutsidePanning(boolean restrictOutsidePanning)
     {
         this.restrictOutsidePanning = restrictOutsidePanning;
     }
@@ -715,7 +738,8 @@ public class JXMapViewer extends JPanel implements DesignMode
     /**
      * @return true if horizontally wrapped or not
      */
-    public boolean isHorizontalWrapped()
+    @Override
+	public boolean isHorizontalWrapped()
     {
         return horizontalWrapped;
     }
@@ -725,7 +749,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      *
      * @param infiniteMapRendering true when infinite map rendering should be enabled
      */
-    public void setInfiniteMapRendering(boolean infiniteMapRendering)
+    @Override
+	public void setInfiniteMapRendering(boolean infiniteMapRendering)
     {
         this.infiniteMapRendering = infiniteMapRendering;
     }
@@ -733,7 +758,8 @@ public class JXMapViewer extends JPanel implements DesignMode
     /**
      * @return true if infinite map rendering is enabled
      */
-    public boolean isInfiniteMapRendering()
+    @Override
+	public boolean isInfiniteMapRendering()
     {
         return horizontalWrapped || infiniteMapRendering;
     }
@@ -741,7 +767,8 @@ public class JXMapViewer extends JPanel implements DesignMode
     /**
      * @param horizontalWrapped true if horizontal wrap is enabled
      */
-    public void setHorizontalWrapped(boolean horizontalWrapped)
+    @Override
+	public void setHorizontalWrapped(boolean horizontalWrapped)
     {
         this.horizontalWrapped = horizontalWrapped;
     }
@@ -752,7 +779,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * @param pos a GeoPosition on the map
      * @return the point in the local coordinate space of the map
      */
-    public Point2D convertGeoPositionToPoint(GeoPosition pos)
+    @Override
+	public Point2D convertGeoPositionToPoint(GeoPosition pos)
     {
         // convert from geo to world bitmap
         Point2D pt = getTileFactory().geoToPixel(pos, getZoom());
@@ -767,7 +795,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * @param pt a point in the local coordinate space of the map
      * @return the point converted to a GeoPosition
      */
-    public GeoPosition convertPointToGeoPosition(Point2D pt)
+    @Override
+	public GeoPosition convertPointToGeoPosition(Point2D pt)
     {
         // convert from local to world bitmap
         Rectangle bounds = getViewportBounds();
@@ -782,7 +811,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * @return isNegativeYAllowed
      * @deprecated do not use
      */
-    @Deprecated
+    @Override
+	@Deprecated
     public boolean isNegativeYAllowed()
     {
         return true;
@@ -793,7 +823,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Useful for performing selections on the map.
      * @param enabled if true, panning is enabled (the default), if false, panning is disabled
      */
-    public void setPanEnabled(boolean enabled)
+    @Override
+	public void setPanEnabled(boolean enabled)
     {
         this.panningEnabled = enabled;
     }
@@ -802,7 +833,8 @@ public class JXMapViewer extends JPanel implements DesignMode
      * Returns whether panning is enabled. If it is disabled, panning should not occur. (Used primarily by {@link PanMouseInputListener}
      * @return true if panning is enabled
      */
-    public boolean isPanningEnabled()
+    @Override
+	public boolean isPanningEnabled()
     {
         return this.panningEnabled;
     }

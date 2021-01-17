@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.AbstractJXMapViewer;
 
 /**
  * This is a standard waypoint renderer.
@@ -45,7 +45,7 @@ public class DefaultWaypointRenderer implements WaypointRenderer<Waypoint>
     }
 
     @Override
-    public void paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint w)
+    public void paintWaypoint(Graphics2D g, AbstractJXMapViewer map, Waypoint w)
     {
         if (img == null)
             return;

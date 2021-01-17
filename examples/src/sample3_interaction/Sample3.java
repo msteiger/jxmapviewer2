@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 import javax.swing.event.MouseInputListener;
 
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.cache.FileBasedLocalCache;
@@ -100,7 +101,7 @@ public class Sample3
         updateWindowTitle(frame, mapViewer);
     }
 
-    protected static void updateWindowTitle(JFrame frame, JXMapViewer mapViewer)
+    protected static void updateWindowTitle(JFrame frame, AbstractJXMapViewer mapViewer)
     {
         double lat = mapViewer.getCenterPosition().getLatitude();
         double lon = mapViewer.getCenterPosition().getLongitude();

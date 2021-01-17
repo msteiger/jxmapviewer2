@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.painter.CompoundPainter;
@@ -31,7 +32,7 @@ public class Sample2
      */
     public static void main(String[] args)
     {
-        JXMapViewer mapViewer = new JXMapViewer();
+        AbstractJXMapViewer mapViewer = new JXMapViewer();
 
         // Display the viewer in a JFrame
         JFrame frame = new JFrame("JXMapviewer2 Example 2");
@@ -71,11 +72,11 @@ public class Sample2
         waypointPainter.setWaypoints(waypoints);
 
         // Create a compound painter that uses both the route-painter and the waypoint-painter
-        List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+        List<Painter<AbstractJXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
         painters.add(routePainter);
         painters.add(waypointPainter);
 
-        CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+        CompoundPainter<AbstractJXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
         mapViewer.setOverlayPainter(painter);
     }
 }

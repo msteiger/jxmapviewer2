@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
 
-import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
 /**
@@ -18,7 +18,7 @@ import org.jxmapviewer.viewer.GeoPosition;
  */
 public abstract class MapClickListener extends MouseAdapter {
 
-    private final JXMapViewer viewer;
+    private final AbstractJXMapViewer viewer;
 
     /**
      * Creates a mouse listener for the jxmapviewer which returns the
@@ -26,7 +26,7 @@ public abstract class MapClickListener extends MouseAdapter {
      * 
      * @param viewer the jxmapviewer
      */
-    public MapClickListener(JXMapViewer viewer) {
+    public MapClickListener(AbstractJXMapViewer viewer) {
         this.viewer = viewer;
     }
 

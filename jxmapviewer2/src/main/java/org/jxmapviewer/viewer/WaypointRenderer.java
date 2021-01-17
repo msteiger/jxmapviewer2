@@ -11,7 +11,7 @@ package org.jxmapviewer.viewer;
 
 import java.awt.Graphics2D;
 
-import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.AbstractJXMapViewer;
 
 /**
  * A interface that draws waypoints. Implementations of WaypointRenderer can
@@ -27,6 +27,6 @@ public interface WaypointRenderer<W>
      * @param map the map
      * @param waypoint the waypoint
      */
-    public void paintWaypoint(Graphics2D g, JXMapViewer map, W waypoint);
+    public void paintWaypoint(Graphics2D g, AbstractJXMapViewer map, W waypoint);
     
 }

@@ -8,7 +8,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 
-import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.AbstractJXMapViewer;
 
 /**
  * zooms to the current mouse cursor 
@@ -17,12 +17,12 @@ import org.jxmapviewer.JXMapViewer;
  */
 public class ZoomMouseWheelListenerCursor implements MouseWheelListener
 {
-    private JXMapViewer viewer;
+    private AbstractJXMapViewer viewer;
     
     /**
      * @param viewer the jxmapviewer
      */
-    public ZoomMouseWheelListenerCursor(JXMapViewer viewer)
+    public ZoomMouseWheelListenerCursor(AbstractJXMapViewer viewer)
     {
         this.viewer = viewer;
     }

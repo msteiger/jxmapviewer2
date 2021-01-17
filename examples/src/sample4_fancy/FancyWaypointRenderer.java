@@ -22,7 +22,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.viewer.WaypointRenderer;
 
 /**
@@ -78,7 +78,7 @@ public class FancyWaypointRenderer implements WaypointRenderer<MyWaypoint>
     }
 
     @Override
-    public void paintWaypoint(Graphics2D g, JXMapViewer viewer, MyWaypoint w)
+    public void paintWaypoint(Graphics2D g, AbstractJXMapViewer viewer, MyWaypoint w)
     {
         g = (Graphics2D)g.create();
 

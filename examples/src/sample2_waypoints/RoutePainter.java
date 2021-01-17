@@ -10,6 +10,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.painter.Painter;
@@ -18,7 +19,7 @@ import org.jxmapviewer.painter.Painter;
  * Paints a route
  * @author Martin Steiger
  */
-public class RoutePainter implements Painter<JXMapViewer>
+public class RoutePainter implements Painter<AbstractJXMapViewer>
 {
     private Color color = Color.RED;
     private boolean antiAlias = true;
@@ -36,7 +37,7 @@ public class RoutePainter implements Painter<JXMapViewer>
     }
 
     @Override
-    public void paint(Graphics2D g, JXMapViewer map, int w, int h)
+    public void paint(Graphics2D g, AbstractJXMapViewer map, int w, int h)
     {
         g = (Graphics2D) g.create();
 
@@ -66,7 +67,7 @@ public class RoutePainter implements Painter<JXMapViewer>
      * @param g the graphics object
      * @param map the map
      */
-    private void drawRoute(Graphics2D g, JXMapViewer map)
+    private void drawRoute(Graphics2D g, AbstractJXMapViewer map)
     {
         int lastX = 0;
         int lastY = 0;

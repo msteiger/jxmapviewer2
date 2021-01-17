@@ -15,7 +15,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.viewer.GeoBounds;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactory;
@@ -140,7 +140,7 @@ public final class GeoUtil
      * @param mapViewer The map viewer.
      * @return Returns the bounds.
      */
-    public static GeoBounds getMapBounds(JXMapViewer mapViewer)
+    public static GeoBounds getMapBounds(AbstractJXMapViewer mapViewer)
     {
         return new GeoBounds(getMapGeoBounds(mapViewer));
     }
@@ -151,7 +151,7 @@ public final class GeoUtil
      * @return Returns the set of two <code>GeoPosition</code> objects that represent the north west and south east
      * corners of the map.
      */
-    private static Set<GeoPosition> getMapGeoBounds(JXMapViewer mapViewer)
+    private static Set<GeoPosition> getMapGeoBounds(AbstractJXMapViewer mapViewer)
     {
         Set<GeoPosition> set = new HashSet<GeoPosition>();
         TileFactory tileFactory = mapViewer.getTileFactory();

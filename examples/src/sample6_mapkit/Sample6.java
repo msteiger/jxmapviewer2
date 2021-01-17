@@ -9,8 +9,8 @@ import java.awt.geom.Point2D;
 import javax.swing.JFrame;
 import javax.swing.JToolTip;
 
+import org.jxmapviewer.AbstractJXMapViewer;
 import org.jxmapviewer.JXMapKit;
-import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -52,7 +52,7 @@ public class Sample6
             @Override
             public void mouseMoved(MouseEvent e)
             {
-                JXMapViewer map = jXMapKit.getMainMap();
+                AbstractJXMapViewer map = jXMapKit.getMainMap();
 
                 // convert to world bitmap
                 Point2D worldPos = map.getTileFactory().geoToPixel(gp, map.getZoom());
