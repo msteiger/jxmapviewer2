@@ -43,9 +43,6 @@ import org.jxmapviewer.viewer.empty.EmptyTileFactory;
  * A tile oriented map component that can easily be used with tile sources
  * on the web like Google and Yahoo maps, satellite data such as NASA imagery,
  * and also with file based sources like pre-processed NASA images.
- * A known map provider can be used with the SLMapServerInfo,
- * which will connect to a 2km resolution version of NASA's Blue Marble Next Generation
- * imagery. @see SLMapServerInfo for more information.
  *
  * Note, the JXMapViewer has three center point properties.  The <B>addressLocation</B> property
  * represents an abstract center of the map. This would usually be something like the first item
