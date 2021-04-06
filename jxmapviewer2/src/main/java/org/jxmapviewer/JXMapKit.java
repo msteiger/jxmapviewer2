@@ -54,10 +54,7 @@ import org.jxmapviewer.viewer.WaypointPainter;
  * <PRE><CODE>jxMapKit.setMiniMapVisible(false);</CODE></PRE>
  *
  * <p>
- * The JXMapViewer is preconfigured to connect to maps.swinglabs.org which
- * serves up global satellite imagery from NASA's
- * <a href="http://earthobservatory.nasa.gov/Newsroom/BlueMarble/">Blue
- * Marble NG</a> image collection.
+ * The JXMapViewer is preconfigured to connect to OpenStreetMap.
  * </p>
  * @author joshy
  */
