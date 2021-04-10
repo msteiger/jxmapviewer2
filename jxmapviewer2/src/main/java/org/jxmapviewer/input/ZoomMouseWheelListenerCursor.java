@@ -11,25 +11,30 @@ import java.awt.geom.Point2D;
 import org.jxmapviewer.JXMapViewer;
 
 /**
- * zooms to the current mouse cursor 
- * using the mouse wheel
+ * Zooms to the current mouse cursor using the mouse wheel.
+ *
+ * <p>This input listener can be disabled. It is enabled by default. When it is
+ * disabled, mouse wheel events will have no effect.
+ *
  * @author Martin Steiger
  */
-public class ZoomMouseWheelListenerCursor implements MouseWheelListener
+public class ZoomMouseWheelListenerCursor extends DisableableMouseWheelListener implements MouseWheelListener, DisableableInputAdapter
 {
-    private JXMapViewer viewer;
-    
     /**
      * @param viewer the jxmapviewer
      */
     public ZoomMouseWheelListenerCursor(JXMapViewer viewer)
     {
-        this.viewer = viewer;
+        super(viewer);
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent evt)
     {
+        if (!enabled)
+        {
+            return;
+        }
         Point current = evt.getPoint();
         Rectangle bound = viewer.getViewportBounds();
         
@@ -52,4 +57,5 @@ public class ZoomMouseWheelListenerCursor implements MouseWheelListener
 
         viewer.setCenter(new Point2D.Double(x, y));
     }
+
 }

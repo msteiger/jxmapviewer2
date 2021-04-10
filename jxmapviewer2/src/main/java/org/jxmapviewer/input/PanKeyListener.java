@@ -9,15 +9,19 @@ import java.awt.geom.Point2D;
 import org.jxmapviewer.JXMapViewer;
 
 /**
- * used to pan using the arrow keys
+ * Used to pan the map using the arrow keys.
+ *
+ * <p>This input listener can be disabled. When it is disabled, key events will have no effect.
+ *
  * @author joshy
  */
-public class PanKeyListener extends KeyAdapter
+public class PanKeyListener extends KeyAdapter implements DisableableInputAdapter
 {
     private static final int OFFSET = 10;
 
     private JXMapViewer viewer;
-    
+    private boolean enabled;
+
     /**
      * @param viewer the jxmapviewer
      */
@@ -29,6 +33,10 @@ public class PanKeyListener extends KeyAdapter
     @Override
     public void keyPressed(KeyEvent e)
     {
+        if (!enabled)
+        {
+            return;
+        }
         int delta_x = 0;
         int delta_y = 0;
 
@@ -56,5 +64,27 @@ public class PanKeyListener extends KeyAdapter
             viewer.setCenter(new Point2D.Double(x, y));
             viewer.repaint();
         }
+    }
+
+    /**
+     * Check if this input listener is enabled.
+     * @return true if it is enabled, otherwise false.
+     */
+    @Override
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    /**
+     * Set whether this input listener is enabled or not.
+     *
+     * If it is not enabled, user input will have no effect.
+     * @param enabled true to enable, false to disable.
+     */
+    @Override
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
     }
 }

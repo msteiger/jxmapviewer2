@@ -11,15 +11,20 @@ import javax.swing.event.MouseInputAdapter;
 import org.jxmapviewer.JXMapViewer;
 
 /**
- * Used to pan using press and drag mouse gestures
+ * Used to pan using press and drag mouse gestures.
+ *
+ * <p>This input listener can be disabled. It is enabled by default. When it is
+ * disabled, mouse events will have no effect.
+ *
  * @author joshy
  */
-public class PanMouseInputListener extends MouseInputAdapter
+public class PanMouseInputListener extends MouseInputAdapter implements DisableableInputAdapter
 {
     private Point prev;
     private JXMapViewer viewer;
     private Cursor priorCursor;
-    
+    private boolean enabled = true;
+
     /**
      * @param viewer the jxmapviewer
      */
@@ -31,6 +36,10 @@ public class PanMouseInputListener extends MouseInputAdapter
     @Override
     public void mousePressed(MouseEvent evt)
     {
+        if (!isEnabled())
+        {
+            return;
+        }
         if (!SwingUtilities.isLeftMouseButton(evt))
             return;
         if (!viewer.isPanningEnabled())
@@ -44,6 +53,10 @@ public class PanMouseInputListener extends MouseInputAdapter
     @Override
     public void mouseDragged(MouseEvent evt)
     {
+        if (!isEnabled())
+        {
+            return;
+        }
         if (!SwingUtilities.isLeftMouseButton(evt))
             return;
         if (!viewer.isPanningEnabled())
@@ -73,10 +86,36 @@ public class PanMouseInputListener extends MouseInputAdapter
     @Override
     public void mouseReleased(MouseEvent evt)
     {
+        if (!isEnabled())
+        {
+            return;
+        }
         if (!SwingUtilities.isLeftMouseButton(evt))
             return;
 
         prev = null;
         viewer.setCursor(priorCursor);
+    }
+
+    /**
+     * Check if this input listener is enabled.
+     * @return true if it is enabled, otherwise false.
+     */
+    @Override
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    /**
+     * Set whether this input listener is enabled or not.
+     *
+     * If it is not enabled, user input will have no effect.
+     * @param enabled true to enable, false to disable.
+     */
+    @Override
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
     }
 }
