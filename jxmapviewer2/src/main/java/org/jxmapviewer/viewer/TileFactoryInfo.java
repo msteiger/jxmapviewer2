@@ -60,6 +60,10 @@ public class TileFactoryInfo
     /** A name for this info. */
     private String name;
 
+
+    /** The maximal amount of tiles stored in the AbstractTileFactory. Used to limit heap space (-1 equal to no limitation) */
+    private int maximalTileAmount;
+
     /**
      * Creates a new instance of TileFactoryInfo. Note that TileFactoryInfo should be considered invariate, meaning that
      * subclasses should ensure all of the properties stay the same after the class is constructed. Returning different
@@ -82,7 +86,7 @@ public class TileFactoryInfo
      * based on the equator.
      */
     public TileFactoryInfo(int minimumZoomLevel, int maximumZoomLevel, int totalMapZoom, int tileSize, boolean xr2l,
-            boolean yt2b, String baseURL, String xparam, String yparam, String zparam)
+                           boolean yt2b, String baseURL, String xparam, String yparam, String zparam)
     {
         this("name not provided", minimumZoomLevel, maximumZoomLevel, totalMapZoom, tileSize, xr2l, yt2b, baseURL,
                 xparam, yparam, zparam);
@@ -111,11 +115,41 @@ public class TileFactoryInfo
      * based on the equator.
      */
     public TileFactoryInfo(String name, int minimumZoomLevel, int maximumZoomLevel, int totalMapZoom, int tileSize,
-            boolean xr2l, boolean yt2b, String baseURL, String xparam, String yparam, String zparam)
+                           boolean xr2l, boolean yt2b, String baseURL, String xparam, String yparam, String zparam)
+    {
+        this(name, minimumZoomLevel, maximumZoomLevel, totalMapZoom, tileSize, xr2l, yt2b, baseURL, xparam, yparam,zparam, -1);
+    }
+
+    /**
+     * Creates a new instance of TileFactoryInfo. Note that TileFactoryInfo should be considered invariate, meaning that
+     * subclasses should ensure all of the properties stay the same after the class is constructed. Returning different
+     * values of getTileSize() for example is considered an error and may result in unexpected behavior.
+     * @param name A name to identify this information.
+     * @param minimumZoomLevel The minimum zoom level, the user is allowed to zoom, means the smallest map
+     * @param maximumZoomLevel the maximum zoom level, the user is allowed to zoom, means the biggest map
+     * @param totalMapZoom how many zoom levels the map provides
+     * @param tileSize the size of the tiles in pixels (must be square)
+     * @param xr2l if the x goes r to l (is this backwards?)
+     * @param yt2b if the y goes top to bottom
+     * @param baseURL the base url for grabbing tiles
+     * @param xparam the x parameter for the tile url
+     * @param yparam the y parameter for the tile url
+     * @param zparam the z parameter for the tile url
+     * @param maximalTileAmount  the maximal amount of tiles stored in the AbstractTileFactory. Used to limit heap space (-1 equal to no limitation)
+     */
+    /*
+     * @param xr2l true if tile x is measured from the far left of the map to the far right, or else false if based on
+     * the center line.
+     * @param yt2b true if tile y is measured from the top (north pole) to the bottom (south pole) or else false if
+     * based on the equator.
+     */
+    public TileFactoryInfo(String name, int minimumZoomLevel, int maximumZoomLevel, int totalMapZoom, int tileSize,
+                           boolean xr2l, boolean yt2b, String baseURL, String xparam, String yparam, String zparam, int maximalTileAmount)
     {
         this.name = name;
         this.minimumZoomLevel = minimumZoomLevel;
         this.maximumZoomLevel = maximumZoomLevel;
+        this.maximalTileAmount = maximalTileAmount;
         this.totalMapZoom = totalMapZoom;
         this.baseURL = baseURL;
         this.xparam = xparam;
@@ -196,6 +230,24 @@ public class TileFactoryInfo
     }
 
     /**
+     * Getter Method for maximalTileAmount
+     *
+     * @return value of maximalTileAmount
+     */
+    public int getMaximalTileAmount() {
+        return maximalTileAmount;
+    }
+
+    /**
+     * Setter Method for maximumZoomLevel
+     *
+     * @param maximumZoomLevel the new value for the field maximumZoomLevel
+     */
+    public void setMaximumZoomLevel(int maximumZoomLevel) {
+        this.maximumZoomLevel = maximumZoomLevel;
+    }
+
+    /**
      * Returns the tile url for the specified tile at the specified zoom level. By default it will generate a tile url
      * using the base url and parameters specified in the constructor. Thus if <PRE><CODE>baseURl =
      * http://www.myserver.com/maps?version=0.1 xparam = x yparam = y zparam = z tilepoint = [1,2] zoom level = 3
@@ -223,7 +275,7 @@ public class TileFactoryInfo
         }
         // System.out.println("new ypart = " + ypart);
         String url = baseURL + "&" + xparam + "=" + x + ypart +
-        // "&" + yparam + "=" + tilePoint.getY() +
+                // "&" + yparam + "=" + tilePoint.getY() +
                 "&" + zparam + "=" + zoom;
         return url;
     }

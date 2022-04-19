@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -54,6 +55,8 @@ public abstract class AbstractTileFactory extends TileFactory
     // TODO the tile map should be static ALWAYS, regardless of the number
     // of GoogleTileFactories because each tile is, really, a singleton.
     private Map<String, Tile> tileMap = new HashMap<String, Tile>();
+    //image access queue to always remove oldest tile from tile map
+    private LinkedList<String> imgmapAccessQueue = new LinkedList<>();
 
     private TileCache cache = new TileCache();
 
@@ -113,19 +116,26 @@ public abstract class AbstractTileFactory extends TileFactory
                 tile = new Tile(tileX, tileY, zoom, url, pri, this);
                 startLoading(tile);
             }
+            if(getInfo() != null && getInfo().getMaximalTileAmount() > 0 && tileMap.size() > getInfo().getMaximalTileAmount()){
+                tileMap.remove(imgmapAccessQueue.removeFirst());
+            }
             tileMap.put(url, tile);
+            imgmapAccessQueue.addLast(url);
         }
         else
         {
             tile = tileMap.get(url);
-
+            //remove old position in access queue
+            imgmapAccessQueue.remove(url);
             //Remove the tile from the map if its loading failed. This will allow the factory to try
             //and re-load the tile when it is requested sometime in the future.
             if (tile.loadingFailed()) {
                 log.info("Removing from map: " + tile.getURL() + ", tile failed to load");
                 tileMap.remove(url);
+            } else {
+                //readd the url to the queue since it was used last - not required to add to queue when tile loading failed
+                imgmapAccessQueue.addLast(url);
             }
-
             // if its in the map but is low and isn't loaded yet
             // but we are in high mode
             if (tile.getPriority() == Tile.Priority.Low && eagerLoad && !tile.isLoaded())
