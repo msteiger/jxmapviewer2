@@ -78,10 +78,15 @@ public abstract class AbstractTileFactory extends TileFactory
     @Override
     public Tile getTile(int x, int y, int zoom)
     {
-        return getTile(x, y, zoom, true);
+        return getTile(x, y, zoom, true, false);
     }
 
-    private Tile getTile(int tpx, int tpy, int zoom, boolean eagerLoad)
+    public Tile getTileSkipCache(int x, int y, int zoom, boolean skipCache)
+    {
+        return getTile(x, y, zoom, true, skipCache);
+    }
+
+    private Tile getTile(int tpx, int tpy, int zoom, boolean eagerLoad, boolean skipCache)
     {
         // wrap the tiles horizontally --> mod the X with the max width
         // and use that
@@ -105,7 +110,7 @@ public abstract class AbstractTileFactory extends TileFactory
         }
         Tile tile;
         // System.out.println("testing for validity: " + tilePoint + " zoom = " + zoom);
-        if (!tileMap.containsKey(url))
+        if (!tileMap.containsKey(url) || skipCache)
         {
             if (!GeoUtil.isValidTile(tileX, tileY, zoom, getInfo()))
             {
@@ -116,10 +121,12 @@ public abstract class AbstractTileFactory extends TileFactory
                 tile = new Tile(tileX, tileY, zoom, url, pri, this);
                 startLoading(tile);
             }
-            if(getInfo() != null && getInfo().getMaximalTileAmount() > 0 && tileMap.size() > getInfo().getMaximalTileAmount()){
-                tileMap.remove(imgmapAccessQueue.removeFirst());
+            if(!skipCache) {
+                if (getInfo() != null && getInfo().getMaximalTileAmount() > 0 && tileMap.size() > getInfo().getMaximalTileAmount()) {
+                    tileMap.remove(imgmapAccessQueue.removeFirst());
+                }
+                tileMap.put(url, tile);
             }
-            tileMap.put(url, tile);
             imgmapAccessQueue.addLast(url);
         }
         else
@@ -166,6 +173,10 @@ public abstract class AbstractTileFactory extends TileFactory
     // return tileMap.containsKey(url);
     // }
 
+    public void clearCachedTiles(){
+        tileMap.clear();
+        imgmapAccessQueue.clear();
+    }
     /**
      * @return the tile cache
      */

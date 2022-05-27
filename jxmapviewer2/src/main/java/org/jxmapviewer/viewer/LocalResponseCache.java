@@ -46,6 +46,15 @@ public class LocalResponseCache extends ResponseCache
     }
 
     /**
+     * Getter Method for cache
+     *
+     * @return value of cache
+     */
+    public FileBasedLocalCache getCache() {
+        return cache;
+    }
+
+    /**
      * Sets this cache as default response cache
      * @param baseURL the URL, the caching should be restricted to or <code>null</code> for none
      * @param cacheDir the cache directory
