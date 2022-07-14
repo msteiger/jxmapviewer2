@@ -14,6 +14,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -53,7 +55,16 @@ public abstract class AbstractTileFactory extends TileFactory
 
     // TODO the tile map should be static ALWAYS, regardless of the number
     // of GoogleTileFactories because each tile is, really, a singleton.
-    private Map<String, Tile> tileMap = new HashMap<String, Tile>();
+    private LinkedHashMap<String, Tile> tileMap = new LinkedHashMap<String, Tile>() {
+            private static final int CACHE_SIZE = 512;
+            private static final long serialVersionUID = 1;
+
+            @Override
+            protected boolean removeEldestEntry(final Map.Entry<String, Tile> eldest) {
+                return size() > CACHE_SIZE;
+            }
+        };
+
 
     private TileCache cache = new TileCache();
 
