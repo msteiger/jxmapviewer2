@@ -15,8 +15,10 @@ repositories {
 
 dependencies {
     implementation group: 'commons-logging', name: 'commons-logging', version: '1.2'
+    // JUnit 4 requires Java >=5
+    // JUnit 5 requires Java >=8
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }
-
 
 uploadArchives {
     repositories {
