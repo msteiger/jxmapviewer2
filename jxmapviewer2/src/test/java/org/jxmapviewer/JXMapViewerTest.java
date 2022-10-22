@@ -41,7 +41,8 @@ public class JXMapViewerTest {
     /**
      *
      * 21.10.2022: red: Method zoomToBestFit throws
-     * java.lang.IllegalArgumentException: GeoBounds is not valid - minLat must be less that maxLat.
+     * java.lang.IllegalArgumentException: GeoBounds is not valid - minLng must be less that maxLng or
+     * minLng must be greater than 0 and maxLng must be less than 0.
      */
     @Test
     public void zoomToBestFit_vertical_track_same_longitude() {
