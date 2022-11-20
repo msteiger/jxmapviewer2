@@ -29,6 +29,10 @@ $ mvn clean package
 $ java -cp target/jxmapviewer2-examples-2.5.jar sample1_basics.Sample1
 ```
 
+### GeoPackage data
+
+An example on how to integrate GeoPackage data has been implemented here: https://github.com/msteiger/jxmapviewer2/pull/122
+
 ### History
 
 This source code used in this project is based on: 
