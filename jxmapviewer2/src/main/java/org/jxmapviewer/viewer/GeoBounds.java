@@ -33,10 +33,10 @@ public class GeoBounds
      */
     public GeoBounds(Set<GeoPosition> geoPositions)
     {
-        if (geoPositions == null || geoPositions.size() < 2)
+        if (geoPositions == null || geoPositions.size() == 0)
         {
             throw new IllegalArgumentException("The attribute 'geoPositions' cannot be null and must "
-                    + "have 2 or more elements.");
+                    + "have 1 or more elements.");
         }
         double minLat = Integer.MAX_VALUE;
         double minLng = Integer.MAX_VALUE;
@@ -61,11 +61,11 @@ public class GeoBounds
      */
     private void setRect(double minLat, double minLng, double maxLat, double maxLng)
     {
-        if (!(minLat < maxLat))
+        if (minLat > maxLat)
         {
-            throw new IllegalArgumentException("GeoBounds is not valid - minLat must be less that maxLat.");
+            throw new IllegalArgumentException("GeoBounds is not valid - minLat must be less than or equal maxLat.");
         }
-        if (!(minLng < maxLng))
+        if (minLng > maxLng)
         {
             if (minLng > 0 && minLng < 180 && maxLng < 0)
             {
@@ -79,7 +79,7 @@ public class GeoBounds
             {
                 rects = new Rectangle2D[] { new Rectangle2D.Double(minLng, minLat, maxLng - minLng, maxLat - minLat) };
 
-                throw new IllegalArgumentException("GeoBounds is not valid - minLng must be less that maxLng or "
+                throw new IllegalArgumentException("GeoBounds is not valid - minLng must be less than or equal maxLng or "
                         + "minLng must be greater than 0 and maxLng must be less than 0.");
             }
         }
