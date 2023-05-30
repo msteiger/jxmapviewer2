@@ -265,8 +265,11 @@ public class JXMapViewer extends JPanel implements DesignMode
                         {
                             int imageX = (getTileFactory().getTileSize(zoom) - getLoadingImage().getWidth(null)) / 2;
                             int imageY = (getTileFactory().getTileSize(zoom) - getLoadingImage().getHeight(null)) / 2;
-                            g.setColor(Color.GRAY);
-                            g.fillRect(ox, oy, size, size);
+                            if (isOpaque())
+                            {
+                                g.setColor(getBackground());
+                                g.fillRect(ox, oy, size, size);
+                            }
                             g.drawImage(getLoadingImage(), ox + imageX, oy + imageY, null);
                         }
                     }
