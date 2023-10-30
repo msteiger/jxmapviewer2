@@ -115,16 +115,17 @@ public class FileBasedLocalCache implements LocalCache {
             name = sb.substring(0, maxLen);
         }
 
-        name = name.replace('?', '$');
-        name = name.replace('*', '$');
-        name = name.replace(':', '$');
-        name = name.replace('<', '$');
-        name = name.replace('>', '$');
-        name = name.replace('"', '$');
+        return new File(cacheDir, normalizeUrlToFileName(name));
+    }
 
-        File f = new File(cacheDir, name);
+    private String normalizeUrlToFileName(String name) {
+        char replacementChar = '$';
+        char[] charsNormalized = new char[]{'?', '*', ':', '<', '>', '"'};
 
-        return f;
+        for (char nchar : charsNormalized) {
+            name = name.replace(nchar, replacementChar);
+        }
+        return name;
     }
 
     /**
