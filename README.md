@@ -15,7 +15,7 @@ The content of this project are also available at [Maven Central](https://mvnrep
 <dependency>
     <groupId>org.jxmapviewer</groupId>
     <artifactId>jxmapviewer2</artifactId>
-    <version>2.5</version>
+    <version>2.8</version>
 </dependency>
 ```
 
