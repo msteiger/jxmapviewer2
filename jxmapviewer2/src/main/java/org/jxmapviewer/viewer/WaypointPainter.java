@@ -74,17 +74,10 @@ public class WaypointPainter<W extends Waypoint> extends AbstractPainter<JXMapVi
             return;
         }
 
-        Rectangle viewportBounds = map.getViewportBounds();
-
-        g.translate(-viewportBounds.getX(), -viewportBounds.getY());
-
         for (W w : getWaypoints())
         {
             renderer.paintWaypoint(g, map, w);
         }
-
-        g.translate(viewportBounds.getX(), viewportBounds.getY());
-
     }
 
 }
