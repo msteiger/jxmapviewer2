@@ -10,6 +10,7 @@
 package org.jxmapviewer.viewer;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
@@ -26,7 +27,7 @@ import org.jxmapviewer.JXMapViewer;
 public class DefaultWaypointRenderer implements WaypointRenderer<Waypoint>
 {
     private static final Log log = LogFactory.getLog(DefaultWaypointRenderer.class);
-    
+
     private BufferedImage img = null;
 
     /**
@@ -51,10 +52,12 @@ public class DefaultWaypointRenderer implements WaypointRenderer<Waypoint>
             return;
 
         Point2D point = map.getTileFactory().geoToPixel(w.getPosition(), map.getZoom());
-        
-        int x = (int)point.getX() -img.getWidth() / 2;
-        int y = (int)point.getY() -img.getHeight();
-        
+
+        Rectangle viewportBounds = map.getViewportBounds();
+
+        int x = (int)(point.getX() -img.getWidth() / 2 -viewportBounds.getX());
+        int y = (int)(point.getY() -img.getHeight() -viewportBounds.getY());
+
         g.drawImage(img, x, y, null);
     }
 }

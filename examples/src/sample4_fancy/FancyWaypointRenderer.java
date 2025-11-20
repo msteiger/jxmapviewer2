@@ -12,6 +12,7 @@ package sample4_fancy;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.net.URL;
@@ -98,7 +99,12 @@ public class FancyWaypointRenderer implements WaypointRenderer<MyWaypoint>
         int x = (int)point.getX();
         int y = (int)point.getY();
 
-        g.drawImage(myImg, x -myImg.getWidth() / 2, y -myImg.getHeight(), null);
+        Rectangle viewportBounds = viewer.getViewportBounds();
+
+        int dx = (int) -viewportBounds.getX();
+        int dy = (int) -viewportBounds.getY();
+
+        g.drawImage(myImg, x -myImg.getWidth() / 2 + dx, y -myImg.getHeight() + dy, null);
 
         String label = w.getLabel();
 
@@ -109,7 +115,14 @@ public class FancyWaypointRenderer implements WaypointRenderer<MyWaypoint>
         int th = 1 + metrics.getAscent();
 
 //        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.drawString(label, x - tw / 2, y + th - myImg.getHeight());
+        g.drawString(label, x - tw / 2 + dx, y + th - myImg.getHeight() + dy);
+
+
+        // paints a blue circle with an internal white circle
+        g.setColor(Color.BLUE);
+        g.fillOval(x-7+dx, y-7+dy, 14, 14);
+        g.setColor(Color.WHITE);
+        g.fillOval(x-4+dx, y-4+dy, 8, 8);
 
         g.dispose();
     }
