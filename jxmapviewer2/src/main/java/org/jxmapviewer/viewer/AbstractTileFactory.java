@@ -1,37 +1,30 @@
 
 package org.jxmapviewer.viewer;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.SoftReference;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-
-import javax.imageio.ImageIO;
-import javax.swing.SwingUtilities;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jxmapviewer.cache.LocalCache;
 import org.jxmapviewer.cache.NoOpLocalCache;
 import org.jxmapviewer.util.ProjectProperties;
 import org.jxmapviewer.viewer.util.GeoUtil;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.lang.ref.SoftReference;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * The <code>AbstractTileFactory</code> provides
@@ -48,7 +41,9 @@ public abstract class AbstractTileFactory extends TileFactory
      */
     private static final String DEFAULT_USER_AGENT = ProjectProperties.INSTANCE.getName() + "/"
             + ProjectProperties.INSTANCE.getVersion();
-
+    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(5))
+            .build();
     private int threadPoolSize = 4;
     private String userAgent = DEFAULT_USER_AGENT;
     private ExecutorService service;
@@ -434,23 +429,21 @@ public abstract class AbstractTileFactory extends TileFactory
             tile.setLoading(false);
         }
 
-        private byte[] cacheInputStream(URL url) throws IOException
-        {
+        private byte[] cacheInputStream(URL url) throws IOException, URISyntaxException, InterruptedException {
+
             InputStream ins = localCache.get(url);
+            byte[] data;
             if (ins == null) {
-                URLConnection connection = url.openConnection();
-                connection.setRequestProperty("User-Agent", userAgent);
-                addCustomRequestProperties(connection);
-                ins = connection.getInputStream();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(url.toURI())
+                        .header("User-Agent", userAgent)
+                        .GET()
+                        .build();
+                ins = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();
             }
-            try {
-                byte[] data = readAllBytes(ins);
-                localCache.put(url, new ByteArrayInputStream(data));
-                return data;
-            }
-            finally {
-                ins.close();
-            }
+            data = readAllBytes(ins);
+            localCache.put(url, new ByteArrayInputStream(data));
+            return data;
         }
 
         private byte[] readAllBytes(InputStream ins) throws IOException {
