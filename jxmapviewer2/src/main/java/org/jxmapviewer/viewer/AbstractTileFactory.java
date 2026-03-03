@@ -341,6 +341,23 @@ public abstract class AbstractTileFactory extends TileFactory
     }
 
     /**
+     * Opens an InputStream for the given tile URL.
+     *
+     * Subclasses may override this method to use a custom HTTP implementation.
+     * The default implementation uses URLConnection.
+     *
+     * @param url  the URL of the tile
+     * @return the input stream for the URL
+     * @throws IOException if an I/O error occurs while opening the stream
+     */
+    protected InputStream openRemoteStream(URL url) throws IOException {
+        URLConnection connection = url.openConnection();
+        connection.setRequestProperty("User-Agent", userAgent);
+        addCustomRequestProperties(connection);
+        return connection.getInputStream();
+    }
+
+    /**
      * An inner class which actually loads the tiles. Used by the thread queue. Subclasses can override this
      * via {@link #createTileRunner(Tile)} if necessary.
      */
@@ -437,15 +454,15 @@ public abstract class AbstractTileFactory extends TileFactory
         private byte[] cacheInputStream(URL url) throws IOException
         {
             InputStream ins = localCache.get(url);
-            if (ins == null) {
-                URLConnection connection = url.openConnection();
-                connection.setRequestProperty("User-Agent", userAgent);
-                addCustomRequestProperties(connection);
-                ins = connection.getInputStream();
+            boolean fromCache = (ins != null);
+            if (!fromCache) {
+                ins = openRemoteStream(url);
             }
             try {
                 byte[] data = readAllBytes(ins);
-                localCache.put(url, new ByteArrayInputStream(data));
+                if (!fromCache) {
+                    localCache.put(url, new ByteArrayInputStream(data));
+                }
                 return data;
             }
             finally {
